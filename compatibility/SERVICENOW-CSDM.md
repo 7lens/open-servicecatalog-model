@@ -75,9 +75,10 @@ Canonical provider association:
 Service / Offering  →  providers (ids)  →  ICT Provider
 ```
 
-That is not a generic Service → Service relationship, and it is not
-`dora_third_party_deps` (DORA regulatory listing on offering
-attributes).
+That is not a generic Service → Service relationship. It is also
+not automatically the same as `dora_third_party_deps`. Whether those
+two fields represent genuinely different relationships is unresolved
+(**OSM-M-005**, **PROPOSED**).
 
 Service → Service relationships remain **deliberately outside the
 current OSM core**. Not a permanent rejection; reopen only if a

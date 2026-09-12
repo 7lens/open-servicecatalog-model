@@ -6,12 +6,48 @@ definitions are in [`SPECIFICATION.md`](SPECIFICATION.md). Accepted
 model decisions are indexed in [`DECISIONS.md`](DECISIONS.md) and
 detailed under [`decisions/`](decisions/).
 
-**OSM-M-007** (Complete Service Definition) is **PROPOSED**. It
-distinguishes Service Definition, Service Posture and External
-Context. That architecture is recorded; this file still describes
-the **currently implemented** model. Current names `service_attributes`
-/ `offering_attributes` (health record) correspond to what OSM-M-007
-calls Service Posture. They have not been renamed here.
+OSM-M-007 is **ACCEPTED** and implemented. The model distinguishes:
+
+```text
+SERVICE DEFINITION     what the service is
+SERVICE POSTURE        how the service currently stands
+PROVENANCE             why the information can be trusted
+EXTERNAL CONTEXT       information owned elsewhere
+```
+
+The YAML keys `service_attributes` / `offering_attributes` are the
+Service Posture and Offering Posture records. File names were kept
+for compatibility; they are not a second catalog entity.
+
+## One concept, one canonical parameter
+
+OSM MUST NOT represent the same semantic concept through multiple
+canonical parameters (OSM-M-008). Before adding a field, search
+schemas, examples, this file, `SPECIFICATION.md` and existing
+decisions. If the concept already exists, reuse it and map frameworks
+to that field. Duplication is justified only for genuinely different
+concepts or different grains — not different names.
+
+Genuinely different concepts may coexist even when they use similar
+names, the same enum values, or appear related.
+
+Canonical examples of **one concept, reused**:
+
+```text
+rto / rpo          recovery objectives (DORA maps here)
+providers          ICT Provider association (a cloud provider is still an ICT Provider)
+operational_criticality   service criticality (DORA maps here)
+```
+
+Canonical examples of **different concepts that may share tokens**:
+
+```text
+data_classification vs security_classification
+automation_coverage vs provisioning_automation
+resilience_tier vs rto / rpo
+accountable vs financial_owner
+availability_target vs service_hours
+```
 
 ## Purpose
 
@@ -42,12 +78,14 @@ It does not describe the rest of an enterprise.
 
 Each service also has:
 
-- an **accountable** Service Owner
+- an **accountable** Service Owner (service-definition
+  accountability; distinct from posture `financial_owner`)
 - **version**, **validity period** and **lifecycle_state**
 - optional **characteristics** (generic machine-readable properties)
 - optional **providers** (ICT Provider ids; OSM-M-006)
-- optional **service attributes** (health / governance posture)
-- optional **offering attributes** (variant-level operational data)
+- optional **provenance** (reusable trust metadata; OSM-M-007)
+- optional **service posture** (`service_attributes`)
+- optional **offering posture** (`offering_attributes`)
 
 ## Technology Stack
 
@@ -82,11 +120,13 @@ A Service has:
 - one or more Service Offerings
 - optional characteristics
 - optional `providers` (ICT Provider ids)
+- optional `provenance`
 
 **Immutable identity ≠ immutable definition** (OSM-M-002). The `id`
 never changes. The definition (name, description, lifecycle, offerings,
-characteristics, providers, version, validity) may change. One catalog
-record exists per service `id`; that record is the current definition.
+characteristics, providers, provenance, version, validity) may change.
+One catalog record exists per service `id`; that record is the current
+definition.
 
 OSM Service is the canonical **definition**. A deployed Service
 Instance is outside the OSM core (OSM-C-005).
@@ -112,18 +152,52 @@ allowed values, cardinality, constraints and a configurable flag.
 Characteristics are a reuse of one small structure, not a new catalog
 entity and not a TM Forum characteristic model.
 
-## Attributes
+## Service posture
 
-Attributes are separated from identity on purpose.
+Posture is separated from definition on purpose (OSM-M-007).
 
 | Layer | Holds | Changes when |
 |-------|--------|--------------|
-| Service / offering catalog | The **definition** of what is delivered, including `lifecycle_state` | Definition version, validity, lifecycle, offerings or characteristics change. `id` does not. |
-| Service attributes | Shared operational / compliance posture | Criticality, classification, automation, resilience evidence change |
-| Offering attributes | Variant-level operations, cost, security, resilience | Day-to-day operational reality changes |
+| Service / offering catalog | The **definition** of what is delivered, including `lifecycle_state` and optional `provenance` | Definition version, validity, lifecycle, offerings, characteristics or providers change. `id` does not. |
+| Service posture (`service_attributes`) | Shared operational / governance state, including service-level expectations | Criticality, classification, automation, resilience and financial characterization change |
+| Offering posture (`offering_attributes`) | Variant-level operations, cost, security, resilience | Day-to-day operational reality changes |
 
-Empty offering attributes are allowed. Populate them as evidence
+Empty offering posture lists are allowed. Populate them as evidence
 becomes available.
+
+OSM records **service-level expectations** (availability, response,
+resolution **targets**) as posture. Targets describe expected
+performance. Offering characteristics `service_hours` and
+`support_hours` describe **when** the service or support is available.
+Those are not the same concept. OSM does not manage SLAs.
+
+Canonical offering-level recovery objectives are `rto` (Recovery Time
+Objective) and `rpo` (Recovery Point Objective). Service-level
+`resilience_tier` is a qualitative classification. A tier MAY be
+associated with expected recovery characteristics; it is not a
+replacement for explicit RTO/RPO values. There is no DORA-prefixed
+copy of `rto` / `rpo`.
+
+`data_classification` classifies the data the service handles.
+`security_classification` classifies the service itself. They may
+share enum tokens; they are not the same fact.
+
+`accountable` on the Service is overall service-definition
+accountability. Posture `financial_owner` is financial ownership.
+They are not the same role.
+
+`automation_coverage` is overall delivery/operation automation.
+`provisioning_automation` is provisioning-process automation. Same
+enum; different scope.
+
+## Provenance
+
+A reusable `provenance` object may attach to a Service, Offering, or
+posture record. It makes an **enterprise fact** trustworthy. OSM does
+not model AI interpretation or AI recommendation. Each provenance
+field answers a different question (who is authoritative, which
+system, which record, when verified, where evidence lives, how much
+to trust, how it was discovered). They are not interchangeable.
 
 ## ICT providers
 
@@ -139,12 +213,15 @@ capability (for example Enterprise DNS → Infoblox). Use Offering-level
 `providers` when provider choice distinguishes the variant (for
 example Kubernetes AWS vs Azure). Association is optional. Multiple
 ids are allowed. Do not copy provider master data onto Service or
-Offering.
+Offering. Do not maintain a parallel `cloud_providers` list; a cloud
+provider is an ICT Provider (OSM-M-008).
 
 Separate, existing fields:
 
 - `dora_third_party_deps` on offering attributes — DORA-oriented
-  third-party listing, not the canonical provider association
+  third-party listing. Whether this is a genuinely different
+  relationship from `providers` is unresolved (**OSM-M-005**,
+  **PROPOSED**). Do not collapse the two fields yet.
 - `services_consumed` on ICT Provider — reverse list of service ids
   in the vendor register
 
@@ -160,7 +237,9 @@ ISO/IEC 27001, ISO/IEC 27701, NIST CSF, GDPR, DORA and the EU AI Act.
 
 Mappings are optional, illustrative and non-normative for those
 frameworks. 7lens OSM is not an implementation of any of them.
-Compatibility does not mean copying (OSM-M-004).
+Compatibility does not mean copying (OSM-M-004). Frameworks map to
+canonical OSM fields when the concept already exists; they do not
+get a second copy of the same fact (OSM-M-008).
 See [`COMPATIBILITY.md`](COMPATIBILITY.md).
 
 ## What is deliberately excluded

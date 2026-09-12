@@ -13,7 +13,7 @@ decisions/       Detailed architectural decisions
 
 **Agents and contributors do not make architectural or model
 decisions here.** They may only apply decisions whose status is
-`ACCEPTED`. A `PROPOSED` decision is recorded, not implemented.
+`ACCEPTED`.
 
 There was no prior numbering scheme in this repository. New IDs use:
 
@@ -90,13 +90,18 @@ extraction was requested for `OSM-C-*`).
 | OSM-M-004 | Best-of, not standards accumulation | ACCEPTED | 2026-09-12 | [`decisions/OSM-M-004-best-of-not-standards-accumulation.md`](decisions/OSM-M-004-best-of-not-standards-accumulation.md) |
 | OSM-M-005 | DORA provider-link grain | PROPOSED | 2026-09-12 | [`decisions/OSM-M-005-dora-provider-link-grain.md`](decisions/OSM-M-005-dora-provider-link-grain.md) |
 | OSM-M-006 | Canonical ICT Provider references | ACCEPTED | 2026-09-12 | [`decisions/OSM-M-006-ict-provider-references.md`](decisions/OSM-M-006-ict-provider-references.md) |
-| OSM-M-007 | Complete Service Definition | PROPOSED | 2026-09-12 | [`decisions/OSM-M-007-complete-service-definition.md`](decisions/OSM-M-007-complete-service-definition.md) |
+| OSM-M-007 | Complete Service Definition | ACCEPTED | 2026-09-12 | [`decisions/OSM-M-007-complete-service-definition.md`](decisions/OSM-M-007-complete-service-definition.md) |
+| OSM-M-008 | One concept, one canonical parameter | ACCEPTED | 2026-09-12 | [`decisions/OSM-M-008-one-concept-one-canonical-parameter.md`](decisions/OSM-M-008-one-concept-one-canonical-parameter.md) |
 
-**OSM-M-007** is established as an architectural decision. Its
-schema/model implementation has **not** been performed. Status
-remains `PROPOSED` until maintainers accept it.
+**OSM-M-007** is ACCEPTED and implemented. Schema/examples/validation
+now include Complete Service Definition semantics (posture fields,
+provenance, service-level expectations). OSM-M-007 does not change
+the status of OSM-M-001–OSM-M-006.
 
-OSM-M-007 does not change the status of OSM-M-001–OSM-M-006.
+**OSM-M-008** is ACCEPTED. OSM must not represent the same semantic
+concept through multiple canonical parameters. DORA RTO/RPO map to
+canonical `rto` / `rpo`. Provider association is `providers`;
+`cloud_providers` is not an OSM field.
 
 ---
 
@@ -110,25 +115,17 @@ SERVICE POSTURE        How the service currently stands
 EXTERNAL CONTEXT       Information owned by other models or systems
 ```
 
-The **implemented** repository still uses older names for the same
-separation of files:
+The **implemented** repository uses these names for the M-007 layers:
 
-| Current repository term | OSM-M-007 term |
-|-------------------------|----------------|
+| Repository term | OSM-M-007 term |
+|-----------------|----------------|
 | Catalog (`services.yaml`) | Service Definition |
-| Health record / `service_attributes` / `offering_attributes` | Service Posture |
+| `service_attributes` / `offering_attributes` | Service Posture / Offering Posture |
+| `provenance` | Provenance & evidence |
 | Out of scope / other systems | External Context |
 
-OSM-M-007 states that the existing attributes pattern supports the
-distinction and that M-007 establishes it as a semantic principle
-rather than merely a file-organization convention.
-
-This register **does not rename** `service_attributes` or rewrite
-`MODEL.md` / `SPECIFICATION.md` field tables. That is implementation
-work after OSM-M-007 is accepted.
-
-Provenance & evidence is a layer in OSM-M-007. It is not in the
-current schema.
+File and YAML key names `service_attributes` were kept for
+compatibility. Semantically they are posture, not a second catalog.
 
 ---
 

@@ -1,10 +1,16 @@
-# JSON Schema — Service Attributes
+# JSON Schema — Service Posture (file: service-attributes.yaml)
 #
-# Operational / governance state for a technological service.
-# Catalog files wrap instances in a top-level `service_attributes` array.
+# Current operational / governance state of a technological service
+# (OSM-M-007 Service Posture). Catalog files wrap instances in a
+# top-level `service_attributes` array. The file and key names are
+# kept for compatibility; they are not a second catalog entity.
 #
-# Framework-named fields are optional reference mappings. They are not
-# legal advice and not evidence of certification or compliance.
+# Canonical OSM posture fields are unprefixed. Framework-named fields
+# are optional reference mappings, not certification or compliance.
+# Do not duplicate a canonical field under a framework prefix
+# (OSM-M-008). DORA maps to rto, rpo, operational_criticality and
+# resilience_tested. Provider association is `providers` on the
+# catalog record, not a posture enum.
 
 $schema: https://json-schema.org/draft/2020-12/schema
 $id: https://raw.githubusercontent.com/7lens/open-servicecatalog-model/main/schema/service-attributes.yaml
@@ -25,13 +31,12 @@ properties:
         minimum: 0
         maximum: 100
       - type: "null"
-  dora_criticality:
-    type: string
-    enum:
-      - critical
-      - important
-      - standard
   data_classification:
+    description: >
+      Classification of the data handled, processed, stored, or
+      exposed by the service. Same enum tokens as
+      security_classification; different subject (data, not the
+      service itself).
     type: string
     enum:
       - public
@@ -44,6 +49,69 @@ properties:
       - active
       - extended
       - end-of-life
+  operational_criticality:
+    description: Canonical operational criticality of the service (OSM-M-007). DORA maps to this field.
+    type: string
+    enum:
+      - critical
+      - important
+      - standard
+  resilience_tier:
+    description: >
+      Qualitative resilience classification/tier for the service.
+      Not a service taxonomy and not a replacement for offering
+      rto / rpo (explicit recovery objectives).
+    type: string
+    minLength: 1
+  availability_target:
+    description: >
+      Expected/target level of service availability (e.g. 99.9%).
+      A performance target, not the hours window (that is the
+      service_hours characteristic). Not an SLA object.
+    type: string
+    minLength: 1
+  response_target:
+    description: >
+      Expected target time for responding to an incident or request
+      (ISO 8601 duration). A performance target, not support_hours.
+      Not an SLA object.
+    type: string
+    minLength: 1
+  resolution_target:
+    description: >
+      Expected target time for resolving an incident or request
+      (ISO 8601 duration). A performance target, not service_hours
+      or support_hours. Not an SLA object.
+    type: string
+    minLength: 1
+  security_classification:
+    description: >
+      Security sensitivity/classification of the service itself.
+      Same enum tokens as data_classification; different subject
+      (the service, not the data it handles).
+    type: string
+    enum:
+      - public
+      - internal
+      - confidential
+      - restricted
+  privacy_classification:
+    type: string
+    enum:
+      - none
+      - pii
+      - sensitive
+      - not-assessed
+  financial_owner:
+    description: >
+      Person or role responsible for the financial ownership of this
+      service. Distinct from Service `accountable` (service-definition
+      accountability). Not a finance system.
+    type: string
+    minLength: 1
+  provenance:
+    description: Optional reusable provenance for this posture record (OSM-M-007).
+    $ref: ./provenance.yaml
   ai_act_applicable:
     type: boolean
   ai_act_risk_class:
@@ -69,15 +137,6 @@ $defs:
       offering_id:
         type: string
         pattern: ^[a-z0-9]+(?:-[a-z0-9]+)*\.[a-z0-9]+(?:-[a-z0-9]+)*\.[a-z0-9]+(?:-[a-z0-9]+)*$
-      cloud_providers:
-        type: array
-        items:
-          type: string
-          enum:
-            - aws
-            - azure
-            - gcp
-            - on-prem
       cost_pool:
         oneOf:
           - type: string
@@ -88,13 +147,40 @@ $defs:
           - shared
           - dedicated
           - consumption
+      unit_cost:
+        description: Optional unit-cost characterization. Not a transaction or invoice.
+        oneOf:
+          - type: number
+            minimum: 0
+          - type: "null"
       automation_coverage:
+        description: >
+          Degree to which the overall delivery and operation of the
+          offering is automated. Same enum as provisioning_automation;
+          different scope (overall operation, not the provisioning
+          process).
         oneOf:
           - type: string
             enum:
               - none
               - partial
               - full
+          - type: "null"
+      provisioning_automation:
+        description: >
+          Degree to which the provisioning process specifically is
+          automated. Same enum as automation_coverage; different
+          scope (provisioning, not overall delivery/operation).
+        oneOf:
+          - type: string
+            enum:
+              - none
+              - partial
+              - full
+          - type: "null"
+      self_service:
+        oneOf:
+          - type: boolean
           - type: "null"
       manual_hours_week:
         oneOf:
@@ -175,11 +261,34 @@ $defs:
             enum:
               - partial
               - not-applicable
-      dora_rto:
+      rto:
+        description: >
+          Recovery Time Objective (ISO 8601 duration). Explicit
+          recovery target. Distinct from service resilience_tier
+          (qualitative classification).
         oneOf:
           - type: string
           - type: "null"
-      dora_rpo:
+      rpo:
+        description: >
+          Recovery Point Objective (ISO 8601 duration). Explicit
+          recovery target. Distinct from service resilience_tier
+          (qualitative classification).
+        oneOf:
+          - type: string
+          - type: "null"
+      resilience_tested:
+        description: Canonical resilience-test posture.
+        oneOf:
+          - type: boolean
+          - type: "null"
+      last_resilience_test:
+        oneOf:
+          - type: string
+            format: date
+          - type: "null"
+      resilience_evidence:
+        description: Handle or URI for resilience evidence. Not a GRC control library.
         oneOf:
           - type: string
           - type: "null"
@@ -188,13 +297,15 @@ $defs:
         description: >
           DORA-oriented third-party dependency listing (provider ids).
           Not the canonical Service/Offering provider association
-          (that is `providers` on the catalog record).
+          (`providers` on the catalog record). Whether these two
+          fields represent genuinely different relationships is an
+          open question (OSM-M-005, PROPOSED). Do not collapse them
+          until that decision is accepted.
         items:
           type: string
-      dora_resilience_tested:
-        oneOf:
-          - type: boolean
-          - type: "null"
+      provenance:
+        description: Optional reusable provenance for this offering posture row (OSM-M-007).
+        $ref: ./provenance.yaml
       ai_act_intended_purpose:
         type: string
       ai_act_human_oversight:

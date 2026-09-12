@@ -32,7 +32,10 @@ properties:
     minLength: 1
   accountable:
     type: string
-    description: Service Owner — role, team, or named individual.
+    description: >
+      Person or role accountable for the service definition and
+      overall service accountability (the Service Owner). Distinct
+      from posture `financial_owner`.
     minLength: 1
   technology_stack:
     type: string
@@ -76,6 +79,9 @@ properties:
     items:
       type: string
       pattern: ^[a-z0-9]+(?:-[a-z0-9]+)*$
+  provenance:
+    description: Optional reusable provenance for this Service definition (OSM-M-007).
+    $ref: ./provenance.yaml
   service_offerings:
     type: array
     minItems: 1

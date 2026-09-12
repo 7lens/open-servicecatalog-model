@@ -37,4 +37,5 @@ structures by default.
 ## Notes
 
 Governing principle for future `OSM-M-*` proposals, including
-OSM-M-007.
+OSM-M-007. OSM-M-008 adds the field-level rule: one concept, one
+canonical parameter.
