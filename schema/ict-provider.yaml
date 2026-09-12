@@ -1,0 +1,132 @@
+# JSON Schema — ICT Provider
+#
+# Third-party technology provider. Catalog files wrap instances in a
+# top-level `ict_providers` array.
+#
+# Fields may support vendor-risk conversations. They are not a
+# regulatory filing and not a real organization's vendor register.
+
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: https://raw.githubusercontent.com/7lens/open-servicecatalog-model/main/schema/ict-provider.yaml
+title: IctProvider
+type: object
+additionalProperties: false
+required:
+  - id
+  - name
+  - type
+  - criticality
+  - substitutability
+properties:
+  id:
+    type: string
+    pattern: ^[a-z0-9]+(?:-[a-z0-9]+)*$
+  name:
+    type: string
+    minLength: 1
+  type:
+    type: string
+    enum:
+      - cloud-infrastructure
+      - cloud-platform
+      - managed-service
+      - software-vendor
+      - network-provider
+      - data-center
+  headquarters:
+    type: string
+    description: ISO 3166-1 alpha-2 country code.
+    pattern: ^[a-z]{2}$
+  data_processing_locations:
+    type: array
+    items:
+      type: string
+  criticality:
+    type: string
+    enum:
+      - critical
+      - important
+      - standard
+  substitutability:
+    type: string
+    enum:
+      - low
+      - medium
+      - high
+  contract_ref:
+    oneOf:
+      - type: string
+      - type: "null"
+  contract_start:
+    oneOf:
+      - type: string
+        format: date
+      - type: "null"
+  contract_end:
+    oneOf:
+      - type: string
+        format: date
+      - type: "null"
+  notice_period_days:
+    oneOf:
+      - type: integer
+        minimum: 0
+      - type: "null"
+  audit_rights:
+    oneOf:
+      - type: boolean
+      - type: "null"
+  subcontracting_allowed:
+    oneOf:
+      - type: boolean
+      - type: string
+        enum:
+          - conditional
+      - type: "null"
+  subcontractors:
+    type: array
+    items:
+      type: string
+  last_risk_assessment:
+    oneOf:
+      - type: string
+        format: date
+      - type: "null"
+  risk_level:
+    oneOf:
+      - type: string
+        enum:
+          - low
+          - medium
+          - high
+          - critical
+      - type: "null"
+  exit_strategy_documented:
+    oneOf:
+      - type: boolean
+      - type: "null"
+  exit_strategy_tested:
+    oneOf:
+      - type: boolean
+      - type: "null"
+  concentration_risk:
+    oneOf:
+      - type: boolean
+      - type: "null"
+  certifications:
+    type: array
+    items:
+      type: string
+  gdpr_dpa_signed:
+    oneOf:
+      - type: boolean
+      - type: "null"
+  dora_notification_clause:
+    oneOf:
+      - type: boolean
+      - type: "null"
+  services_consumed:
+    type: array
+    items:
+      type: string
+      pattern: ^[a-z0-9]+(?:-[a-z0-9]+)*\.[a-z0-9]+(?:-[a-z0-9]+)*$

@@ -1,0 +1,94 @@
+# Example ICT Providers
+#
+# Small synthetic register of well-known public providers. This is not
+# a real vendor register, not a recommended supplier list, and not a
+# regulatory filing. Contract, risk and resilience fields are left
+# unset on purpose.
+
+ict_providers:
+
+  - id: aws
+    name: Amazon Web Services, Inc.
+    type: cloud-infrastructure
+    headquarters: us
+    data_processing_locations: [eu, us]
+    criticality: critical
+    substitutability: medium
+    contract_ref: null
+    contract_start: null
+    contract_end: null
+    notice_period_days: null
+    audit_rights: null
+    subcontracting_allowed: null
+    subcontractors: []
+    last_risk_assessment: null
+    risk_level: null
+    exit_strategy_documented: null
+    exit_strategy_tested: null
+    concentration_risk: true
+    certifications: [iso27001, soc2-type2]
+    gdpr_dpa_signed: null
+    dora_notification_clause: null
+    services_consumed:
+      - compute.virtual-machines
+      - compute.kubernetes
+      - db.managed-postgres
+      - db.managed-cache
+      - net.connectivity
+      - storage.object-storage
+      - devops.continuous-delivery
+      - auto.infrastructure-as-code
+      - ops.observability
+      - finops.cloud-cost
+
+  - id: azure
+    name: Microsoft Azure
+    type: cloud-infrastructure
+    headquarters: us
+    data_processing_locations: [eu, us]
+    criticality: important
+    substitutability: medium
+    contract_ref: null
+    contract_start: null
+    contract_end: null
+    notice_period_days: null
+    audit_rights: null
+    subcontracting_allowed: null
+    subcontractors: []
+    last_risk_assessment: null
+    risk_level: null
+    exit_strategy_documented: null
+    exit_strategy_tested: null
+    concentration_risk: false
+    certifications: [iso27001, soc2-type2]
+    gdpr_dpa_signed: null
+    dora_notification_clause: null
+    services_consumed:
+      - compute.kubernetes
+      - data.analytics-platform
+      - sec.identity-access
+
+  - id: github
+    name: GitHub, Inc.
+    type: cloud-platform
+    headquarters: us
+    data_processing_locations: [us]
+    criticality: important
+    substitutability: medium
+    contract_ref: null
+    contract_start: null
+    contract_end: null
+    notice_period_days: null
+    audit_rights: null
+    subcontracting_allowed: null
+    subcontractors: []
+    last_risk_assessment: null
+    risk_level: null
+    exit_strategy_documented: null
+    exit_strategy_tested: null
+    concentration_risk: false
+    certifications: [iso27001, soc2-type2]
+    gdpr_dpa_signed: null
+    dora_notification_clause: null
+    services_consumed:
+      - devops.continuous-delivery

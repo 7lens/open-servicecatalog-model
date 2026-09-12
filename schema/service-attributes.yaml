@@ -1,0 +1,228 @@
+# JSON Schema — Service Attributes
+#
+# Operational / governance state for a technological service.
+# Catalog files wrap instances in a top-level `service_attributes` array.
+#
+# Framework-named fields are optional reference mappings. They are not
+# legal advice and not evidence of certification or compliance.
+
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: https://raw.githubusercontent.com/7lens/open-servicecatalog-model/main/schema/service-attributes.yaml
+title: ServiceAttributes
+type: object
+additionalProperties: false
+required:
+  - service_id
+  - lifecycle_state
+  - offering_attributes
+properties:
+  service_id:
+    type: string
+    pattern: ^[a-z0-9]+(?:-[a-z0-9]+)*\.[a-z0-9]+(?:-[a-z0-9]+)*$
+  lifecycle_state:
+    type: string
+    enum:
+      - draft
+      - pilot
+      - production
+      - sunset
+      - retired
+  tech_debt_score:
+    description: 0-100, or null if not assessed.
+    oneOf:
+      - type: integer
+        minimum: 0
+        maximum: 100
+      - type: "null"
+  dora_criticality:
+    type: string
+    enum:
+      - critical
+      - important
+      - standard
+  data_classification:
+    type: string
+    enum:
+      - public
+      - internal
+      - confidential
+      - restricted
+  vendor_support_status:
+    type: string
+    enum:
+      - active
+      - extended
+      - end-of-life
+  ai_act_applicable:
+    type: boolean
+  ai_act_risk_class:
+    type: string
+    enum:
+      - unacceptable
+      - high-risk
+      - limited-risk
+      - minimal-risk
+      - not-applicable
+  offering_attributes:
+    type: array
+    items:
+      $ref: "#/$defs/OfferingAttributes"
+
+$defs:
+  OfferingAttributes:
+    type: object
+    additionalProperties: false
+    required:
+      - offering_id
+    properties:
+      offering_id:
+        type: string
+        pattern: ^[a-z0-9]+(?:-[a-z0-9]+)*\.[a-z0-9]+(?:-[a-z0-9]+)*\.[a-z0-9]+(?:-[a-z0-9]+)*$
+      cloud_providers:
+        type: array
+        items:
+          type: string
+          enum:
+            - aws
+            - azure
+            - gcp
+            - on-prem
+      cost_pool:
+        oneOf:
+          - type: string
+          - type: "null"
+      chargeback_model:
+        type: string
+        enum:
+          - shared
+          - dedicated
+          - consumption
+      automation_coverage:
+        oneOf:
+          - type: string
+            enum:
+              - none
+              - partial
+              - full
+          - type: "null"
+      manual_hours_week:
+        oneOf:
+          - type: number
+            minimum: 0
+          - type: "null"
+      last_security_review:
+        oneOf:
+          - type: string
+            format: date
+          - type: "null"
+      asset_coverage:
+        oneOf:
+          - type: string
+            enum:
+              - complete
+              - partial
+              - unknown
+          - type: "null"
+      iso27001_controls:
+        type: array
+        items:
+          type: string
+      iso27701_pii_role:
+        type: string
+        enum:
+          - controller
+          - processor
+          - joint-controller
+          - none
+      iso27701_pii_categories:
+        type: array
+        items:
+          type: string
+          enum:
+            - identity
+            - financial
+            - health
+            - behavioral
+            - location
+            - biometric
+            - communications
+            - none
+      iso27701_retention_days:
+        oneOf:
+          - type: integer
+            minimum: 0
+          - type: "null"
+      nist_functions:
+        type: array
+        uniqueItems: true
+        items:
+          type: string
+          enum:
+            - govern
+            - identify
+            - protect
+            - detect
+            - respond
+            - recover
+      nist_control_status:
+        oneOf:
+          - type: string
+            enum:
+              - implemented
+              - partially-implemented
+              - planned
+              - not-applicable
+          - type: "null"
+      gdpr_processing_activity:
+        type: boolean
+      gdpr_dpia_required:
+        type: boolean
+      gdpr_erasure_capable:
+        oneOf:
+          - type: boolean
+          - type: string
+            enum:
+              - partial
+              - not-applicable
+      dora_rto:
+        oneOf:
+          - type: string
+          - type: "null"
+      dora_rpo:
+        oneOf:
+          - type: string
+          - type: "null"
+      dora_third_party_deps:
+        type: array
+        items:
+          type: string
+      dora_resilience_tested:
+        oneOf:
+          - type: boolean
+          - type: "null"
+      ai_act_intended_purpose:
+        type: string
+      ai_act_human_oversight:
+        type: string
+        enum:
+          - human-in-the-loop
+          - human-on-the-loop
+          - human-in-command
+          - none
+      ai_act_transparency_level:
+        type: string
+        enum:
+          - explicit-disclosure
+          - implicit-disclosure
+          - none
+      ai_act_conformity_assessment:
+        oneOf:
+          - type: string
+            format: date
+          - type: "null"
+      ai_act_training_data_doc:
+        oneOf:
+          - type: boolean
+          - type: string
+            enum:
+              - not-applicable

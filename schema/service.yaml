@@ -1,0 +1,42 @@
+# JSON Schema — Service
+#
+# A Service is a technological capability delivered by the technology
+# organization. Service ID has exactly 2 segments.
+# Catalog files wrap instances in a top-level `services` array.
+
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: https://raw.githubusercontent.com/7lens/open-servicecatalog-model/main/schema/service.yaml
+title: Service
+type: object
+additionalProperties: false
+required:
+  - id
+  - name
+  - description
+  - accountable
+  - technology_stack
+  - service_offerings
+properties:
+  id:
+    type: string
+    description: Immutable 2-segment service identifier.
+    pattern: ^[a-z0-9]+(?:-[a-z0-9]+)*\.[a-z0-9]+(?:-[a-z0-9]+)*$
+  name:
+    type: string
+    minLength: 1
+  description:
+    type: string
+    minLength: 1
+  accountable:
+    type: string
+    description: Service Owner — role, team, or named individual.
+    minLength: 1
+  technology_stack:
+    type: string
+    description: Name of the owning Technology Stack. Exactly one.
+    minLength: 1
+  service_offerings:
+    type: array
+    minItems: 1
+    items:
+      $ref: ./service-offering.yaml

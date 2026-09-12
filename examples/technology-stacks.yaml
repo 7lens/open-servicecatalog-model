@@ -1,0 +1,184 @@
+# Example Technology Stacks
+#
+# Synthetic starter set. Replace with the operational domains of the
+# adopting organization. These records are not a required taxonomy and
+# not a description of any particular estate.
+#
+# Framework mappings below are OPTIONAL REFERENCE MAPPINGS. They are
+# not legal advice and not evidence of compliance or certification.
+
+technology_stacks:
+
+  - id: compute
+    name: Compute
+    description: >
+      Virtual machines, containers and serverless execution environments
+      operated as technological services.
+    mappings:
+      tbm_tower: Infrastructure
+      tbm_sub_tower: Compute
+      togaf_domain: Technology Architecture
+      iso27001: "A.8.9 Configuration management; A.8.8 Technical vulnerability management"
+      iso27701: not-applicable
+      nist_csf: [identify, protect]
+      gdpr: not-applicable
+      dora:
+        pillar: ICT Risk Management
+        criticality: important
+      ai_act:
+        contains_ai_systems: false
+        max_risk_class: not-applicable
+
+  - id: db
+    name: Database
+    description: >
+      Managed relational and non-relational data stores, including
+      provisioning, health and capacity of database services.
+    mappings:
+      tbm_tower: Infrastructure
+      tbm_sub_tower: Database
+      togaf_domain: Technology Architecture
+      iso27001: "A.8.24 Cryptography; A.8.10 Information deletion"
+      iso27701: "PII storage and deletion controls (illustrative)"
+      nist_csf: [identify, protect, detect]
+      gdpr: "Security of processing (illustrative reference only)"
+      dora:
+        pillar: ICT Risk Management
+        criticality: critical
+      ai_act:
+        contains_ai_systems: false
+        max_risk_class: not-applicable
+
+  - id: net
+    name: Network
+    description: >
+      Connectivity, name resolution, segmentation, load balancing and
+      remote access offered as technological services.
+    mappings:
+      tbm_tower: Infrastructure
+      tbm_sub_tower: Network
+      togaf_domain: Technology Architecture
+      nist_csf: [protect, detect]
+      dora:
+        pillar: ICT Risk Management
+        criticality: important
+      ai_act:
+        contains_ai_systems: false
+        max_risk_class: not-applicable
+
+  - id: storage
+    name: Storage
+    description: >
+      Object storage, file storage, backup and archive services.
+    mappings:
+      tbm_tower: Infrastructure
+      tbm_sub_tower: Storage
+      togaf_domain: Technology Architecture
+      nist_csf: [protect, recover]
+      dora:
+        pillar: ICT Risk Management
+        criticality: important
+      ai_act:
+        contains_ai_systems: false
+        max_risk_class: not-applicable
+
+  - id: sec
+    name: Security
+    description: >
+      Identity, secrets, certificates and security-operations services
+      delivered to the rest of the technology organization.
+    mappings:
+      tbm_tower: Security
+      tbm_sub_tower: Security Operations
+      togaf_domain: Security Architecture
+      nist_csf: [identify, protect, detect, respond]
+      dora:
+        pillar: ICT Risk Management
+        criticality: critical
+      ai_act:
+        contains_ai_systems: false
+        max_risk_class: not-applicable
+
+  - id: devops
+    name: DevOps
+    description: >
+      Source control, continuous delivery, artifact storage and related
+      developer-platform services.
+    mappings:
+      tbm_tower: Applications
+      tbm_sub_tower: Application Development and Support
+      togaf_domain: Technology Architecture
+      nist_csf: [protect]
+      dora:
+        pillar: ICT Risk Management
+        criticality: important
+      ai_act:
+        contains_ai_systems: false
+        max_risk_class: not-applicable
+
+  - id: auto
+    name: Automation
+    description: >
+      Infrastructure-as-code, configuration automation and workflow
+      execution services.
+    mappings:
+      tbm_tower: Applications
+      tbm_sub_tower: Application Development and Support
+      togaf_domain: Technology Architecture
+      nist_csf: [protect, recover]
+      dora:
+        pillar: ICT Risk Management
+        criticality: standard
+      ai_act:
+        contains_ai_systems: false
+        max_risk_class: not-applicable
+
+  - id: data
+    name: Data
+    description: >
+      Analytics platforms, ingestion pipelines and data-platform services.
+    mappings:
+      tbm_tower: Data Management
+      tbm_sub_tower: Data Platform and Analytics
+      togaf_domain: Data Architecture
+      nist_csf: [identify, protect]
+      dora:
+        pillar: ICT Risk Management
+        criticality: important
+      ai_act:
+        contains_ai_systems: true
+        max_risk_class: limited-risk
+        reference: "Illustrative mapping only — not a legal classification"
+
+  - id: ops
+    name: Operations
+    description: >
+      Observability, event management and operational-tooling services.
+    mappings:
+      tbm_tower: Management
+      tbm_sub_tower: IT Service Management
+      togaf_domain: Technology Architecture
+      nist_csf: [detect, respond]
+      dora:
+        pillar: ICT-related Incident Management
+        criticality: important
+      ai_act:
+        contains_ai_systems: false
+        max_risk_class: not-applicable
+
+  - id: finops
+    name: FinOps
+    description: >
+      Cloud cost visibility, budget signals and license-tracking services.
+    mappings:
+      tbm_tower: Management
+      tbm_sub_tower: IT Financial Management
+      togaf_domain: Technology Architecture
+      nist_csf: [identify]
+      gdpr: not-applicable
+      dora:
+        pillar: ICT Third-Party Risk Management
+        criticality: standard
+      ai_act:
+        contains_ai_systems: false
+        max_risk_class: not-applicable
