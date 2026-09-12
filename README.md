@@ -1,24 +1,76 @@
-# 7lens Open Services Data Model
+# 7lens OSM
 
-A small, vendor-neutral, machine-readable model for describing
+**7lens Open Service Catalog Model**
+
+A small, vendor-neutral, machine-readable **data model** for describing
 technological services, their offerings, ownership, operational
 state and third-party dependencies.
 
-This project is intentionally focused on the **Service** domain.
-It is maintained by [7lens](https://7lens.io), and it is published
-as a standalone open-source model that any technology organization
-can adopt without depending on a particular vendor, product, or
-enterprise architecture method.
+7lens OSM is maintained by [7lens](https://7lens.io). It is published
+as a standalone open-source Service Catalog Model. It does not require
+a particular vendor, product, or enterprise architecture method.
 
-**Service**, in this repository, always means a **technological
-service** delivered by a technology or platform organization.
+**Service**, in 7lens OSM, always means a **technological service**
+delivered by a technology or platform organization.
+
+7lens OSM is a data model. It is not an AI model.
 
 ---
 
-## What this model is
+## Why 7lens OSM exists
 
-The 7lens Open Services Data Model is a compact YAML catalog for
-describing:
+Two ideas sit underneath this project.
+
+### 1. A small model that can sit with existing languages
+
+Organizations already describe technology through several service
+models, architecture models and governance frameworks. 7lens OSM is
+**designed** to bring together the useful characteristics of that
+landscape into one deliberately small, vendor-neutral Service Catalog
+Model.
+
+That is a design goal. It is not a claim that OSM is already the
+best of those models, or that it is already compatible with them.
+The [initial compatibility universe](COMPATIBILITY.md) is the map
+against which that goal will be validated.
+
+### 2. Prepared for a world where AI operates technology
+
+7lens OSM is designed from the ground up for a future in which AI
+manages an increasing — and eventually dominant — portion of
+enterprise technology systems. That is not an afterthought.
+
+The 7lens line that names the problem is:
+
+> Your Corporate Surface Has Outgrown Human Governance.
+
+When the estate is larger than human-only governance can hold,
+catalog information has to be explicit enough for both people and
+machines. 7lens OSM is meant to help organizations prepare for a
+world where:
+
+- AI agents increasingly operate technology
+- systems need machine-readable semantics
+- services need explicit ownership and relationships
+- operational state needs to be represented consistently
+- governance needs to be understandable by both humans and machines
+- technology estates increasingly exceed the practical limits of
+  human-only governance
+
+The model should support a future in which AI agents can reason over
+enterprise technological services because the underlying information
+is explicit, structured, consistent, machine-readable, governed and
+traceable.
+
+That is why OSM is a **data model** for technological services — not
+an AI product, and not a description of any proprietary 7lens agent
+architecture.
+
+---
+
+## What 7lens OSM is
+
+7lens OSM is a compact YAML catalog for describing:
 
 - **Technology Stacks** — operational competency domains
 - **Services** — technological capabilities the organization delivers
@@ -31,7 +83,7 @@ describing:
 
 It is designed to be read by humans and validated by machines.
 
-## Why this exists
+## What problem it solves
 
 Technology organizations repeatedly rebuild service catalogs in
 spreadsheets, wiki pages, CMDB extensions and proprietary tools.
@@ -41,6 +93,16 @@ and infrastructure records until nobody can answer a simple question:
 > What technological services do we actually deliver, who owns them,
 > and in what operational state are they?
 
+Most catalogs fail in one of two ways:
+
+1. They are too thin — a list of names with no ownership, offerings
+   or operational signal.
+2. They are too broad — an attempt to model the entire enterprise
+   in one schema, which becomes slow to adopt and hard to keep true.
+
+7lens OSM sits in between. It is opinionated about a few things and
+silent about everything else.
+
 A small common model makes it easier to:
 
 - describe technological services consistently
@@ -49,26 +111,32 @@ A small common model makes it easier to:
 - connect a service catalog with operational tooling
 - map services to governance frameworks when needed
 - improve transparency between technology teams and stakeholders
+- give humans and machines the same structured picture of what is
+  delivered
 
 The purpose is community utility and interoperability.
 
-## What problem it solves
+---
 
-Most catalogs fail in one of two ways:
+## Compatibility
 
-1. They are too thin — a list of names with no ownership, offerings
-   or operational signal.
-2. They are too broad — an attempt to model the entire enterprise
-   in one schema, which becomes slow to adopt and hard to keep true.
+7lens OSM is **designed to be compatible with** a defined set of
+existing service models, architecture models and
+compliance/governance frameworks. That set is the initial
+compatibility baseline. It is **not** a list of completed mappings
+and **not** a list of regulations OSM complies with.
 
-This model sits in between. It is opinionated about a few things
-and silent about everything else.
+See [`COMPATIBILITY.md`](COMPATIBILITY.md) and decision **OSM-C-001**
+in [`DECISIONS.md`](DECISIONS.md).
+
+Until an analysis is accepted, every entry in that universe is
+**NOT ANALYZED**.
 
 ---
 
 ## Conceptual structure
 
-The public model stays inside this boundary:
+7lens OSM stays inside this boundary:
 
 ```
 Technology Stack
@@ -113,7 +181,7 @@ service     compute.kubernetes
   └── offering  compute.kubernetes.dedicated-cluster
 ```
 
-That is the only nesting in the model. There is no deeper tree.
+That is the only nesting in 7lens OSM. There is no deeper tree.
 
 ### Identity
 
@@ -203,20 +271,13 @@ organization's real third-party register.
 
 ## Framework mappings
 
-The model can carry **optional reference mappings** to established
-frameworks, including:
-
-- TBM
-- TOGAF
-- ISO/IEC 27001
-- ISO/IEC 27701
-- NIST CSF
-- GDPR
-- DORA
-- EU AI Act
+7lens OSM can carry **optional reference mappings**. Some mapping
+fields already exist in the schema (for example TBM, TOGAF, ISO,
+NIST, GDPR, DORA and the EU AI Act). Other models in the
+[compatibility universe](COMPATIBILITY.md) have no OSM fields yet.
 
 These mappings exist so different stakeholders can read the same
-catalog in their own language. They do **not** make this model an
+catalog in their own language. They do **not** make 7lens OSM an
 implementation, certification, or legal interpretation of any of
 those frameworks.
 
@@ -251,12 +312,12 @@ estate.
    documentation exercise.
 6. Run the checks in [`validation/`](validation/) in review or CI.
 
-The model is YAML. You can store it in git, generate documentation
+7lens OSM is YAML. You can store it in git, generate documentation
 from it, or load it into whatever operational tooling you already use.
 
 ---
 
-## What this model does NOT try to model
+## What 7lens OSM does NOT try to model
 
 The following are **out of scope**:
 
@@ -287,6 +348,8 @@ systems; this repository does not define those other records.
 ├── GOVERNANCE.md
 ├── MODEL.md
 ├── CONTRIBUTING.md
+├── COMPATIBILITY.md
+├── DECISIONS.md
 ├── schema/
 │   ├── technology-stack.yaml
 │   ├── service.yaml
@@ -298,6 +361,8 @@ systems; this repository does not define those other records.
 │   ├── services.yaml
 │   ├── service-attributes.yaml
 │   └── ict-providers.yaml
+├── compatibility/
+├── compliance/
 └── validation/
     ├── README.md
     ├── requirements.txt
@@ -306,7 +371,7 @@ systems; this repository does not define those other records.
 
 ## Contribution approach
 
-Contributions are welcome when they keep the model:
+Contributions are welcome when they keep 7lens OSM:
 
 - small
 - opinionated
@@ -315,6 +380,7 @@ Contributions are welcome when they keep the model:
 - understandable
 - machine-readable
 
+Model changes need an accepted decision in [`DECISIONS.md`](DECISIONS.md).
 See [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
 ## License

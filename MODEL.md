@@ -1,8 +1,8 @@
 # Conceptual model
 
-This document describes the 7lens Open Services Data Model as a
-standalone conceptual structure. The normative field definitions are
-in [`SPECIFICATION.md`](SPECIFICATION.md).
+This document describes **7lens OSM** (7lens Open Service Catalog
+Model) as a standalone conceptual structure. The normative field
+definitions are in [`SPECIFICATION.md`](SPECIFICATION.md).
 
 ## Purpose
 
@@ -106,8 +106,8 @@ Stacks, services and offerings may carry mappings to TBM, TOGAF,
 ISO/IEC 27001, ISO/IEC 27701, NIST CSF, GDPR, DORA and the EU AI Act.
 
 Mappings are optional, illustrative and non-normative for those
-frameworks. The Services Data Model is not an implementation of any
-of them.
+frameworks. 7lens OSM is not an implementation of any of them.
+See [`COMPATIBILITY.md`](COMPATIBILITY.md).
 
 ## What is deliberately excluded
 

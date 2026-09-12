@@ -1,7 +1,7 @@
 # Governance
 
 This document defines the two ownership roles used by the
-`accountable` field in the Open Services Data Model.
+`accountable` field in 7lens OSM.
 
 The roles are deliberately small. They describe accountability for
 **technological services**, not a complete operating model, RACI
