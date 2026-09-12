@@ -41,10 +41,10 @@ not required to operate every service personally.
 - Ensure the service is used for its stated technological purpose.
 - Own the service lifecycle: requestability, operation, change,
   incident support, decommissioning, and agreed service levels.
-- Maintain the catalog identity of the service and its offerings
-  (stable IDs, accurate names and descriptions).
+- Maintain the catalog identity and definition of the service
+  (`lifecycle_state`, names, descriptions, version/validity).
 - Keep operational attributes current enough to be useful, including
-  lifecycle, criticality, automation and resilience evidence.
+  criticality, automation and resilience evidence.
 - Own applicable security, privacy and operational-resilience
   obligations of the service, or name the controlling control owner.
 - Oversee vendor support, provider concentration and cost signals

@@ -1,7 +1,9 @@
 # JSON Schema — ICT Provider
 #
 # Third-party technology provider. Catalog files wrap instances in a
-# top-level `ict_providers` array.
+# top-level `ict_providers` array. This is the canonical provider
+# entity. Services and offerings reference it by id (`providers`);
+# they must not copy these attributes.
 #
 # Fields may support vendor-risk conversations. They are not a
 # regulatory filing and not a real organization's vendor register.

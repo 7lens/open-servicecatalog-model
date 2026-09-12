@@ -13,20 +13,11 @@ type: object
 additionalProperties: false
 required:
   - service_id
-  - lifecycle_state
   - offering_attributes
 properties:
   service_id:
     type: string
     pattern: ^[a-z0-9]+(?:-[a-z0-9]+)*\.[a-z0-9]+(?:-[a-z0-9]+)*$
-  lifecycle_state:
-    type: string
-    enum:
-      - draft
-      - pilot
-      - production
-      - sunset
-      - retired
   tech_debt_score:
     description: 0-100, or null if not assessed.
     oneOf:
@@ -194,6 +185,10 @@ $defs:
           - type: "null"
       dora_third_party_deps:
         type: array
+        description: >
+          DORA-oriented third-party dependency listing (provider ids).
+          Not the canonical Service/Offering provider association
+          (that is `providers` on the catalog record).
         items:
           type: string
       dora_resilience_tested:

@@ -1,22 +1,26 @@
-# 7lens OSM — Decision log
+# 7lens OSM — Decision register
 
 **Canonical name:** 7lens OSM  
 **Expanded:** 7lens Open Service Catalog Model
 
-This log records maintainer decisions. It is the input to any later
-propagation across schema, specification, README, examples,
-compatibility files, compliance files and validation.
+This file is the **decision register** (index). Detailed model
+decision documents live in [`decisions/`](decisions/).
+
+```text
+DECISIONS.md     Decision register / index
+decisions/       Detailed architectural decisions
+```
 
 **Agents and contributors do not make architectural or model
 decisions here.** They may only apply decisions whose status is
-`ACCEPTED`.
+`ACCEPTED`. A `PROPOSED` decision is recorded, not implemented.
 
 There was no prior numbering scheme in this repository. New IDs use:
 
 | Prefix | Use |
 |--------|-----|
 | `OSM-C-nnn` | Compatibility universe and mapping decisions |
-| `OSM-M-nnn` | Model / schema decisions (`OSM-M-001` deferred; none accepted) |
+| `OSM-M-nnn` | Model / schema decisions |
 | `OSM-D-nnn` | Documentation / naming decisions (none yet) |
 
 ---
@@ -32,17 +36,10 @@ There was no prior numbering scheme in this repository. New IDs use:
 - Decision:
 - What this is not:
 - Surfaces to update:
-  - [ ] schema/
-  - [ ] SPECIFICATION.md
-  - [ ] MODEL.md
-  - [ ] README.md
-  - [ ] examples/
-  - [ ] compatibility/
-  - [ ] compliance/
-  - [ ] validation/
-  - [ ] DECISIONS.md (this file)
 - Notes:
 ```
+
+Accepted **model** decisions also have a file under `decisions/`.
 
 ---
 
@@ -63,10 +60,75 @@ Propagation rules:
    and the status table in `COMPATIBILITY.md`.
 7. If identifiers or enums change, update `validation/validate.py`.
 8. Record the commit or PR on the decision once applied.
+9. Detailed `OSM-M-*` text lives in `decisions/`; keep this register
+   in sync (status, date, link).
 
-The next human-led step is P1 comparison against the current
-compatibility universe (OSM-C-001 as amended by OSM-C-002 and
-OSM-C-003). That work is not started here.
+---
+
+## Compatibility decisions
+
+Compatibility decision records remain in this file (no `decisions/`
+extraction was requested for `OSM-C-*`).
+
+| ID | Decision | Status | Date | Record |
+|----|----------|--------|------|--------|
+| OSM-C-001 | Initial compatibility universe | ACCEPTED | 2026-09-12 | [below](#osm-c-001--initial-compatibility-universe) |
+| OSM-C-002 | Remove PDMC from the universe | ACCEPTED | 2026-09-12 | [below](#osm-c-002--remove-pdmc-from-the-compatibility-universe) |
+| OSM-C-003 | Retain ServiceNow CSDM in the universe | ACCEPTED | 2026-09-12 | [below](#osm-c-003--retain-servicenow-csdm-in-the-compatibility-universe) |
+| OSM-C-004 | ITIL v5 selective compatibility | ACCEPTED | 2026-09-12 | [below](#osm-c-004--itil-v5-selective-compatibility) |
+| OSM-C-005 | CSDM selective compatibility | ACCEPTED | 2026-09-12 | [below](#osm-c-005--csdm-selective-compatibility) |
+
+---
+
+## Model decisions
+
+| ID | Decision | Status | Date | Document |
+|----|----------|--------|------|----------|
+| OSM-M-001 | Generic characteristics | ACCEPTED | 2026-09-12 | [`decisions/OSM-M-001-generic-characteristics.md`](decisions/OSM-M-001-generic-characteristics.md) |
+| OSM-M-002 | Temporal semantics | ACCEPTED | 2026-09-12 | [`decisions/OSM-M-002-temporal-semantics.md`](decisions/OSM-M-002-temporal-semantics.md) |
+| OSM-M-003 | Service is the stable definition | ACCEPTED | 2026-09-12 | [`decisions/OSM-M-003-service-definition.md`](decisions/OSM-M-003-service-definition.md) |
+| OSM-M-004 | Best-of, not standards accumulation | ACCEPTED | 2026-09-12 | [`decisions/OSM-M-004-best-of-not-standards-accumulation.md`](decisions/OSM-M-004-best-of-not-standards-accumulation.md) |
+| OSM-M-005 | DORA provider-link grain | PROPOSED | 2026-09-12 | [`decisions/OSM-M-005-dora-provider-link-grain.md`](decisions/OSM-M-005-dora-provider-link-grain.md) |
+| OSM-M-006 | Canonical ICT Provider references | ACCEPTED | 2026-09-12 | [`decisions/OSM-M-006-ict-provider-references.md`](decisions/OSM-M-006-ict-provider-references.md) |
+| OSM-M-007 | Complete Service Definition | PROPOSED | 2026-09-12 | [`decisions/OSM-M-007-complete-service-definition.md`](decisions/OSM-M-007-complete-service-definition.md) |
+
+**OSM-M-007** is established as an architectural decision. Its
+schema/model implementation has **not** been performed. Status
+remains `PROPOSED` until maintainers accept it.
+
+OSM-M-007 does not change the status of OSM-M-001–OSM-M-006.
+
+---
+
+## Terminology note (OSM-M-007 vs current repository)
+
+OSM-M-007 formally distinguishes:
+
+```text
+SERVICE DEFINITION     What the service is
+SERVICE POSTURE        How the service currently stands
+EXTERNAL CONTEXT       Information owned by other models or systems
+```
+
+The **implemented** repository still uses older names for the same
+separation of files:
+
+| Current repository term | OSM-M-007 term |
+|-------------------------|----------------|
+| Catalog (`services.yaml`) | Service Definition |
+| Health record / `service_attributes` / `offering_attributes` | Service Posture |
+| Out of scope / other systems | External Context |
+
+OSM-M-007 states that the existing attributes pattern supports the
+distinction and that M-007 establishes it as a semantic principle
+rather than merely a file-organization convention.
+
+This register **does not rename** `service_attributes` or rewrite
+`MODEL.md` / `SPECIFICATION.md` field tables. That is implementation
+work after OSM-M-007 is accepted.
+
+Provenance & evidence is a layer in OSM-M-007. It is not in the
+current schema.
 
 ---
 
@@ -157,22 +219,79 @@ OSM-C-003). That work is not started here.
   - [x] `COMPATIBILITY.md` (CSDM already listed; retained)
   - [x] `DECISIONS.md` (this record)
   - [ ] `schema/` — no change
-- **Notes:** Confirms OSM-C-001 with respect to CSDM.
+- **Notes:** Confirms OSM-C-001 with respect to CSDM. Analysis status
+  is recorded in **OSM-C-005** (PARTIALLY COMPATIBLE / selective).
 
----
+### OSM-C-004 — ITIL v5 selective compatibility
 
-## Model decisions
-
-### OSM-M-001 — DORA provider-link grain (offering vs service)
-
-- **Status:** PROPOSED
+- **Status:** ACCEPTED
 - **Date:** 2026-09-12
-- **Type:** Model
-- **Decision:** Not decided. Observed mismatch: `dora_third_party_deps`
-  is offering-level; `services_consumed` is service-level. Maintainers
-  will address this during DORA compliance analysis. **Do not change
-  schema, examples or validation now.**
-- **What this is not:** an accepted model change; a P0 action.
-- **Surfaces to update:** none until this decision is ACCEPTED.
-- **Notes:** Recorded so P1+ compliance work has a stable ID. P0
-  remains documentation-only.
+- **Type:** Compatibility
+- **Decision:** OSM is not an alternative implementation of ITIL.
+  OSM is a small canonical core of technological services and
+  offerings, mapped to ITIL and other frameworks, then to customer
+  tools. ITIL v5 status is **PARTIALLY COMPATIBLE / SELECTIVE
+  COMPATIBILITY**. OSM Service is conceptually compatible with ITIL
+  Service but narrower (technological only). OSM Service Offering is
+  compatible with the useful ITIL offering core (atomic
+  requestable/deliverable variant). OSM Service and Offering records
+  constitute the technological service catalogue; there is no
+  ServiceCatalogue entity. OSM lifecycle (`version`, `valid_from`,
+  `valid_to`, `lifecycle_state`) remains the definition lifecycle
+  and is not ITIL lifecycle activities. Ownership stays
+  `accountable` plus Technology Stack owner. ICT Provider remains
+  compatible with relevant supplier/provider semantics. Digital
+  Product, Business Service, outcomes, consumers, Value Streams,
+  Service→Service relationships, CI/asset links, detailed SLA
+  modelling, and ITIL practices stay **deliberately outside the
+  current OSM core** (not recorded as missing capabilities).
+  Service→Service is not a permanent rejection; reopen only if a
+  concrete interoperability requirement appears. No OSM schema
+  change in this decision.
+- **What this is not:** an ITIL implementation; permission to add
+  ITIL entities or role/supplier/SLA structures to OSM; a change to
+  OSM-M-001–OSM-M-004.
+- **Surfaces to update:**
+  - [x] `compatibility/ITIL.md`
+  - [x] `COMPATIBILITY.md`
+  - [x] `README.md` (compatibility status)
+  - [x] `SPECIFICATION.md` (canonical-core / boundary consistency)
+  - [x] `MODEL.md` (deliberate exclusions consistency)
+  - [x] `CONTRIBUTING.md` (out-of-scope boundaries)
+  - [x] `DECISIONS.md` (this record)
+  - [ ] `schema/` — no change
+  - [ ] `examples/` — no change
+  - [ ] `validation/` — no change
+- **Notes:** Mapping path is OSM core → semantic mapping → ITIL /
+  CSDM / ArchiMate / other frameworks → customer tools.
+
+### OSM-C-005 — CSDM selective compatibility
+
+- **Status:** ACCEPTED
+- **Date:** 2026-09-12
+- **Type:** Compatibility
+- **Decision:** OSM is not a CSDM implementation. CSDM status is
+  **PARTIALLY COMPATIBLE / SELECTIVE COMPATIBILITY**. OSM Service
+  conceptually maps to CSDM Technology Management Service but remains
+  narrower and technology-focused. OSM Service Offering conceptually
+  maps to CSDM Service Offering as an atomic requestable/deliverable
+  technological variant; variation dimensions are not hard-coded.
+  Service Instance, Business Service, Application Service, CMDB/CIs,
+  Product Models and Value Streams stay **outside OSM**. Service →
+  Service relationships stay outside the current OSM core (not a
+  permanent rejection). Existing `accountable` / Service Owner
+  semantics remain valid. Technology Provider information is supported
+  through canonical ICT Provider references on Service and/or Offering
+  (**OSM-M-006**). OSM maps into CSDM; it does not reproduce CSDM.
+- **What this is not:** a ServiceNow metamodel; permission to add
+  CSDM classes to OSM; a change to OSM-M-001–OSM-M-004 or OSM-C-004.
+- **Surfaces to update:**
+  - [x] `compatibility/SERVICENOW-CSDM.md`
+  - [x] `COMPATIBILITY.md`
+  - [x] `README.md`
+  - [x] `SPECIFICATION.md`
+  - [x] `MODEL.md`
+  - [x] `CONTRIBUTING.md`
+  - [x] `DECISIONS.md` (this record)
+- **Notes:** Completes the analysis whose universe membership was
+  retained by OSM-C-003.

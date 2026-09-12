@@ -1,10 +1,18 @@
 # Example Services
 #
 # Synthetic catalog for a fictional technology platform organization.
-# It demonstrates identity, ownership and offerings. It is not a real
-# service inventory and not a recommended technology estate.
+# It demonstrates identity, definition version/validity, offerings,
+# optional characteristics, and optional ICT Provider references.
+# It is not a real service inventory.
 #
 # Service ID = 2 segments. Offering ID = 3 segments.
+# Identity is immutable; version, validity and lifecycle_state
+# describe this definition. Offerings have no independent version.
+#
+# `providers` lists ICT Provider ids (see ict-providers.yaml).
+# Use it on Service when the provider is intrinsic to the capability,
+# or on Offering when provider choice distinguishes the variant.
+# Omit it when not applicable. It is not DORA `dora_third_party_deps`.
 
 services:
 
@@ -13,6 +21,13 @@ services:
     description: Provisioned virtual machines with lifecycle and patching.
     accountable: Service Owner
     technology_stack: Compute
+    version: "1.0.0"
+    valid_from: 2025-01-01
+    valid_to: null
+    lifecycle_state: production
+    # Service-level: both clouds underpin the VM capability as a whole.
+    # Offerings distinguish tenancy, not provider.
+    providers: [aws, azure]
     service_offerings:
       - id: compute.virtual-machines.shared
         name: Shared virtual machine pool
@@ -24,28 +39,75 @@ services:
     description: Managed Kubernetes clusters offered as a technological service.
     accountable: Service Owner
     technology_stack: Compute
+    version: "1.1.0"
+    valid_from: 2025-04-01
+    valid_to: null
+    lifecycle_state: production
+    characteristics:
+      - name: orchestration_api
+        value_type: string
+        description: Kubernetes API compatibility advertised by the service definition.
+        allowed_values: ["1.28", "1.29", "1.30"]
+        default_value: "1.29"
+        value: "1.29"
+        min_cardinality: 1
+        max_cardinality: 1
+        configurable: false
     service_offerings:
-      - id: compute.kubernetes.shared-cluster
-        name: Shared cluster
-      - id: compute.kubernetes.dedicated-cluster
-        name: Dedicated cluster
+      - id: compute.kubernetes.aws
+        name: AWS
+        # Offering-level: provider choice is the variant.
+        providers: [aws]
+      - id: compute.kubernetes.azure
+        name: Azure
+        providers: [azure]
 
   - id: db.managed-postgres
     name: Managed PostgreSQL
     description: Managed PostgreSQL database service.
     accountable: Service Owner
     technology_stack: Database
+    version: "1.0.0"
+    valid_from: 2025-01-01
+    valid_to: null
+    lifecycle_state: production
     service_offerings:
       - id: db.managed-postgres.standard
         name: Standard instance
+        characteristics:
+          - name: storage_gb
+            value_type: number
+            description: Allocated storage in gibibytes.
+            default_value: 100
+            min_cardinality: 1
+            max_cardinality: 1
+            configurable: true
+            constraints:
+              min: 20
+              max: 4096
       - id: db.managed-postgres.high-availability
         name: Highly available instance
+        characteristics:
+          - name: storage_gb
+            value_type: number
+            description: Allocated storage in gibibytes.
+            default_value: 500
+            min_cardinality: 1
+            max_cardinality: 1
+            configurable: true
+            constraints:
+              min: 100
+              max: 8192
 
   - id: db.managed-cache
     name: Managed Cache
     description: In-memory cache offered as a managed service.
     accountable: Service Owner
     technology_stack: Database
+    version: "1.0.0"
+    valid_from: 2025-01-01
+    valid_to: null
+    lifecycle_state: production
     service_offerings:
       - id: db.managed-cache.standard
         name: Standard cache
@@ -55,17 +117,40 @@ services:
     description: Virtual networks and remote-access connectivity.
     accountable: Service Owner
     technology_stack: Network
+    version: "1.0.0"
+    valid_from: 2025-01-01
+    valid_to: null
+    lifecycle_state: production
     service_offerings:
       - id: net.connectivity.virtual-network
         name: Virtual network
       - id: net.connectivity.remote-access
         name: Remote access VPN
 
+  - id: net.enterprise-dns
+    name: Enterprise DNS
+    description: Authoritative and recursive DNS as a technological service.
+    accountable: Service Owner
+    technology_stack: Network
+    version: "1.0.0"
+    valid_from: 2025-01-01
+    valid_to: null
+    lifecycle_state: production
+    # Service-level: Infoblox is intrinsic to this DNS capability.
+    providers: [infoblox]
+    service_offerings:
+      - id: net.enterprise-dns.managed
+        name: Managed DNS
+
   - id: storage.object-storage
     name: Object Storage
     description: Object storage for unstructured data.
     accountable: Service Owner
     technology_stack: Storage
+    version: "1.0.0"
+    valid_from: 2025-01-01
+    valid_to: null
+    lifecycle_state: production
     service_offerings:
       - id: storage.object-storage.standard
         name: Standard object storage
@@ -77,6 +162,10 @@ services:
     description: Directory, authentication and access-governance services.
     accountable: Service Owner
     technology_stack: Security
+    version: "1.0.0"
+    valid_from: 2025-01-01
+    valid_to: null
+    lifecycle_state: production
     service_offerings:
       - id: sec.identity-access.directory
         name: Directory lifecycle
@@ -88,9 +177,14 @@ services:
     description: Pipelines and artifact storage for building and releasing software.
     accountable: Service Owner
     technology_stack: DevOps
+    version: "1.0.0"
+    valid_from: 2025-01-01
+    valid_to: null
+    lifecycle_state: production
     service_offerings:
       - id: devops.continuous-delivery.pipeline
         name: Delivery pipeline
+        providers: [github]
       - id: devops.continuous-delivery.artifacts
         name: Artifact registry
 
@@ -99,6 +193,10 @@ services:
     description: Versioned infrastructure automation and guarded execution.
     accountable: Service Owner
     technology_stack: Automation
+    version: "1.0.0"
+    valid_from: 2025-01-01
+    valid_to: null
+    lifecycle_state: production
     service_offerings:
       - id: auto.infrastructure-as-code.execution
         name: Guarded IaC execution
@@ -108,6 +206,10 @@ services:
     description: Analytical warehouse and ingestion services.
     accountable: Service Owner
     technology_stack: Data
+    version: "0.9.0"
+    valid_from: 2025-06-01
+    valid_to: null
+    lifecycle_state: pilot
     service_offerings:
       - id: data.analytics-platform.warehouse
         name: Analytical warehouse
@@ -121,6 +223,10 @@ services:
     description: Metrics, logs, traces and alerting as a technological service.
     accountable: Service Owner
     technology_stack: Operations
+    version: "1.0.0"
+    valid_from: 2025-01-01
+    valid_to: null
+    lifecycle_state: production
     service_offerings:
       - id: ops.observability.metrics-alerting
         name: Metrics and alerting
@@ -130,6 +236,10 @@ services:
     description: Cost allocation, budgets and usage signals for cloud spend.
     accountable: Service Owner
     technology_stack: FinOps
+    version: "1.0.0"
+    valid_from: 2025-01-01
+    valid_to: null
+    lifecycle_state: production
     service_offerings:
       - id: finops.cloud-cost.visibility
         name: Cost visibility

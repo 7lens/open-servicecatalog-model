@@ -29,10 +29,15 @@ models, architecture models and governance frameworks. 7lens OSM is
 landscape into one deliberately small, vendor-neutral Service Catalog
 Model.
 
-That is a design goal. It is not a claim that OSM is already the
-best of those models, or that it is already compatible with them.
+7lens OSM incorporates useful semantics from existing models where
+they materially improve interoperability, governance or
+machine-readability. It does **not** copy those models wholesale.
+Compatibility does not mean copying.
+
 The [initial compatibility universe](COMPATIBILITY.md) is the map
-against which that goal will be validated.
+against which that goal will be validated. 7lens OSM is **designed
+to be compatible** with those languages. That is not a claim that
+it already is.
 
 ### 2. Prepared for a world where AI operates technology
 
@@ -73,13 +78,16 @@ architecture.
 7lens OSM is a compact YAML catalog for describing:
 
 - **Technology Stacks** — operational competency domains
-- **Services** — technological capabilities the organization delivers
+- **Services** — stable definitions of technological capabilities
 - **Service Offerings** — atomic requestable or deliverable variants
+- **Characteristics** — optional generic properties on services and offerings
 - **Ownership** — who is accountable for a stack or a service
-- **Operational state** — lifecycle, criticality, automation, security
-  and resilience posture
+- **Temporal semantics** — definition version, validity period and lifecycle
+- **Operational posture** — criticality, automation, security
+  and resilience evidence in the health record
 - **Governance attributes** — optional mappings to common frameworks
-- **ICT providers** — third-party technology dependencies
+- **ICT providers** — canonical third-party technology providers;
+  Services and Offerings may reference them
 
 It is designed to be read by humans and validated by machines.
 
@@ -126,11 +134,17 @@ compliance/governance frameworks. That set is the initial
 compatibility baseline. It is **not** a list of completed mappings
 and **not** a list of regulations OSM complies with.
 
-See [`COMPATIBILITY.md`](COMPATIBILITY.md) and decision **OSM-C-001**
-in [`DECISIONS.md`](DECISIONS.md).
+See [`COMPATIBILITY.md`](COMPATIBILITY.md) and the register
+[`DECISIONS.md`](DECISIONS.md) (`OSM-C-001`, `OSM-C-004`, `OSM-C-005`,
+`OSM-M-001`–`OSM-M-004`, `OSM-M-006`). Detailed model decisions are
+in [`decisions/`](decisions/). **OSM-M-007** (Complete Service
+Definition) is recorded as **PROPOSED**; it is not yet implemented
+in schema or examples.
 
-Until an analysis is accepted, every entry in that universe is
-**NOT ANALYZED**.
+Until an analysis is accepted, an entry is **NOT ANALYZED**. TM Forum
+TMF633, ITIL v5 and ServiceNow CSDM are **PARTIALLY COMPATIBLE**
+(selective compatibility; OSM is not a TMF, ITIL or CSDM
+implementation).
 
 ---
 
@@ -150,35 +164,44 @@ Service Offering
 
 Associated records:
 
+- Optional characteristics on services and offerings
+- Optional `providers` (ICT Provider ids) on services and offerings
 - Service attributes and offering attributes
-- ICT provider relationships
+- ICT Provider register
 - Governance / ownership
 
 Two files, two cadences:
 
 | Record | Nature | Typical cadence |
 |--------|--------|-----------------|
-| Catalog (`services`) | Stable identity of what is delivered | Changes when a service or offering is introduced, renamed for humans, or withdrawn |
+| Catalog (`services`) | Current **definition** of what is delivered | Changes when version, validity, lifecycle, offerings or characteristics change. `id` does not change. |
 | Health record (`service_attributes`) | Current operational and compliance state | Changes as operations, risk and governance teams update posture |
 
-Identifiers never change once assigned. Ownership and operational
-state may change freely.
+Identifiers never change once assigned. The **definition** may evolve
+(`version`, `valid_from`, `valid_to`, `lifecycle_state`). Ownership and
+operational posture may change freely. Immutable identity is not an
+immutable definition.
 
 ## Service vs Service Offering
 
-A **Service** is a technological capability offered by the technology
-organization. Examples: managed Kubernetes, object storage, identity
+A **Service** is the stable **definition** of a technological
+capability (not merely a catalog listing, and not a running
+instance). Examples: managed Kubernetes, object storage, identity
 and access management, CI/CD.
 
-A **Service Offering** is the atomic unit a consumer can request or
-be given. One service may have several offerings: a shared cluster
-and a dedicated cluster; a standard database and a highly available
-database; an AWS-hosted variant and an Azure-hosted variant.
+A **Service Offering** is the atomic requestable/deliverable variant
+of that service. Variants may differ in environment, location,
+availability, packaging, operating model, provider, or other
+meaningful characteristics — without turning each dimension into a
+mandatory field.
+
+A **Service Instance** / deployed implementation is operational
+runtime context. It is **outside** the OSM core.
 
 ```
 service     compute.kubernetes
-  └── offering  compute.kubernetes.shared-cluster
-  └── offering  compute.kubernetes.dedicated-cluster
+  └── offering  compute.kubernetes.aws
+  └── offering  compute.kubernetes.azure
 ```
 
 That is the only nesting in 7lens OSM. There is no deeper tree.
@@ -190,13 +213,22 @@ That is the only nesting in 7lens OSM. There is no deeper tree.
 ```
 
 - **Service ID** = 2 segments, for example `compute.kubernetes`
-- **Offering ID** = 3 segments, for example `compute.kubernetes.shared-cluster`
+- **Offering ID** = 3 segments, for example `compute.kubernetes.aws`
 - Segments are lowercase, hyphen-delimited slugs
 
 The prefix records the stack under which the service was originally
 created. A service may later move to another technology stack
 **without changing its ID**. IDs are permanent references; ownership
-evolves.
+evolves. A new `version` of the same service also keeps the same ID.
+`lifecycle_state` is part of that Service definition.
+
+## Characteristics
+
+Services and offerings may declare optional **characteristics**:
+named, typed properties (value, type, allowed values, default,
+cardinality, constraints, configurable). Use them instead of growing
+the core schema for every property. They are not a separate catalog
+entity.
 
 ## Technology Stacks
 
@@ -241,9 +273,9 @@ convention.
 ## Operational attributes
 
 [`schema/service-attributes.yaml`](schema/service-attributes.yaml)
-describes the living health record of a service:
+describes the living health record of a service (not its definition
+lifecycle):
 
-- lifecycle state
 - technical debt
 - operational criticality
 - data classification
@@ -260,10 +292,20 @@ time.
 
 ## Third-party providers
 
-Technological services often depend on external ICT providers.
-[`schema/ict-provider.yaml`](schema/ict-provider.yaml) describes
-provider identity, criticality, substitutability, contract and risk
-fields, certifications, and the services consumed from that provider.
+ICT Provider is the canonical provider entity.
+[`schema/ict-provider.yaml`](schema/ict-provider.yaml) holds provider
+identity, criticality, substitutability, contract and risk fields,
+and certifications.
+
+A Service or Offering may list `providers` — ids into that register —
+when a provider delivers or underpins the capability (OSM-M-006).
+Use Service-level association when the provider is intrinsic to the
+Service; use Offering-level association when provider choice is the
+variant. Association is optional. Multiple providers are allowed.
+Do not copy provider master data onto Service or Offering.
+
+`dora_third_party_deps` on offering attributes is a separate
+DORA-oriented listing, not the canonical provider association.
 
 The examples contain a **small fictional register** of well-known
 public providers. They are not a recommended vendor list and not an
@@ -292,9 +334,9 @@ Synthetic examples live in [`examples/`](examples/):
 | File | What it demonstrates |
 |------|----------------------|
 | `technology-stacks.yaml` | Generic operational domains and optional mappings |
-| `services.yaml` | A small catalog of services and offerings |
-| `service-attributes.yaml` | Lifecycle, compliance and offering-level posture |
-| `ict-providers.yaml` | Third-party dependencies for the example catalog |
+| `services.yaml` | A small catalog of services, offerings and optional providers |
+| `service-attributes.yaml` | Compliance and offering-level posture |
+| `ict-providers.yaml` | Canonical ICT Provider register for the example catalog |
 
 The examples are deliberately small and fictional. Replace them with
 your own catalog. Do not treat them as a recommended technology
@@ -306,8 +348,8 @@ estate.
 2. Copy `examples/` and replace the records with your stacks, services
    and offerings.
 3. Keep IDs stable. Assign them carefully; they are immutable.
-4. Populate `service_attributes` incrementally. Start with lifecycle
-   and criticality.
+4. Populate `service_attributes` incrementally. Start with criticality
+   and data classification.
 5. Add ICT providers as part of vendor management, not as a one-off
    documentation exercise.
 6. Run the checks in [`validation/`](validation/) in review or CI.
@@ -323,8 +365,11 @@ The following are **out of scope**:
 
 - business capabilities
 - business services
+- Application Services
+- Service Instances / deployed implementations
 - applications
 - infrastructure inventory / CMDB configuration items
+- Product Models
 - organizational hierarchy
 - geographic hierarchy
 - enterprise-wide ontology
@@ -350,10 +395,12 @@ systems; this repository does not define those other records.
 ├── CONTRIBUTING.md
 ├── COMPATIBILITY.md
 ├── DECISIONS.md
+├── decisions/
 ├── schema/
 │   ├── technology-stack.yaml
 │   ├── service.yaml
 │   ├── service-offering.yaml
+│   ├── characteristic.yaml
 │   ├── service-attributes.yaml
 │   └── ict-provider.yaml
 ├── examples/
@@ -379,9 +426,10 @@ Contributions are welcome when they keep 7lens OSM:
 - focused on technological services
 - understandable
 - machine-readable
+- extensible without copying other models wholesale
 
 Model changes need an accepted decision in [`DECISIONS.md`](DECISIONS.md).
-See [`CONTRIBUTING.md`](CONTRIBUTING.md).
+See [`CONTRIBUTING.md`](CONTRIBUTING.md) and [`decisions/`](decisions/).
 
 ## License
 
