@@ -64,6 +64,7 @@ ict_providers:
     gdpr_dpa_signed: null
     dora_notification_clause: null
     services_consumed:
+      - compute.virtual-machines
       - compute.kubernetes
       - data.analytics-platform
       - sec.identity-access
@@ -92,3 +93,28 @@ ict_providers:
     dora_notification_clause: null
     services_consumed:
       - devops.continuous-delivery
+
+  - id: infoblox
+    name: Infoblox
+    type: software-vendor
+    headquarters: us
+    data_processing_locations: [us]
+    criticality: important
+    substitutability: medium
+    contract_ref: null
+    contract_start: null
+    contract_end: null
+    notice_period_days: null
+    audit_rights: null
+    subcontracting_allowed: null
+    subcontractors: []
+    last_risk_assessment: null
+    risk_level: null
+    exit_strategy_documented: null
+    exit_strategy_tested: null
+    concentration_risk: false
+    certifications: [iso27001, soc2-type2]
+    gdpr_dpa_signed: null
+    dora_notification_clause: null
+    services_consumed:
+      - net.enterprise-dns

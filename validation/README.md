@@ -34,8 +34,14 @@ Expected files in that directory:
 - offering IDs are children of their parent service ID
 - `technology_stack` matches a stack `name`
 - service-attribute and offering-attribute references exist
-- ICT provider references exist in both directions
+- ICT Provider ids in Service/Offering `providers` exist in the
+  provider register (omitted `providers` is valid)
+- ICT provider `services_consumed` references exist
+- `dora_third_party_deps` references exist (DORA listing; distinct
+  from canonical `providers`)
 - EU AI Act offering fields appear only when `ai_act_applicable` is true
-- basic enum membership for lifecycle, criticality and similar fields
+- each service has `lifecycle_state`, `version` and `valid_from`; `valid_to` is not before `valid_from`
+- `service_attributes` must not contain `lifecycle_state`
+- characteristic names are unique per parent; values respect `allowed_values`
 
 The checker exits `0` when the catalog is valid and `1` when it is not.

@@ -34,11 +34,12 @@ Present in the current schema (not yet analyzed as a mapping):
 | `mappings.dora.criticality` | Technology Stack |
 | `dora_criticality` | Service attributes |
 | `dora_rto`, `dora_rpo` | Offering attributes |
-| `dora_third_party_deps` | Offering attributes |
+| `dora_third_party_deps` | Offering attributes (DORA listing; not canonical `providers`) |
 | `dora_resilience_tested` | Offering attributes |
 | ICT Provider contract / risk / resilience fields | ICT Provider |
 | `dora_notification_clause` | ICT Provider |
-| `services_consumed` | ICT Provider |
+| `services_consumed` | ICT Provider (register reverse list) |
+| `providers` | Service and Service Offering (canonical ICT Provider ids; **not** a DORA field) |
 
 ## 4. Mapping opportunities
 
@@ -52,10 +53,13 @@ DORA RTS register-of-information fields, entity identifiers, and
 supervisory reporting layouts are not in OSM.
 
 There is a grain mismatch already visible and **not yet decided**
-(**OSM-M-001**, status PROPOSED): `dora_third_party_deps` is
+(**OSM-M-005**, status PROPOSED): `dora_third_party_deps` is
 offering-level; `services_consumed` is service-level. Do not change
-those fields until OSM-M-001 is accepted. Address it during DORA
-compliance analysis.
+those DORA/register fields until OSM-M-005 is accepted.
+
+Canonical Service/Offering `providers` (**OSM-M-006**) is a separate
+association: who delivers or underpins the technological
+Service/Offering. It is not a substitute for `dora_third_party_deps`.
 
 ## 6. Potential extensions
 

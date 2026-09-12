@@ -2,7 +2,7 @@
 #
 # An offering is the atomic requestable / deliverable unit of a Service.
 # Offering ID has exactly 3 segments; the first 2 must equal the parent
-# service ID.
+# service ID. Offerings have no independent version or validity fields.
 
 $schema: https://json-schema.org/draft/2020-12/schema
 $id: https://raw.githubusercontent.com/7lens/open-servicecatalog-model/main/schema/service-offering.yaml
@@ -22,3 +22,19 @@ properties:
     minLength: 1
   description:
     type: string
+  characteristics:
+    type: array
+    description: Optional generic characteristics (OSM-M-001).
+    items:
+      $ref: ./characteristic.yaml
+  providers:
+    type: array
+    description: >
+      Optional ICT Provider ids when provider choice is a characteristic
+      of this offering (OSM-M-006). References schema/ict-provider.yaml;
+      do not embed provider master data. Distinct from
+      dora_third_party_deps.
+    uniqueItems: true
+    items:
+      type: string
+      pattern: ^[a-z0-9]+(?:-[a-z0-9]+)*$

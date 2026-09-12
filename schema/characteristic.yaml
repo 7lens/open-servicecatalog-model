@@ -1,0 +1,76 @@
+# JSON Schema — Characteristic
+#
+# Nested, reusable property structure for Service and Service Offering.
+# This is not a first-class catalog entity and has no identifier of its
+# own (OSM-M-001). Inspired by TM Forum characteristics; not a copy of
+# the TMF characteristic model.
+
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: https://raw.githubusercontent.com/7lens/open-servicecatalog-model/main/schema/characteristic.yaml
+title: Characteristic
+type: object
+additionalProperties: false
+required:
+  - name
+  - value_type
+properties:
+  name:
+    type: string
+    description: Characteristic key. Unique within the parent Service or Offering.
+    minLength: 1
+    pattern: ^[a-z0-9]+(?:_[a-z0-9]+)*$
+  value_type:
+    type: string
+    enum:
+      - string
+      - number
+      - boolean
+      - date
+  description:
+    type: string
+  value:
+    description: Current value when set. Omitted if only declared.
+    oneOf:
+      - type: string
+      - type: number
+      - type: boolean
+      - type: "null"
+  default_value:
+    description: Default when no value is set.
+    oneOf:
+      - type: string
+      - type: number
+      - type: boolean
+      - type: "null"
+  allowed_values:
+    type: array
+    description: Closed set of permitted values, when applicable.
+    items:
+      oneOf:
+        - type: string
+        - type: number
+        - type: boolean
+  min_cardinality:
+    type: integer
+    minimum: 0
+    description: Minimum number of values. Default 0 when omitted.
+  max_cardinality:
+    description: Maximum number of values. null means unbounded.
+    oneOf:
+      - type: integer
+        minimum: 1
+      - type: "null"
+  configurable:
+    type: boolean
+    description: Whether a consumer may choose the value when requesting.
+  constraints:
+    type: object
+    additionalProperties: false
+    description: Optional machine-checkable limits.
+    properties:
+      min:
+        type: number
+      max:
+        type: number
+      pattern:
+        type: string

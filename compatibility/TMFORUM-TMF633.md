@@ -1,76 +1,94 @@
 # TM Forum TMF633 — Service Catalog
 
-- **Status:** NOT ANALYZED
+- **Status:** PARTIALLY COMPATIBLE
 - **Universe:** OSM-C-001 (model / taxonomy / architectural framework)
-- **OSM schema fields today:** none dedicated to TMF633
+- **Decisions applied:** OSM-M-001, OSM-M-002, OSM-M-003, OSM-M-004
 
-Do not treat this file as a mapping.
+This file records the first TM Forum analysis as implemented in OSM.
+It is **not** a claim that OSM implements TMF633, SID, or TMF
+certification. Compatibility does not mean copying (OSM-M-004).
 
 ## 1. Model overview
 
 TM Forum TMF633 is the REST API and information model for **Service
-Catalog Management**. It is commonly used with related TM Forum
-catalog and inventory APIs (for example service inventory) and with
-the SID information framework distinctions such as service
-specification vs service instance, and customer-facing vs
-resource-facing services.
-
-This overview is public-model context only. It is not a TMF
-certification statement.
+Catalog Management**. Related TMF / SID ideas include service
+specification vs service instance, catalog vs inventory, and
+customer-facing vs resource-facing services.
 
 ## 2. Scope
 
-In scope for a later OSM comparison: catalog-level description of
-technological services and requestable variants.
+In scope for OSM: catalog-level **definition** of technological
+services and requestable offerings, with optional characteristics
+and definition version, validity and `lifecycle_state`.
 
-Out of scope for OSM itself (already stated in the OSM spec): business
-products, applications, resource inventory, and customer instances.
+Out of scope for OSM: TMF service instances, resource inventory,
+product catalog, CFS/RFS as OSM entities, TMF API resources, and
+the full characteristic/lifecycle metamodel.
 
-## 3. OSM concepts potentially corresponding to the model
+## 3. OSM concepts corresponding to the model
 
-NOT YET ANALYZED.
-
-Candidates to compare later (not mappings):
-
-| OSM (current) | TMF633 / SID concept to inspect |
-|---------------|----------------------------------|
-| Service | Service specification / catalog service |
-| Service Offering | Catalog offering / candidate / variant |
-| Technology Stack | No obvious TMF633 class; may have no counterpart |
-| ICT Provider | Related party / supporting resource provider (uncertain) |
+| OSM | TMF / SID role | Status |
+|-----|----------------|--------|
+| Service | Semantic role of **ServiceSpecification** (stable definition). OSM does **not** add a ServiceSpecification entity (OSM-M-003). | MAPPED (selective) |
+| Service Offering | Requestable catalog variant. Not imported as TMF ServiceCandidate / catalog hierarchy. | PARTIAL — grain kept as OSM offering |
+| Characteristic (nested) | Inspired by TMF characteristics; small OSM structure only (OSM-M-001). | MAPPED (selective) |
+| `version`, `valid_from`, `valid_to`, `lifecycle_state` | Definition may evolve while `id` stays (OSM-M-002). OSM lifecycle enum on Service; not TMF's full lifecycleStatus machine. | MAPPED (selective) |
+| Technology Stack | No TMF633 counterpart adopted. | NOT APPLICABLE |
+| ICT Provider | Not mapped in this analysis. | NOT ANALYZED |
+| Service instance / inventory | Out of OSM scope. | NOT APPLICABLE |
 
 ## 4. Attribute compatibility
 
-NOT YET ANALYZED.
+Adopted into OSM (small subset):
+
+- nested characteristic fields listed in `SPECIFICATION.md` §5.1
+- Service `version`, `valid_from`, `valid_to`, `lifecycle_state`
+
+Not adopted: TMF characteristic specification catalog, `@type` /
+`@schemaLocation`, full lifecycleStatus state machines, bundled
+offering graphs, ServiceCandidate, ServiceCategory, CFS/RFS, TMF
+API resource structures, or TMF identifier schemes.
 
 ## 5. Relationship compatibility
 
-NOT YET ANALYZED.
+OSM keeps **Technology Stack → Service → Service Offering**.
+No TMF catalog/category/candidate tree was added.
 
 ## 6. Terminology differences
 
-NOT YET ANALYZED.
-
-Likely tension to inspect later: OSM uses **Service** strictly as a
-**technological service**. TM Forum service language is broader.
+- OSM **Service** = technological service **definition** (TMF
+  specification role), never a running instance.
+- OSM **Service** is not TMF's broader "service" (including CFS).
+- OSM characteristic `name` is a key on the parent; it is not a
+  TMF entity id.
 
 ## 7. Gaps
 
-NOT YET ANALYZED.
+Deliberate (OSM-M-004), not accidental omission:
+
+- no ServiceSpecification entity
+- no service instance
+- no CFS/RFS split
+- no TMF catalog API resources
+- no ServiceCandidate / ServiceCategory
+- no in-catalog history of prior definition versions (one row per `id`)
+- no offering-level version/validity
 
 ## 8. Potential extensions
 
-None proposed. Extensions require a later maintainer decision
-(`OSM-M-*`). This baseline does not add attributes.
+None proposed here. Further TMF structures need a new `OSM-M-*`
+decision. Do not add them because TMF has them.
 
 ## 9. Decisions still required
 
-- Whether OSM Service aligns to TMF specification, candidate, or another class
-- Whether OSM Offering aligns to TMF offering or a different catalog object
-- Whether CFS/RFS is in or out of OSM's boundary
-- Whether any TMF identifier scheme should ever influence OSM IDs
-  (current OSM IDs must not be changed in this task)
+- CFS/RFS remains out of OSM unless a later decision says otherwise
+- TMF identifier schemes will not replace OSM 2-/3-segment IDs
+- Offering-level version/validity was not part of OSM-M-002
 
 ## 10. Compatibility status
 
-**NOT ANALYZED**
+**PARTIALLY COMPATIBLE**
+
+OSM adopts a small set of useful TMF *semantics* (definition vs
+identity, nested characteristics, version/validity, Service
+`lifecycle_state`). OSM is not a TMF633 implementation.

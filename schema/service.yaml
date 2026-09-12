@@ -1,7 +1,7 @@
 # JSON Schema — Service
 #
-# A Service is a technological capability delivered by the technology
-# organization. Service ID has exactly 2 segments.
+# A Service is the stable definition of a technological capability
+# (OSM-M-003). Service ID has exactly 2 segments and is immutable.
 # Catalog files wrap instances in a top-level `services` array.
 
 $schema: https://json-schema.org/draft/2020-12/schema
@@ -15,6 +15,9 @@ required:
   - description
   - accountable
   - technology_stack
+  - version
+  - valid_from
+  - lifecycle_state
   - service_offerings
 properties:
   id:
@@ -35,6 +38,44 @@ properties:
     type: string
     description: Name of the owning Technology Stack. Exactly one.
     minLength: 1
+  version:
+    type: string
+    description: Definition version. The service id does not change when this changes.
+    minLength: 1
+  valid_from:
+    type: string
+    format: date
+    description: Inclusive start of this definition's validity period (ISO 8601 date).
+  valid_to:
+    description: Inclusive end of validity. null means still in force.
+    oneOf:
+      - type: string
+        format: date
+      - type: "null"
+  lifecycle_state:
+    type: string
+    description: Definition lifecycle of this Service. Authoritative location.
+    enum:
+      - draft
+      - pilot
+      - production
+      - sunset
+      - retired
+  characteristics:
+    type: array
+    description: Optional generic characteristics (OSM-M-001).
+    items:
+      $ref: ./characteristic.yaml
+  providers:
+    type: array
+    description: >
+      Optional ICT Provider ids when the provider is intrinsic to this
+      Service (OSM-M-006). References schema/ict-provider.yaml; do not
+      embed provider master data. Distinct from dora_third_party_deps.
+    uniqueItems: true
+    items:
+      type: string
+      pattern: ^[a-z0-9]+(?:-[a-z0-9]+)*$
   service_offerings:
     type: array
     minItems: 1

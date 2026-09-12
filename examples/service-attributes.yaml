@@ -10,7 +10,6 @@ service_attributes:
 
   # Fully populated production service with two offerings.
   - service_id: compute.kubernetes
-    lifecycle_state: production
     tech_debt_score: 18
     dora_criticality: important
     data_classification: internal
@@ -18,8 +17,8 @@ service_attributes:
     ai_act_applicable: false
     ai_act_risk_class: not-applicable
     offering_attributes:
-      - offering_id: compute.kubernetes.shared-cluster
-        cloud_providers: [aws, azure]
+      - offering_id: compute.kubernetes.aws
+        cloud_providers: [aws]
         cost_pool: compute-shared
         chargeback_model: shared
         automation_coverage: partial
@@ -37,10 +36,10 @@ service_attributes:
         gdpr_erasure_capable: not-applicable
         dora_rto: PT8H
         dora_rpo: PT2H
-        dora_third_party_deps: [aws, azure]
+        dora_third_party_deps: [aws]
         dora_resilience_tested: false
-      - offering_id: compute.kubernetes.dedicated-cluster
-        cloud_providers: [aws]
+      - offering_id: compute.kubernetes.azure
+        cloud_providers: [azure]
         cost_pool: compute-dedicated
         chargeback_model: dedicated
         automation_coverage: partial
@@ -58,12 +57,11 @@ service_attributes:
         gdpr_erasure_capable: not-applicable
         dora_rto: PT6H
         dora_rpo: PT30M
-        dora_third_party_deps: [aws]
+        dora_third_party_deps: [azure]
         dora_resilience_tested: true
 
   # Restricted classification with privacy-related reference mappings.
   - service_id: db.managed-postgres
-    lifecycle_state: production
     tech_debt_score: null
     dora_criticality: critical
     data_classification: confidential
@@ -95,7 +93,6 @@ service_attributes:
 
   # Valid incremental state: service posture only, no offering rows yet.
   - service_id: compute.virtual-machines
-    lifecycle_state: production
     tech_debt_score: 12
     dora_criticality: important
     data_classification: internal
@@ -106,7 +103,6 @@ service_attributes:
 
   # Illustrative AI-related fields on one offering. Not a legal classification.
   - service_id: data.analytics-platform
-    lifecycle_state: pilot
     tech_debt_score: 25
     dora_criticality: standard
     data_classification: internal
@@ -144,7 +140,6 @@ service_attributes:
         ai_act_training_data_doc: not-applicable
 
   - service_id: devops.continuous-delivery
-    lifecycle_state: production
     tech_debt_score: 8
     dora_criticality: important
     data_classification: internal

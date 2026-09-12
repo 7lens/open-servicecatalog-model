@@ -11,6 +11,7 @@ from __future__ import annotations
 import argparse
 import re
 import sys
+from datetime import date, datetime
 from pathlib import Path
 from typing import Any
 
@@ -66,6 +67,8 @@ PROVIDER_TYPE = {
     "data-center",
 }
 SUBSTITUTABILITY = {"low", "medium", "high"}
+VALUE_TYPES = {"string", "number", "boolean", "date"}
+NAME_KEY = re.compile(r"^[a-z0-9]+(?:_[a-z0-9]+)*$")
 
 
 class Reporter:
@@ -84,8 +87,95 @@ def load_yaml(path: Path) -> Any:
         return yaml.safe_load(handle)
 
 
+def parse_iso_date(value: Any) -> date | None:
+    if isinstance(value, datetime):
+        return value.date()
+    if isinstance(value, date):
+        return value
+    if isinstance(value, str):
+        try:
+            return date.fromisoformat(value)
+        except ValueError:
+            return None
+    return None
+
+
+def validate_characteristics(parent_id: str, rows: Any, reporter: Reporter) -> None:
+    if rows is None:
+        return
+    if not isinstance(rows, list):
+        reporter.error(f"{parent_id} characteristics must be a list")
+        return
+    seen: set[str] = set()
+    for item in rows:
+        if not isinstance(item, dict):
+            reporter.error(f"{parent_id} characteristic must be a mapping")
+            continue
+        name = item.get("name")
+        if not isinstance(name, str) or not NAME_KEY.match(name):
+            reporter.error(f"{parent_id} has invalid characteristic name {name!r}")
+            continue
+        if name in seen:
+            reporter.error(f"{parent_id} has duplicate characteristic name {name}")
+        seen.add(name)
+        value_type = item.get("value_type")
+        if value_type not in VALUE_TYPES:
+            reporter.error(f"{parent_id}.{name} has invalid value_type {value_type!r}")
+        allowed = item.get("allowed_values")
+        if allowed is not None and not isinstance(allowed, list):
+            reporter.error(f"{parent_id}.{name} allowed_values must be a list")
+            allowed = None
+        value = item.get("value", None)
+        if value is not None and allowed and value not in allowed:
+            reporter.error(f"{parent_id}.{name} value {value!r} is not in allowed_values")
+        default = item.get("default_value", None)
+        if default is not None and allowed and default not in allowed:
+            reporter.error(
+                f"{parent_id}.{name} default_value {default!r} is not in allowed_values"
+            )
+        min_card = item.get("min_cardinality", 0)
+        max_card = item.get("max_cardinality", None)
+        if min_card is not None and not (isinstance(min_card, int) and min_card >= 0):
+            reporter.error(f"{parent_id}.{name} has invalid min_cardinality")
+            min_card = 0
+        if max_card is not None and not (isinstance(max_card, int) and max_card >= 1):
+            reporter.error(f"{parent_id}.{name} has invalid max_cardinality")
+        elif isinstance(max_card, int) and isinstance(min_card, int) and max_card < min_card:
+            reporter.error(f"{parent_id}.{name} max_cardinality is less than min_cardinality")
+        if "configurable" in item and not isinstance(item.get("configurable"), bool):
+            reporter.error(f"{parent_id}.{name} configurable must be a boolean")
+        constraints = item.get("constraints")
+        if constraints is not None:
+            if not isinstance(constraints, dict):
+                reporter.error(f"{parent_id}.{name} constraints must be a mapping")
+            else:
+                extra = set(constraints) - {"min", "max", "pattern"}
+                if extra:
+                    reporter.error(f"{parent_id}.{name} has unknown constraint keys {sorted(extra)}")
+
+
 def parent_service_id(offering_id: str) -> str:
     return ".".join(offering_id.split(".")[:2])
+
+
+def validate_provider_refs(owner_id: str, refs: Any, provider_ids: set[str], reporter: Reporter) -> None:
+    if refs is None:
+        return
+    if not isinstance(refs, list):
+        reporter.error(f"{owner_id} providers must be a list of ICT Provider ids")
+        return
+    seen: set[str] = set()
+    for ref in refs:
+        if not isinstance(ref, str) or not PROVIDER_ID.match(ref):
+            reporter.error(f"{owner_id} has invalid provider id {ref!r}")
+            continue
+        if ref in seen:
+            reporter.error(f"{owner_id} has duplicate provider id {ref}")
+        seen.add(ref)
+        if ref not in provider_ids:
+            reporter.error(
+                f"{owner_id} providers references unknown ICT Provider {ref}"
+            )
 
 
 def validate_catalog(catalog_dir: Path) -> list[str]:
@@ -125,6 +215,28 @@ def validate_catalog(catalog_dir: Path) -> list[str]:
         reporter.error("ict-providers.yaml must contain an ict_providers list")
         providers = []
 
+    provider_ids: set[str] = set()
+    for provider in providers:
+        if not isinstance(provider, dict):
+            reporter.error("ict provider entry must be a mapping")
+            continue
+        provider_id = provider.get("id")
+        if not isinstance(provider_id, str) or not PROVIDER_ID.match(provider_id):
+            reporter.error(f"invalid provider id: {provider_id!r}")
+        elif provider_id in provider_ids:
+            reporter.error(f"duplicate provider id: {provider_id}")
+        else:
+            provider_ids.add(provider_id)
+        if not provider.get("name"):
+            reporter.error(f"provider {provider_id!r} is missing name")
+        provider_type = provider.get("type")
+        if provider_type not in PROVIDER_TYPE:
+            reporter.error(f"provider {provider_id!r} has invalid type {provider_type!r}")
+        if provider.get("criticality") not in CRITICALITY:
+            reporter.error(f"provider {provider_id!r} has invalid criticality")
+        if provider.get("substitutability") not in SUBSTITUTABILITY:
+            reporter.error(f"provider {provider_id!r} has invalid substitutability")
+
     stack_ids: set[str] = set()
     stack_names: set[str] = set()
     for stack in stacks:
@@ -157,9 +269,23 @@ def validate_catalog(catalog_dir: Path) -> list[str]:
             reporter.error("service entry must be a mapping")
             continue
         service_id = service.get("id")
-        for field in ("name", "description", "accountable", "technology_stack"):
+        for field in ("name", "description", "accountable", "technology_stack", "version", "valid_from", "lifecycle_state"):
             if not service.get(field):
                 reporter.error(f"service {service_id!r} is missing {field}")
+        if service.get("lifecycle_state") not in LIFECYCLE:
+            reporter.error(f"service {service_id!r} has invalid lifecycle_state")
+        valid_from = parse_iso_date(service.get("valid_from"))
+        if service.get("valid_from") is not None and valid_from is None:
+            reporter.error(f"service {service_id!r} has invalid valid_from")
+        valid_to_raw = service.get("valid_to", None)
+        if valid_to_raw is not None:
+            valid_to = parse_iso_date(valid_to_raw)
+            if valid_to is None:
+                reporter.error(f"service {service_id!r} has invalid valid_to")
+            elif valid_from is not None and valid_to < valid_from:
+                reporter.error(f"service {service_id!r} valid_to is before valid_from")
+        validate_characteristics(str(service_id), service.get("characteristics"), reporter)
+        validate_provider_refs(str(service_id), service.get("providers"), provider_ids, reporter)
         if not isinstance(service_id, str) or not SERVICE_ID.match(service_id):
             reporter.error(f"invalid service id (need 2 segments): {service_id!r}")
         elif service_id in service_ids:
@@ -196,28 +322,13 @@ def validate_catalog(catalog_dir: Path) -> list[str]:
                     f"offering {offering_id} is not a child of service {service_id}"
                 )
             offerings_by_service[service_id].add(offering_id)
+            validate_characteristics(str(offering_id), offering.get("characteristics"), reporter)
+            validate_provider_refs(str(offering_id), offering.get("providers"), provider_ids, reporter)
 
-    provider_ids: set[str] = set()
     for provider in providers:
         if not isinstance(provider, dict):
-            reporter.error("ict provider entry must be a mapping")
             continue
         provider_id = provider.get("id")
-        if not isinstance(provider_id, str) or not PROVIDER_ID.match(provider_id):
-            reporter.error(f"invalid provider id: {provider_id!r}")
-        elif provider_id in provider_ids:
-            reporter.error(f"duplicate provider id: {provider_id}")
-        else:
-            provider_ids.add(provider_id)
-        if not provider.get("name"):
-            reporter.error(f"provider {provider_id!r} is missing name")
-        provider_type = provider.get("type")
-        if provider_type not in PROVIDER_TYPE:
-            reporter.error(f"provider {provider_id!r} has invalid type {provider_type!r}")
-        if provider.get("criticality") not in CRITICALITY:
-            reporter.error(f"provider {provider_id!r} has invalid criticality")
-        if provider.get("substitutability") not in SUBSTITUTABILITY:
-            reporter.error(f"provider {provider_id!r} has invalid substitutability")
         for consumed in provider.get("services_consumed") or []:
             if consumed not in service_ids:
                 reporter.error(
@@ -236,8 +347,10 @@ def validate_catalog(catalog_dir: Path) -> list[str]:
         if service_id in seen_attribute_services:
             reporter.error(f"duplicate service_attributes for {service_id}")
         seen_attribute_services.add(service_id)
-        if record.get("lifecycle_state") not in LIFECYCLE:
-            reporter.error(f"{service_id} has invalid lifecycle_state")
+        if "lifecycle_state" in record:
+            reporter.error(
+                f"{service_id} service_attributes must not include lifecycle_state; it belongs on Service"
+            )
         score = record.get("tech_debt_score", None)
         if score is not None and not (isinstance(score, int) and 0 <= score <= 100):
             reporter.error(f"{service_id} has invalid tech_debt_score")
