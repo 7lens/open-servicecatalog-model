@@ -40,7 +40,6 @@ CRITICALITY = {"critical", "important", "standard"}
 CLASSIFICATION = {"public", "internal", "confidential", "restricted"}
 VENDOR_SUPPORT = {"active", "extended", "end-of-life"}
 AI_RISK = {"unacceptable", "high-risk", "limited-risk", "minimal-risk", "not-applicable"}
-CLOUD = {"aws", "azure", "gcp", "on-prem"}
 CHARGEBACK = {"shared", "dedicated", "consumption"}
 AUTOMATION = {"none", "partial", "full"}
 ASSET_COVERAGE = {"complete", "partial", "unknown"}
@@ -69,6 +68,32 @@ PROVIDER_TYPE = {
 SUBSTITUTABILITY = {"low", "medium", "high"}
 VALUE_TYPES = {"string", "number", "boolean", "date"}
 NAME_KEY = re.compile(r"^[a-z0-9]+(?:_[a-z0-9]+)*$")
+CONFIDENCE = {"high", "medium", "low", "unknown"}
+DISCOVERY = {"declared", "imported", "discovered", "manual"}
+PRIVACY_CLASS = {"none", "pii", "sensitive", "not-assessed"}
+PROVENANCE_KEYS = {
+    "authoritative_source",
+    "source_system",
+    "source_record_id",
+    "last_verified",
+    "evidence_reference",
+    "confidence",
+    "discovery_method",
+}
+PROHIBITED_REL = {
+    "depends_on",
+    "consumes",
+    "provides_to",
+    "related_service",
+    "related_services",
+}
+REMOVED_CANONICAL_COPIES = {
+    "dora_rto",
+    "dora_rpo",
+    "dora_resilience_tested",
+    "dora_criticality",
+    "cloud_providers",
+}
 
 
 class Reporter:
@@ -156,6 +181,37 @@ def validate_characteristics(parent_id: str, rows: Any, reporter: Reporter) -> N
 
 def parent_service_id(offering_id: str) -> str:
     return ".".join(offering_id.split(".")[:2])
+
+
+def reject_service_relationships(owner_id: str, record: dict[str, Any], reporter: Reporter) -> None:
+    present = sorted(PROHIBITED_REL.intersection(record))
+    if present:
+        reporter.error(
+            f"{owner_id} must not declare Service-to-Service relationship fields {present}"
+        )
+
+
+def validate_provenance(owner_id: str, row: Any, reporter: Reporter) -> None:
+    if row is None:
+        return
+    if not isinstance(row, dict):
+        reporter.error(f"{owner_id} provenance must be a mapping")
+        return
+    extra = set(row) - PROVENANCE_KEYS
+    if extra:
+        reporter.error(f"{owner_id} provenance has unknown keys {sorted(extra)}")
+    if "confidence" in row and row["confidence"] not in CONFIDENCE:
+        reporter.error(f"{owner_id} provenance has invalid confidence {row['confidence']!r}")
+    if "discovery_method" in row and row["discovery_method"] not in DISCOVERY:
+        reporter.error(
+            f"{owner_id} provenance has invalid discovery_method {row['discovery_method']!r}"
+        )
+    if row.get("last_verified") is not None and parse_iso_date(row.get("last_verified")) is None:
+        reporter.error(f"{owner_id} provenance has invalid last_verified")
+    for key in ("authoritative_source", "source_system", "source_record_id", "evidence_reference"):
+        value = row.get(key)
+        if value is not None and not (isinstance(value, str) and value.strip()):
+            reporter.error(f"{owner_id} provenance {key} must be a non-empty string")
 
 
 def validate_provider_refs(owner_id: str, refs: Any, provider_ids: set[str], reporter: Reporter) -> None:
@@ -286,6 +342,9 @@ def validate_catalog(catalog_dir: Path) -> list[str]:
                 reporter.error(f"service {service_id!r} valid_to is before valid_from")
         validate_characteristics(str(service_id), service.get("characteristics"), reporter)
         validate_provider_refs(str(service_id), service.get("providers"), provider_ids, reporter)
+        validate_provenance(str(service_id), service.get("provenance"), reporter)
+        if isinstance(service, dict):
+            reject_service_relationships(str(service_id), service, reporter)
         if not isinstance(service_id, str) or not SERVICE_ID.match(service_id):
             reporter.error(f"invalid service id (need 2 segments): {service_id!r}")
         elif service_id in service_ids:
@@ -324,6 +383,8 @@ def validate_catalog(catalog_dir: Path) -> list[str]:
             offerings_by_service[service_id].add(offering_id)
             validate_characteristics(str(offering_id), offering.get("characteristics"), reporter)
             validate_provider_refs(str(offering_id), offering.get("providers"), provider_ids, reporter)
+            validate_provenance(str(offering_id), offering.get("provenance"), reporter)
+            reject_service_relationships(str(offering_id), offering, reporter)
 
     for provider in providers:
         if not isinstance(provider, dict):
@@ -351,17 +412,28 @@ def validate_catalog(catalog_dir: Path) -> list[str]:
             reporter.error(
                 f"{service_id} service_attributes must not include lifecycle_state; it belongs on Service"
             )
+        extra_copies = sorted(REMOVED_CANONICAL_COPIES.intersection(record))
+        if extra_copies:
+            reporter.error(
+                f"{service_id} service_attributes uses removed duplicate fields {extra_copies}; "
+                "use the canonical OSM field (OSM-M-008)"
+            )
         score = record.get("tech_debt_score", None)
         if score is not None and not (isinstance(score, int) and 0 <= score <= 100):
             reporter.error(f"{service_id} has invalid tech_debt_score")
-        if "dora_criticality" in record and record["dora_criticality"] not in CRITICALITY:
-            reporter.error(f"{service_id} has invalid dora_criticality")
         if "data_classification" in record and record["data_classification"] not in CLASSIFICATION:
             reporter.error(f"{service_id} has invalid data_classification")
         if "vendor_support_status" in record and record["vendor_support_status"] not in VENDOR_SUPPORT:
             reporter.error(f"{service_id} has invalid vendor_support_status")
         if "ai_act_risk_class" in record and record["ai_act_risk_class"] not in AI_RISK:
             reporter.error(f"{service_id} has invalid ai_act_risk_class")
+        if "operational_criticality" in record and record["operational_criticality"] not in CRITICALITY:
+            reporter.error(f"{service_id} has invalid operational_criticality")
+        if "security_classification" in record and record["security_classification"] not in CLASSIFICATION:
+            reporter.error(f"{service_id} has invalid security_classification")
+        if "privacy_classification" in record and record["privacy_classification"] not in PRIVACY_CLASS:
+            reporter.error(f"{service_id} has invalid privacy_classification")
+        validate_provenance(str(service_id), record.get("provenance"), reporter)
 
         ai_applicable = bool(record.get("ai_act_applicable"))
         offering_rows = record.get("offering_attributes")
@@ -382,6 +454,12 @@ def validate_catalog(catalog_dir: Path) -> list[str]:
             if offering_id in seen_offerings:
                 reporter.error(f"duplicate offering_attributes for {offering_id}")
             seen_offerings.add(offering_id)
+            extra_copies = sorted(REMOVED_CANONICAL_COPIES.intersection(row))
+            if extra_copies:
+                reporter.error(
+                    f"{offering_id} offering_attributes uses removed duplicate fields {extra_copies}; "
+                    "use the canonical OSM field (OSM-M-008)"
+                )
 
             extra_ai = AI_ACT_OFFERING_FIELDS.intersection(row)
             if extra_ai and not ai_applicable:
@@ -389,14 +467,28 @@ def validate_catalog(catalog_dir: Path) -> list[str]:
                     f"{offering_id} has AI Act fields but service ai_act_applicable is not true"
                 )
 
-            for cloud in row.get("cloud_providers") or []:
-                if cloud not in CLOUD:
-                    reporter.error(f"{offering_id} has invalid cloud provider {cloud!r}")
             if "chargeback_model" in row and row["chargeback_model"] not in CHARGEBACK:
                 reporter.error(f"{offering_id} has invalid chargeback_model")
             coverage = row.get("automation_coverage", None)
             if coverage is not None and coverage not in AUTOMATION:
                 reporter.error(f"{offering_id} has invalid automation_coverage")
+            provisioning = row.get("provisioning_automation", None)
+            if provisioning is not None and provisioning not in AUTOMATION:
+                reporter.error(f"{offering_id} has invalid provisioning_automation")
+            if "self_service" in row and row["self_service"] not in {True, False, None}:
+                reporter.error(f"{offering_id} has invalid self_service")
+            unit_cost = row.get("unit_cost", None)
+            if unit_cost is not None and not (
+                isinstance(unit_cost, (int, float)) and not isinstance(unit_cost, bool) and unit_cost >= 0
+            ):
+                reporter.error(f"{offering_id} has invalid unit_cost")
+            if row.get("last_resilience_test") is not None and parse_iso_date(
+                row.get("last_resilience_test")
+            ) is None:
+                reporter.error(f"{offering_id} has invalid last_resilience_test")
+            if "resilience_tested" in row and row["resilience_tested"] not in {True, False, None}:
+                reporter.error(f"{offering_id} has invalid resilience_tested")
+            validate_provenance(str(offering_id), row.get("provenance"), reporter)
             asset = row.get("asset_coverage", None)
             if asset is not None and asset not in ASSET_COVERAGE:
                 reporter.error(f"{offering_id} has invalid asset_coverage")

@@ -1,0 +1,62 @@
+# JSON Schema — Provenance
+#
+# Reusable metadata for "why should I believe this information?"
+# (OSM-M-007). Attach to a Service, Service Offering, service posture
+# record, or offering posture row. This is not an AI interpretation
+# or recommendation model.
+
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: https://raw.githubusercontent.com/7lens/open-servicecatalog-model/main/schema/provenance.yaml
+title: Provenance
+type: object
+additionalProperties: false
+properties:
+  authoritative_source:
+    type: string
+    description: >
+      Who or what is authoritative for this information (person, role,
+      or body). Distinct from source_system (the system of origin).
+    minLength: 1
+  source_system:
+    type: string
+    description: >
+      System from which the information was obtained. Distinct from
+      authoritative_source and from source_record_id.
+    minLength: 1
+  source_record_id:
+    type: string
+    description: >
+      Identifier of the originating record in source_system. Distinct
+      from evidence_reference (supporting evidence, which may live
+      elsewhere).
+    minLength: 1
+  last_verified:
+    type: string
+    format: date
+    description: Inclusive ISO 8601 date this information was last verified.
+  evidence_reference:
+    type: string
+    description: >
+      Handle or URI for supporting evidence. Not the source record
+      itself and not a GRC control library.
+    minLength: 1
+  confidence:
+    type: string
+    description: >
+      Trust in this information as an enterprise fact. Distinct from
+      discovery_method (how the fact entered the catalog).
+    enum:
+      - high
+      - medium
+      - low
+      - unknown
+  discovery_method:
+    type: string
+    description: >
+      How the information entered the catalog. Distinct from
+      confidence (how much the fact should be trusted).
+    enum:
+      - declared
+      - imported
+      - discovered
+      - manual

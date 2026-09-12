@@ -32,7 +32,9 @@ Model.
 7lens OSM incorporates useful semantics from existing models where
 they materially improve interoperability, governance or
 machine-readability. It does **not** copy those models wholesale.
-Compatibility does not mean copying.
+Compatibility does not mean copying. One semantic concept has one
+canonical OSM parameter (OSM-M-008); frameworks map to that
+parameter rather than adding a second copy.
 
 The [initial compatibility universe](COMPATIBILITY.md) is the map
 against which that goal will be validated. 7lens OSM is **designed
@@ -81,10 +83,11 @@ architecture.
 - **Services** — stable definitions of technological capabilities
 - **Service Offerings** — atomic requestable or deliverable variants
 - **Characteristics** — optional generic properties on services and offerings
+- **Provenance** — reusable source, evidence, verification and confidence
 - **Ownership** — who is accountable for a stack or a service
 - **Temporal semantics** — definition version, validity period and lifecycle
 - **Operational posture** — criticality, automation, security
-  and resilience evidence in the health record
+  and resilience evidence in the service posture record
 - **Governance attributes** — optional mappings to common frameworks
 - **ICT providers** — canonical third-party technology providers;
   Services and Offerings may reference them
@@ -136,10 +139,8 @@ and **not** a list of regulations OSM complies with.
 
 See [`COMPATIBILITY.md`](COMPATIBILITY.md) and the register
 [`DECISIONS.md`](DECISIONS.md) (`OSM-C-001`, `OSM-C-004`, `OSM-C-005`,
-`OSM-M-001`–`OSM-M-004`, `OSM-M-006`). Detailed model decisions are
-in [`decisions/`](decisions/). **OSM-M-007** (Complete Service
-Definition) is recorded as **PROPOSED**; it is not yet implemented
-in schema or examples.
+`OSM-M-001`–`OSM-M-004`, `OSM-M-006`, `OSM-M-007`). Detailed model
+decisions are in [`decisions/`](decisions/).
 
 Until an analysis is accepted, an entry is **NOT ANALYZED**. TM Forum
 TMF633, ITIL v5 and ServiceNow CSDM are **PARTIALLY COMPATIBLE**
@@ -166,7 +167,8 @@ Associated records:
 
 - Optional characteristics on services and offerings
 - Optional `providers` (ICT Provider ids) on services and offerings
-- Service attributes and offering attributes
+- Optional `provenance` on definitions and posture records
+- Service posture and offering posture (`service_attributes`)
 - ICT Provider register
 - Governance / ownership
 
@@ -174,8 +176,8 @@ Two files, two cadences:
 
 | Record | Nature | Typical cadence |
 |--------|--------|-----------------|
-| Catalog (`services`) | Current **definition** of what is delivered | Changes when version, validity, lifecycle, offerings or characteristics change. `id` does not change. |
-| Health record (`service_attributes`) | Current operational and compliance state | Changes as operations, risk and governance teams update posture |
+| Catalog (`services`) | Current **definition** of what is delivered | Changes when version, validity, lifecycle, offerings, characteristics or providers change. `id` does not change. |
+| Service posture (`service_attributes`) | Current operational and governance state | Changes as operations, risk and governance teams update posture |
 
 Identifiers never change once assigned. The **definition** may evolve
 (`version`, `valid_from`, `valid_to`, `lifecycle_state`). Ownership and
@@ -266,29 +268,38 @@ Two roles are defined in [`GOVERNANCE.md`](GOVERNANCE.md):
   lifecycle, correct use, and applicable security and operational
   obligations.
 
-The `accountable` field on a service names the Service Owner. Use a
-role title, a named individual, or a team alias according to local
-convention.
+The `accountable` field on a service names the Service Owner
+(service-definition and overall service accountability). Use a role
+title, a named individual, or a team alias according to local
+convention. Posture `financial_owner` is a different concept:
+financial ownership of the service.
 
-## Operational attributes
+## Service posture
 
 [`schema/service-attributes.yaml`](schema/service-attributes.yaml)
-describes the living health record of a service (not its definition
-lifecycle):
+holds **Service Posture** — how the service currently stands — not
+its definition lifecycle:
 
-- technical debt
-- operational criticality
-- data classification
-- vendor support status
-- automation vs manual operation
-- security review and asset coverage
-- operational resilience (for example RTO/RPO)
-- optional regulatory or framework fields
+- operational criticality and qualitative `resilience_tier` (not a
+  substitute for offering `rto` / `rpo`)
+- service-level **targets** (availability / response / resolution) —
+  expected performance, not hours windows
+- data classification (data handled) and security classification
+  (the service itself); shared enum tokens, different subjects
+- technical debt and vendor support
+- `automation_coverage` (overall delivery/operation) and
+  `provisioning_automation` (provisioning process)
+- financial characterization (cost pool, chargeback, unit cost,
+  `financial_owner` — distinct from Service `accountable`)
+- offering-level RTO/RPO and resilience evidence (`rto`, `rpo`; DORA
+  maps to these canonical fields)
+- optional regulatory or framework mappings (not copies of canonical
+  fields)
+- optional provenance
 
 Service-level fields apply to the whole service. Offering-level
 fields capture differences between requestable variants. An empty
-`offering_attributes` list is valid: attributes are filled in over
-time.
+`offering_attributes` list is valid: posture is filled in over time.
 
 ## Third-party providers
 
@@ -303,9 +314,13 @@ Use Service-level association when the provider is intrinsic to the
 Service; use Offering-level association when provider choice is the
 variant. Association is optional. Multiple providers are allowed.
 Do not copy provider master data onto Service or Offering.
+There is no separate `cloud_providers` field; a cloud provider is an
+ICT Provider.
 
-`dora_third_party_deps` on offering attributes is a separate
-DORA-oriented listing, not the canonical provider association.
+`dora_third_party_deps` on offering attributes is a DORA-oriented
+listing. Whether it is a genuinely different relationship from
+canonical `providers` is unresolved (**OSM-M-005**, **PROPOSED**).
+Do not collapse the two fields yet.
 
 The examples contain a **small fictional register** of well-known
 public providers. They are not a recommended vendor list and not an
@@ -321,7 +336,8 @@ NIST, GDPR, DORA and the EU AI Act). Other models in the
 These mappings exist so different stakeholders can read the same
 catalog in their own language. They do **not** make 7lens OSM an
 implementation, certification, or legal interpretation of any of
-those frameworks.
+those frameworks. If OSM already represents the concept, the
+framework maps to that field (OSM-M-008).
 
 Illustrative mappings in the examples are reference material only.
 They are not legal advice, not evidence of regulatory compliance,
@@ -401,6 +417,7 @@ systems; this repository does not define those other records.
 │   ├── service.yaml
 │   ├── service-offering.yaml
 │   ├── characteristic.yaml
+│   ├── provenance.yaml
 │   ├── service-attributes.yaml
 │   └── ict-provider.yaml
 ├── examples/

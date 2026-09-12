@@ -38,7 +38,6 @@ A new entity; a TMF catalog tree; an instance or inventory object.
 Documentation and comments only, plus the fields from OSM-M-001 and
 OSM-M-002.
 
-OSM-M-007 (PROPOSED) builds on this decision: it does not replace
+OSM-M-007 (ACCEPTED) builds on this decision: it does not replace
 the “Service is the stable definition” architecture; it completes
-the definition. Schema implementation of OSM-M-007 has not been
-performed.
+the definition.

@@ -1,6 +1,6 @@
 # 7lens OSM — Specification
 
-Version: 1.2.0
+Version: 1.3.0
 
 This is the normative specification of **7lens OSM** (7lens Open
 Service Catalog Model): a small, opinionated way to describe *what* a
@@ -22,11 +22,19 @@ core for semantic mapping and integration, not an alternative
 implementation of ITIL, CSDM or other enterprise frameworks
 (OSM-C-004, OSM-C-005).
 
-**OSM-M-007** (Complete Service Definition) is **PROPOSED** and is
-**not** yet implemented in this specification. Until it is accepted
-and propagated, the field tables below remain the implemented
-normative model. See
+OSM-M-007 defines a **Complete Service Definition**. The implemented
+model separates:
+
+```text
+SERVICE DEFINITION     what the service is (catalog)
+SERVICE POSTURE        how it currently stands (service_attributes)
+PROVENANCE             why the information can be trusted
+EXTERNAL CONTEXT       owned by other systems — not modelled here
+```
+
+Architectural reasoning is in
 [`decisions/OSM-M-007-complete-service-definition.md`](decisions/OSM-M-007-complete-service-definition.md).
+This specification is the implemented field model.
 
 ---
 
@@ -62,12 +70,13 @@ model.
 
 ### Design principles
 
-1. **Catalog vs. health record.** The catalog holds the **service
+1. **Catalog vs. posture.** The catalog holds the **service
    definition** (`id`, version, validity, `lifecycle_state`,
-   offerings, characteristics, optional `providers`). Identity (`id`)
-   is immutable. The definition may evolve (OSM-M-002).
-   Operational/compliance posture lives in `service_attributes` and
-   changes on a different cadence.
+   offerings, characteristics, optional `providers`, optional
+   `provenance`). Identity (`id`) is immutable. The definition may
+   evolve (OSM-M-002). Current operational/governance **posture**
+   lives in `service_attributes` (OSM-M-007) and changes on a
+   different cadence.
 2. **Two tiers, no deeper.** A service has service offerings. That is
    the only nesting. Offerings are the atomic requestable unit. OSM
    does not add a ServiceSpecification entity or extra catalog
@@ -77,14 +86,42 @@ model.
 4. **Every service has exactly one operational owner** (a technology
    stack).
 5. **Generic characteristics where a dedicated field is not justified**
-   (OSM-M-001). Do not grow the core schema for every possible
-   property.
+   (OSM-M-001, OSM-M-007). Delivery, service-experience, capacity,
+   commercial and technology variant dimensions belong on
+   characteristics unless they are classified as posture. Do not grow
+   the core schema for every possible property. `service_type` is not
+   a core field; Technology Stack remains the classification axis.
 6. **Selective compatibility** (OSM-M-004). Optional mappings to TBM,
    TOGAF, ISO, NIST, GDPR, DORA and the EU AI Act let different
    readers translate the catalog. 7lens OSM is not an implementation
    of those frameworks. Compatibility does not mean copying. The
    compatibility universe and analysis status live in
    [`COMPATIBILITY.md`](COMPATIBILITY.md).
+7. **One concept, one canonical parameter** (OSM-M-008). OSM MUST NOT
+   represent the same semantic concept through multiple canonical
+   parameters. Before introducing any new field, parameter,
+   characteristic, or mapping field:
+
+   1. Search the entire model for an existing representation of the
+      concept.
+   2. Check schemas.
+   3. Check examples.
+   4. Check `MODEL.md`.
+   5. Check `SPECIFICATION.md`.
+   6. Check existing decisions.
+   7. Determine whether the apparent difference is actually semantic
+      or merely terminology / framework-specific.
+   8. Only add a new field if there is a genuine semantic distinction.
+
+   If an existing OSM field already represents the concept, reuse it
+   and express framework-specific semantics through mappings. The
+   existence of a field in another standard is not sufficient
+   justification for adding it to OSM. Duplication is justified only
+   for genuinely different concepts or different grains — not
+   different names. The default when two fields appear equivalent is
+   **consolidation, not duplication**. Genuinely different concepts
+   may coexist even when they use similar names, the same enum
+   values, or appear related.
 
 ---
 
@@ -94,7 +131,7 @@ model.
 |------|---------|--------|---------------|
 | `examples/technology-stacks.yaml` | Operational competency domains | Stable | Platform leadership |
 | `examples/services.yaml` | The catalog (services → offerings) | Stable | Stack + Service Owners |
-| `examples/service-attributes.yaml` | Operational and compliance state | Dynamic | Multiple teams |
+| `examples/service-attributes.yaml` | Service / offering **posture** | Dynamic | Multiple teams |
 | `examples/ict-providers.yaml` | Third-party provider register | Semi-dynamic | Vendor management / risk |
 
 ```
@@ -179,6 +216,11 @@ EU AI Act `max_risk_class` ∈ {`unacceptable`, `high-risk`, `limited-risk`, `mi
 These mappings are **optional reference mappings**. They are not a
 claim of compliance, certification, or legal interpretation.
 
+Stack `mappings.dora.criticality` is a **stack-level** DORA label.
+Service criticality is canonical `operational_criticality`. Those are
+different grains (OSM-M-008). Do not add a service-level
+`dora_criticality` copy.
+
 ---
 
 ## 5. Service
@@ -204,7 +246,7 @@ Keep this boundary explicit (OSM-C-005):
 | `id` | yes | 2-segment service ID. Immutable. |
 | `name` | yes | Capability name. |
 | `description` | yes | Plain-language capability description. |
-| `accountable` | yes | The Service Owner (role name, team, or named individual). |
+| `accountable` | yes | Person or role accountable for the service definition and overall service accountability (the Service Owner). Distinct from posture `financial_owner`. |
 | `technology_stack` | yes | The `name` of the owning stack. Exactly one. |
 | `version` | yes | Definition version (opaque string). Does not change `id`. |
 | `valid_from` | yes | Inclusive ISO 8601 date this definition takes effect. |
@@ -212,6 +254,7 @@ Keep this boundary explicit (OSM-C-005):
 | `lifecycle_state` | yes | `draft` \| `pilot` \| `production` \| `sunset` \| `retired`. Authoritative definition lifecycle. |
 | `characteristics` | no | Generic characteristics (see §5.1). |
 | `providers` | no | ICT Provider ids when the provider is intrinsic to this Service (OSM-M-006). |
+| `provenance` | no | Reusable provenance for this definition (OSM-M-007). |
 | `service_offerings` | yes | List of offerings. |
 
 This catalog record is the **current** definition for that `id`.
@@ -230,6 +273,7 @@ validity, or lifecycle fields.
 | `description` | no | Optional clarification of the variant. |
 | `characteristics` | no | Generic characteristics (see §5.1). |
 | `providers` | no | ICT Provider ids when provider choice distinguishes this offering (OSM-M-006). |
+| `provenance` | no | Reusable provenance for this offering (OSM-M-007). |
 
 An **offering** is the atomic requestable/deliverable variant of a
 Service. It may differ in delivery characteristics such as
@@ -273,17 +317,61 @@ Rules:
 3. If `max_cardinality` is set, it must be ≥ `min_cardinality`
    (treat omitted `min_cardinality` as 0).
 4. Do not add a characteristic to the core schema when this mechanism
-   is enough (OSM-M-004).
+   is enough (OSM-M-004). Offering dimensions such as environment,
+   location, service hours, support hours, pricing model and unit of
+   consumption are characteristics, not dedicated schema fields
+   (OSM-M-007). `service_hours` is the time window the service is
+   intended to be available; `support_hours` is the time window
+   support is available. They are not `availability_target`,
+   `response_target` or `resolution_target`.
+
+### 5.2 Provenance (OSM-M-007)
+
+A reusable **provenance** object may be attached to a Service, a
+Service Offering, a service posture record, or an offering posture
+row. It records why an enterprise fact can be trusted. It is not an
+AI interpretation or recommendation.
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| `authoritative_source` | no | Who or what is authoritative (person, role, or body). Distinct from `source_system`. |
+| `source_system` | no | System the information came from. Distinct from `authoritative_source` and `source_record_id`. |
+| `source_record_id` | no | Identifier of the originating record in `source_system`. Distinct from `evidence_reference`. |
+| `last_verified` | no | ISO 8601 date last verified. |
+| `evidence_reference` | no | Handle or URI for supporting evidence. Not the source record. |
+| `confidence` | no | Trust in the fact: `high` \| `medium` \| `low` \| `unknown`. Distinct from `discovery_method`. |
+| `discovery_method` | no | How the fact entered the catalog: `declared` \| `imported` \| `discovered` \| `manual`. Distinct from `confidence`. |
+
+These seven fields are not interchangeable. Each answers a different
+trust question. Do not collapse them.
 
 ---
 
-## 6. Service attributes
+## 6. Service posture
 
-Organized **by service**. Each block has service-level posture fields
-plus a list of `offering_attributes`. Service-level fields are not
-duplicated per offering — an offering inherits them from its parent.
+Organized **by service** in `service_attributes`. The YAML key and
+filename are kept for compatibility. Semantically this is **Service
+Posture** (how the service currently stands) plus nested **Offering
+Posture**.
 
-An empty `offering_attributes: []` is a valid state.
+Service-level fields are not duplicated per offering — an offering
+inherits them from its parent. An empty `offering_attributes: []` is
+a valid incremental state.
+
+Canonical OSM posture fields are unprefixed. Framework-named fields
+remain optional **mappings of concepts OSM does not already
+represent**. Do not add a framework-prefixed copy of a canonical
+field (OSM-M-008). DORA recovery and criticality information maps to
+canonical `rto`, `rpo`, `operational_criticality` and
+`resilience_tested`.
+
+OSM records lightweight **service-level expectations**
+(`availability_target`, `response_target`, `resolution_target`) on
+service posture. **Targets** describe expected service performance.
+`service_hours` and `support_hours` are offering **characteristics**
+that describe **when** service or support is available. They are not
+the same concept as the targets. OSM does not manage SLAs, contracts,
+penalties, credits, workflows or measurement history.
 
 ### Service-level fields
 
@@ -291,32 +379,60 @@ An empty `offering_attributes: []` is a valid state.
 |-------|--------|
 | `service_id` | Must exist in the services catalog. |
 | `tech_debt_score` | `0`–`100`, or `null` if not assessed. |
-| `dora_criticality` | `critical` \| `important` \| `standard` |
-| `data_classification` | `public` \| `internal` \| `confidential` \| `restricted` |
+| `operational_criticality` | `critical` \| `important` \| `standard` |
+| `resilience_tier` | qualitative resilience classification/tier (free-text). Not a replacement for offering `rto` / `rpo`. |
+| `availability_target` | expected/target level of service availability (e.g. `99.9%`). A performance target, not `service_hours`. |
+| `response_target` | expected target time to respond to an incident/request (ISO 8601 duration). A performance target, not `support_hours`. |
+| `resolution_target` | expected target time to resolve an incident/request (ISO 8601 duration). A performance target, not hours. |
+| `data_classification` | classification of the data handled, processed, stored, or exposed: `public` \| `internal` \| `confidential` \| `restricted` |
+| `security_classification` | security sensitivity of the service itself: `public` \| `internal` \| `confidential` \| `restricted` |
+| `privacy_classification` | `none` \| `pii` \| `sensitive` \| `not-assessed` |
 | `vendor_support_status` | `active` \| `extended` \| `end-of-life` |
+| `financial_owner` | person/role responsible for financial ownership. Distinct from Service `accountable`. |
+| `provenance` | reusable provenance object |
 | `ai_act_applicable` | `true` \| `false` |
 | `ai_act_risk_class` | `unacceptable` \| `high-risk` \| `limited-risk` \| `minimal-risk` \| `not-applicable` |
 
-`dora_criticality` and `ai_act_*` are named for the frameworks they
-optionally map to. Using them does not constitute a DORA or AI Act
-assessment.
+`operational_criticality` is the canonical criticality semantic.
+DORA maps to this field; there is no `dora_criticality` copy.
+`ai_act_*` fields are named for the framework they optionally map
+to. Using them does not constitute an AI Act assessment.
+
+`data_classification` and `security_classification` share enum tokens
+on purpose. They are **not** the same fact: one classifies the data
+the service handles; the other classifies the service itself.
+`resilience_tier` is a qualitative classification; offering `rto` /
+`rpo` are explicit Recovery Time / Recovery Point Objectives. A tier
+MAY imply expected recovery characteristics, but it does not replace
+those values. `accountable` (Service definition) is not
+`financial_owner` (posture).
 
 ### Offering-level fields
 
-**Finance**
+**Finance (characterization, not accounting)**
 
 | Field | Values |
 |-------|--------|
-| `cloud_providers` | list of `aws`, `azure`, `gcp`, `on-prem` |
 | `cost_pool` | free-text cost pool, or `null` |
 | `chargeback_model` | `shared` \| `dedicated` \| `consumption` |
+| `unit_cost` | number ≥ 0, or `null` |
+
+Cloud / vendor association is not a finance enum. Use canonical
+`providers` on the Service or Offering (OSM-M-006). A cloud provider
+is an ICT Provider.
 
 **Operations**
 
 | Field | Values |
 |-------|--------|
-| `automation_coverage` | `none` \| `partial` \| `full` \| `null` |
+| `automation_coverage` | `none` \| `partial` \| `full` \| `null` — degree to which overall delivery/operation of the offering is automated |
+| `provisioning_automation` | `none` \| `partial` \| `full` \| `null` — degree to which the provisioning process specifically is automated |
+| `self_service` | `true` \| `false` \| `null` |
 | `manual_hours_week` | number, or `null` |
+
+`automation_coverage` and `provisioning_automation` share enum tokens
+on purpose. They are **not** the same fact: overall operational
+automation versus the provisioning process.
 
 **Security operations**
 
@@ -324,6 +440,20 @@ assessment.
 |-------|--------|
 | `last_security_review` | ISO 8601 date, or `null` |
 | `asset_coverage` | `complete` \| `partial` \| `unknown` \| `null` |
+
+**Canonical resilience (offering posture)**
+
+| Field | Values |
+|-------|--------|
+| `rto` | Recovery Time Objective (ISO 8601 duration, e.g. `PT8H`), or `null` |
+| `rpo` | Recovery Point Objective (ISO 8601 duration, e.g. `PT1H`), or `null` |
+| `resilience_tested` | `true` \| `false` \| `null` |
+| `last_resilience_test` | ISO 8601 date, or `null` |
+| `resilience_evidence` | handle or URI, or `null` |
+
+`rto` and `rpo` are explicit recovery objectives. Service-level
+`resilience_tier` is a qualitative classification of the service.
+They coexist; the tier is not a substitute for RTO/RPO.
 
 **ISO 27001 / 27701 (reference mappings)**
 
@@ -349,14 +479,17 @@ assessment.
 | `gdpr_dpia_required` | `true` \| `false` |
 | `gdpr_erasure_capable` | `true` \| `false` \| `partial` \| `not-applicable` |
 
-**Operational resilience**
+**DORA-oriented listing (not a copy of canonical resilience)**
+
+DORA recovery and testing semantics map to canonical `rto`, `rpo`
+and `resilience_tested` above. Do not duplicate those fields under
+DORA-prefixed names.
 
 | Field | Values |
 |-------|--------|
-| `dora_rto` | ISO 8601 duration (e.g. `PT8H`), or `null` |
-| `dora_rpo` | ISO 8601 duration (e.g. `PT1H`), or `null` |
-| `dora_third_party_deps` | list of provider IDs from the ICT provider file (DORA listing; not canonical `providers`) |
-| `dora_resilience_tested` | `true` \| `false` \| `null` |
+| `dora_third_party_deps` | list of provider IDs from the ICT provider file (DORA-oriented listing). Distinct from canonical `providers` until OSM-M-005 decides otherwise. Status of that question: **PROPOSED**, unresolved. |
+
+An offering posture row may also carry `provenance`.
 
 **EU AI Act (present only when `ai_act_applicable: true`)**
 
@@ -393,8 +526,12 @@ Service or Offering. It is not a generic Service → Service
 relationship.
 
 `dora_third_party_deps` on offering attributes remains a separate
-DORA-oriented listing. `services_consumed` on the provider remains
-the register's reverse list of service ids.
+DORA-oriented listing. Whether that listing is a genuinely different
+relationship from canonical `providers` is an **unresolved
+architectural question** (**OSM-M-005**, status **PROPOSED**). Do not
+collapse, rename or replace either field until that decision is
+accepted. `services_consumed` on the provider remains the register's
+reverse list of service ids.
 
 Fields support vendor-risk conversations; they do not by themselves
 satisfy any regulatory filing.
@@ -468,5 +605,14 @@ An implementation should enforce:
 13. Every id in Service or Offering `providers` exists in the ICT
     provider file. The field may be omitted. Duplicate ids in one
     list are rejected.
+14. If `provenance` is present, `confidence` and `discovery_method`
+    must use the published enums; `last_verified` must be an ISO date.
+15. Service and Offering records must not declare Service-to-Service
+    relationship fields (`depends_on`, `consumes`, `provides_to`,
+    `related_service`, `related_services`).
+16. Posture records must not declare removed duplicate fields
+    (`dora_rto`, `dora_rpo`, `dora_criticality`,
+    `dora_resilience_tested`, `cloud_providers`). Use the canonical
+    OSM field instead (OSM-M-008).
 
 See [`validation/`](validation/) for a lightweight checker.

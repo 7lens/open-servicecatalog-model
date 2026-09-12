@@ -27,13 +27,20 @@ accept an `OSM-M-*` decision (OSM-M-004: compatibility does not mean
 copying). Compatibility scope is `OSM-C-001` in that register. See
 [`COMPATIBILITY.md`](COMPATIBILITY.md).
 
-**OSM-M-007** (Complete Service Definition) is **PROPOSED**. Do not
-implement its schema or model changes until it is `ACCEPTED`.
+**OSM-M-007** (Complete Service Definition) is **ACCEPTED**. Apply its
+classification system (CORE FIELD, CHARACTERISTIC, SERVICE POSTURE,
+EXTERNAL CONTEXT, FRAMEWORK MAPPING, OUT OF SCOPE) when proposing
+fields. Do not add concepts it excludes.
+
+**OSM-M-008** (One Concept, One Canonical Parameter) is **ACCEPTED**.
+Before proposing any new field, search schemas, examples, `MODEL.md`,
+`SPECIFICATION.md` and existing decisions. If OSM already represents
+the concept, reuse that field and document a mapping. Do not add a
+framework-prefixed copy because DORA, ISO, NIST, GDPR, the EU AI Act,
+ITIL, CSDM or TM Forum uses a different name.
 
 Prefer a **characteristic** (OSM-M-001) over a new core field when
-the property is not needed by most adopters. OSM-M-007 (when
-accepted) classifies candidates as CORE FIELD, CHARACTERISTIC,
-SERVICE POSTURE, EXTERNAL CONTEXT, FRAMEWORK MAPPING, or OUT OF SCOPE.
+the property is not needed by most adopters.
 
 Not in scope:
 
@@ -50,7 +57,8 @@ Not in scope:
 Do not add Service → Service relationships unless maintainers accept
 a later decision; they are outside the current OSM core (OSM-C-004,
 OSM-C-005). Canonical provider association is `providers` → ICT
-Provider (OSM-M-006), not a service-to-service link.
+Provider (OSM-M-006), not a service-to-service link and not a
+separate `cloud_providers` list.
 
 If a change would require a reader to understand a broader enterprise
 model in order to use this catalog, it does not belong here.
@@ -68,6 +76,9 @@ Keep 7lens OSM:
    the spec in one sitting.
 6. **Machine-readable** — YAML that a validator can check.
 7. **Selective** — useful semantics only; do not accumulate standards.
+8. **One concept** — do not add a second canonical field for a
+   concept OSM already represents (OSM-M-008). Map frameworks to the
+   existing field.
 
 ## Identifier rules
 

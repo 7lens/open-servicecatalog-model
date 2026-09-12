@@ -53,14 +53,84 @@ services:
         min_cardinality: 1
         max_cardinality: 1
         configurable: false
+    provenance:
+      authoritative_source: Service Owner
+      source_system: osm-catalog
+      source_record_id: compute.kubernetes
+      last_verified: 2025-09-01
+      evidence_reference: synthetic://catalog/compute.kubernetes
+      confidence: high
+      discovery_method: declared
     service_offerings:
       - id: compute.kubernetes.aws
         name: AWS
-        # Offering-level: provider choice is the variant.
         providers: [aws]
+        characteristics:
+          - name: environment
+            value_type: string
+            description: Delivery environment of this offering.
+            allowed_values: [production, development]
+            value: production
+            default_value: production
+            min_cardinality: 1
+            max_cardinality: 1
+            configurable: false
+          - name: service_hours
+            value_type: string
+            description: >
+              Time window during which the service is intended to be
+              available. Distinct from availability_target (expected
+              performance).
+            value: 24x7
+            configurable: false
+          - name: support_hours
+            value_type: string
+            description: >
+              Time window during which support is available. Distinct
+              from response_target and resolution_target.
+            value: 24x7
+            configurable: false
+          - name: pricing_model
+            value_type: string
+            description: How consumption of this offering is priced.
+            allowed_values: [subscription, consumption]
+            value: consumption
+            configurable: false
+          - name: unit_of_consumption
+            value_type: string
+            description: Unit used to characterize consumption.
+            value: cluster-hour
+            configurable: false
       - id: compute.kubernetes.azure
         name: Azure
         providers: [azure]
+        characteristics:
+          - name: environment
+            value_type: string
+            description: Delivery environment of this offering.
+            allowed_values: [production, development]
+            value: production
+            default_value: production
+            min_cardinality: 1
+            max_cardinality: 1
+            configurable: false
+          - name: service_hours
+            value_type: string
+            value: 24x7
+            configurable: false
+          - name: support_hours
+            value_type: string
+            value: business-hours
+            configurable: false
+          - name: pricing_model
+            value_type: string
+            allowed_values: [subscription, consumption]
+            value: subscription
+            configurable: false
+          - name: unit_of_consumption
+            value_type: string
+            value: cluster-month
+            configurable: false
 
   - id: db.managed-postgres
     name: Managed PostgreSQL

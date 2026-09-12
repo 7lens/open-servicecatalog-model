@@ -26,9 +26,13 @@ add a provider-role taxonomy (primary / secondary / subcontractor /
 reseller).
 
 `providers` is not a generic Service → Service relationship and is
-not `dora_third_party_deps`. Existing DORA fields remain. ICT
+not `dora_third_party_deps`. DORA copies of canonical recovery,
+criticality or testing fields are not OSM fields (OSM-M-008).
+`dora_third_party_deps` remains as a DORA-oriented listing until
+OSM-M-005 is decided. Whether it is a genuinely different
+relationship from `providers` is still open. ICT
 Provider remains the single canonical provider entity; no new
-Provider type.
+Provider type and no `cloud_providers` list.
 
 ```text
 Service / Offering

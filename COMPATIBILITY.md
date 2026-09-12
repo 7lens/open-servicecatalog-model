@@ -15,7 +15,8 @@ TMF or CSDM.
 Related decisions: [`DECISIONS.md`](DECISIONS.md) — **OSM-C-001**
 (as amended by **OSM-C-002**, **OSM-C-003**); TM Forum follow-up
 **OSM-M-001**–**OSM-M-004**; ITIL v5 **OSM-C-004**; CSDM **OSM-C-005**
-and provider references **OSM-M-006**.
+and provider references **OSM-M-006**; Complete Service Definition
+**OSM-M-007**; One concept, one canonical parameter **OSM-M-008**.
 
 ---
 
@@ -43,6 +44,10 @@ reproduction. OSM holds the minimum canonical semantics needed to
 define its concepts. Contextual concepts and richer relationships
 can exist in the broader 7lens model or in customer systems and
 frameworks without being duplicated in OSM.
+
+A framework must not drive a new OSM field simply because it has a
+field with a different name (OSM-M-008). Reuse the canonical OSM
+concept and document the mapping.
 
 ---
 
@@ -109,8 +114,9 @@ any private source catalog.
 | Service | Stable **definition** of a technological service (OSM-M-003), including `version`, validity and `lifecycle_state` |
 | Service Offering | Atomic requestable / deliverable variant |
 | Characteristic | Nested property on Service or Offering (OSM-M-001); not a catalog entity |
-| Service Attributes | Health / governance posture of a service |
-| Offering Attributes | Variant-level operational data |
+| Provenance | Reusable source/evidence/confidence object (OSM-M-007); not a catalog entity |
+| Service Posture | Current operational / governance state (`service_attributes`) |
+| Offering Posture | Variant-level operational state (`offering_attributes`) |
 | ICT Provider | Canonical third-party technology provider (OSM-M-006) |
 | Roles (documentation) | Technology Stack Owner, Service Owner |
 
@@ -119,10 +125,11 @@ any private source catalog.
 - Technology Stack `1 : many` Service (`service.technology_stack` = stack `name`)
 - Service `1 : many` Service Offering (offering ID prefix = service ID)
 - Service / Offering `0 : many` Characteristic (nested; no characteristic id)
+- Service / Offering / posture `0 : 1` Provenance (nested; OSM-M-007)
 - Service `1 : 0..1` Service Attributes (`service_id`)
 - Service Attributes `1 : many` Offering Attributes (`offering_id`)
 - Service / Offering `0 : many` ICT Provider (`providers` ids; OSM-M-006)
-- Offering attributes → ICT Provider (`dora_third_party_deps`; DORA listing, distinct from `providers`)
+- Offering attributes → ICT Provider (`dora_third_party_deps`; DORA-oriented listing. Whether this is a genuinely different relationship from `providers` is unresolved — OSM-M-005, PROPOSED)
 - ICT Provider → Service (`services_consumed`; register reverse list)
 
 Consumers of a technological service are out of scope. No application,
@@ -136,7 +143,11 @@ relationships are deliberately outside the current OSM core
 Optional reference mappings already exist on **Technology Stack**
 (`tbm_tower`, `tbm_sub_tower`, `togaf_domain`, `iso27001`, `iso27701`,
 `nist_csf`, `gdpr`, `dora`, `ai_act`) and on **service / offering
-attributes** (ISO, NIST, GDPR, DORA-named and EU AI Act fields).
+attributes** (ISO, NIST, GDPR and EU AI Act fields, plus
+`dora_third_party_deps`). DORA recovery, criticality and resilience
+testing map to canonical `rto`, `rpo`, `operational_criticality` and
+`resilience_tested`; there are no DORA-prefixed copies of those
+fields (OSM-M-008). Canonical provider association is `providers`.
 
 No mapping fields currently exist for ArchiMate. TM Forum analysis is
 recorded in
@@ -216,5 +227,6 @@ Maintainers record accepted changes in [`DECISIONS.md`](DECISIONS.md).
 Detailed `OSM-M-*` documents are in [`decisions/`](decisions/).
 A future propagation pass must update every listed surface and must
 **not** invent model changes. See *Decision propagation* in the
-register. **OSM-M-007** is PROPOSED; do not treat it as implemented
-compatibility or schema change.
+register. **OSM-M-007** is ACCEPTED; it does not add framework
+entities to OSM. **OSM-M-008** is ACCEPTED: frameworks map to
+canonical OSM fields rather than creating copies of them.

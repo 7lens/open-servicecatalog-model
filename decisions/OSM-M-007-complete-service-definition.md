@@ -1,15 +1,20 @@
 # OSM-M-007 — Complete Service Definition
 
-**Status:** PROPOSED → ready for acceptance  
+**Status:** ACCEPTED  
 **Date:** 2026-09-12  
 **Type:** Model  
 **Scope:** Core OSM semantic model
 
 > **Repository record.** This file is the canonical architectural
-> document for OSM-M-007. Schema, examples and validation have **not**
-> been changed to implement it. Implementation waits for acceptance
-> and a later propagation pass. See the register:
-> [`DECISIONS.md`](../DECISIONS.md).
+> document for OSM-M-007. Schema, examples and validation implement
+> it. See the register: [`DECISIONS.md`](../DECISIONS.md).
+>
+> OSM-M-008 (One Concept, One Canonical Parameter) applies to this
+> implementation. Framework-specific information is expressed through
+> mappings when the underlying concept is already represented
+> canonically. Canonical resilience and provider fields are `rto`,
+> `rpo`, and `providers`. `dora_rto`, `dora_rpo`, and
+> `cloud_providers` are not OSM fields.
 
 ---
 
@@ -157,7 +162,7 @@ M-007 confirms the following as **CORE**.
 | `id` | **CORE** | Yes |
 | `name` | **CORE** | Yes |
 | `description` | **CORE** | Yes |
-| `accountable` | **CORE** | Yes |
+| `accountable` | **CORE** | Yes — service-definition / overall accountability; distinct from `financial_owner` |
 | `technology_stack` | **CORE** | Yes |
 | `version` | **CORE** | Yes |
 | `valid_from` | **CORE** | Yes |
@@ -260,14 +265,19 @@ The following are **CHARACTERISTICS**, not mandatory schema fields.
 
 - pricing model
 - unit of consumption
-- chargeback model
 - consumption model
+
+`chargeback_model` is offering **posture**, not a second characteristic
+of the same fact (see §13).
 
 ### Technology
 
-- cloud provider
 - platform variant
 - technology variant
+
+Provider / cloud association is **not** a characteristic and not a
+parallel `cloud_providers` field. Use canonical `providers` → ICT
+Provider (OSM-M-006). A cloud provider is still an ICT Provider.
 
 The generic Characteristics mechanism should be used instead of creating dozens of dedicated Offering fields.
 
@@ -294,6 +304,15 @@ The distinction is:
 
 > **OSM defines service-level expectations; it does not manage SLAs.**
 
+**Targets** (`availability_target`, `response_target`,
+`resolution_target`) describe expected service performance.
+
+**Hours** (`service_hours`, `support_hours` characteristics) describe
+when the service or support is available.
+
+They are not the same concept. Do not treat hours as a substitute for
+targets, or targets as a substitute for hours.
+
 ### Explicitly excluded
 
 - SLA entities
@@ -312,17 +331,24 @@ The complete service picture includes:
 
 ### Service-level posture
 
-- operational criticality
-- resilience tier
-- business/DORA criticality where applicable
+- operational criticality (canonical; DORA maps to this field)
+- resilience tier — qualitative resilience classification
+
+Do not add a separate DORA-prefixed criticality field. Stack-level
+`mappings.dora.criticality` remains a stack mapping at a different
+grain.
 
 ### Offering-level posture
 
-- RTO
-- RPO
+- RTO — Recovery Time Objective (explicit)
+- RPO — Recovery Point Objective (explicit)
 - resilience tested
 - last resilience test
 - resilience-related evidence
+
+`resilience_tier` and `rto` / `rpo` are different concepts. A tier
+MAY be associated with expected recovery characteristics; it is not
+a replacement for explicit RTO/RPO values.
 
 ---
 
@@ -334,11 +360,14 @@ OSM should describe enough security/data posture to make a technological service
 
 | Concept | Classification |
 |---|---|
-| Data classification | **SERVICE POSTURE** |
-| Security classification | **SERVICE POSTURE** |
+| Data classification | **SERVICE POSTURE** — data handled, processed, stored, or exposed |
+| Security classification | **SERVICE POSTURE** — security sensitivity of the service itself |
 | Privacy classification | **SERVICE POSTURE / CHARACTERISTIC** |
 | AI applicability | **FRAMEWORK / POSTURE** |
 | Criticality | **SERVICE POSTURE** |
+
+`data_classification` and `security_classification` may share enum
+tokens. They classify different subjects and are not the same fact.
 
 ### Offering-level
 
@@ -373,6 +402,8 @@ Current mappings remain:
 
 Mappings allow OSM information to be translated into external frameworks without making OSM a compliance implementation or certification system.
 
+A framework field with a different name is **not** sufficient justification for a new OSM field (OSM-M-008). If OSM already represents the concept, reuse the canonical field and document the mapping. Do not keep framework-prefixed copies such as `dora_rto` alongside canonical `rto`.
+
 ---
 
 ## 13. Financial characterization
@@ -393,7 +424,7 @@ It should not answer:
 | Chargeback model | **SERVICE POSTURE** |
 | Pricing model | **CHARACTERISTIC** |
 | Unit of consumption | **CHARACTERISTIC** |
-| Financial owner | **SERVICE POSTURE / CHARACTERISTIC** |
+| Financial owner | **SERVICE POSTURE** — financial ownership; distinct from Service `accountable` |
 | Unit cost | **SERVICE POSTURE** where useful |
 
 ### Exclude
@@ -415,12 +446,15 @@ The complete service picture includes operational maturity signals.
 
 ### Include as POSTURE
 
-- automation coverage
+- automation coverage — overall delivery/operation of the offering
+- provisioning automation — the provisioning process specifically
 - manual effort
 - self-service capability
-- provisioning automation
 - technical debt
 - vendor support status
+
+`automation_coverage` and `provisioning_automation` share enum tokens
+on purpose. They are not the same fact.
 
 ### Exclude
 
@@ -456,6 +490,18 @@ OSM should therefore support provenance for important information.
 | Discovery method | **POSTURE / METADATA** |
 
 This should be implemented as a **reusable provenance mechanism**, rather than as seven unrelated fields on Service.
+
+The seven fields are not interchangeable:
+
+| Field | Question |
+|---|---|
+| `authoritative_source` | Who/what is authoritative? |
+| `source_system` | Which system did it come from? |
+| `source_record_id` | Which record in that system? |
+| `last_verified` | When was it last verified? |
+| `evidence_reference` | Where is supporting evidence? |
+| `confidence` | How much should this fact be trusted? |
+| `discovery_method` | How did it enter the catalog? |
 
 The strategic purpose is to distinguish:
 
@@ -660,7 +706,9 @@ If another system/model should own the information.
 
 ### FRAMEWORK MAPPING
 
-If the concept exists primarily because another framework uses it.
+If the concept exists primarily because another framework uses it **and** OSM does not already represent that concept.
+
+If OSM already represents the concept, document a mapping instead of adding a second field (OSM-M-008).
 
 This is the primary anti-bloat mechanism for OSM.
 
@@ -708,6 +756,7 @@ M-007 does not invalidate:
 - OSM-M-004 — Best-of, not standards accumulation
 - OSM-M-005 — DORA provider-link grain
 - OSM-M-006 — Canonical ICT Provider references
+- OSM-M-008 — One concept, one canonical parameter
 
 Instead, M-007 builds on them.
 
