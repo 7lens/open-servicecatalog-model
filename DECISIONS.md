@@ -16,7 +16,7 @@ There was no prior numbering scheme in this repository. New IDs use:
 | Prefix | Use |
 |--------|-----|
 | `OSM-C-nnn` | Compatibility universe and mapping decisions |
-| `OSM-M-nnn` | Model / schema decisions (none yet) |
+| `OSM-M-nnn` | Model / schema decisions (`OSM-M-001` deferred; none accepted) |
 | `OSM-D-nnn` | Documentation / naming decisions (none yet) |
 
 ---
@@ -64,8 +64,9 @@ Propagation rules:
 7. If identifiers or enums change, update `validation/validate.py`.
 8. Record the commit or PR on the decision once applied.
 
-The next human-led step after OSM-C-001 is comparison and decision
-making (P1+). That work is not started here.
+The next human-led step is P1 comparison against the current
+compatibility universe (OSM-C-001 as amended by OSM-C-002 and
+OSM-C-003). That work is not started here.
 
 ---
 
@@ -85,8 +86,6 @@ making (P1+). That work is not started here.
   - ArchiMate
   - TOGAF
   - TBM (Technology Business Management)
-  - PDMC (working identification: Practical Data Model for CMDB;
-    confirm if another public service-model reference was intended)
 
   **B. Compliance / governance frameworks**
   - ISO/IEC 27001
@@ -117,3 +116,63 @@ making (P1+). That work is not started here.
   Optional mapping fields already in the schema (TBM, TOGAF, ISO,
   NIST, GDPR, DORA, EU AI Act) remain illustrative until maintainers
   accept a mapping decision.
+  Amended by **OSM-C-002** (PDMC removed) and **OSM-C-003** (CSDM
+  retained). P0 accepted as documentation-only.
+
+### OSM-C-002 — Remove PDMC from the compatibility universe
+
+- **Status:** ACCEPTED
+- **Date:** 2026-09-12
+- **Type:** Compatibility
+- **Decision:** PDMC is removed from the 7lens OSM compatibility
+  universe. It was introduced prematurely and ambiguously and is not
+  an approved OSM compatibility target. It is not replaced by another
+  model.
+- **What this is not:** a model/schema/example change; a substitute
+  mapping target.
+- **Surfaces to update:**
+  - [x] `compatibility/PDMC.md` — deleted
+  - [x] `COMPATIBILITY.md`
+  - [x] `DECISIONS.md` (this record)
+  - [x] `README.md` — no PDMC references were present
+  - [ ] `schema/` — no change
+  - [ ] `examples/` — no change
+  - [ ] `validation/` — no change
+- **Notes:** Amends OSM-C-001.
+
+### OSM-C-003 — Retain ServiceNow CSDM in the compatibility universe
+
+- **Status:** ACCEPTED
+- **Date:** 2026-09-12
+- **Type:** Compatibility
+- **Decision:** ServiceNow CSDM remains in the compatibility universe.
+  Although vendor-specific, it is sufficiently important in enterprise
+  service management to justify compatibility analysis. OSM remains
+  vendor-neutral; a later mapping would be a projection into CSDM,
+  not an adoption of ServiceNow as the OSM metamodel.
+- **What this is not:** a completed CSDM mapping; a decision to model
+  business services or applications in OSM.
+- **Surfaces to update:**
+  - [x] `compatibility/SERVICENOW-CSDM.md` (universe confirmation only)
+  - [x] `COMPATIBILITY.md` (CSDM already listed; retained)
+  - [x] `DECISIONS.md` (this record)
+  - [ ] `schema/` — no change
+- **Notes:** Confirms OSM-C-001 with respect to CSDM.
+
+---
+
+## Model decisions
+
+### OSM-M-001 — DORA provider-link grain (offering vs service)
+
+- **Status:** PROPOSED
+- **Date:** 2026-09-12
+- **Type:** Model
+- **Decision:** Not decided. Observed mismatch: `dora_third_party_deps`
+  is offering-level; `services_consumed` is service-level. Maintainers
+  will address this during DORA compliance analysis. **Do not change
+  schema, examples or validation now.**
+- **What this is not:** an accepted model change; a P0 action.
+- **Surfaces to update:** none until this decision is ACCEPTED.
+- **Notes:** Recorded so P1+ compliance work has a stable ID. P0
+  remains documentation-only.

@@ -14,9 +14,11 @@ related objects. It typically spans foundation data, design objects,
 technical services, application services, and sell/consume (business)
 services.
 
-CSDM is vendor-specific. OSM is vendor-neutral. Compatibility, if
-later established, would mean an adopter can *project* OSM records
-into CSDM classes — not that OSM is a ServiceNow product model.
+CSDM is vendor-specific. OSM is vendor-neutral. **OSM-C-003** keeps
+CSDM in the compatibility universe because it is important in
+enterprise service management. Compatibility, if later established,
+would mean an adopter can *project* OSM records into CSDM classes —
+not that OSM is a ServiceNow product model.
 
 ## 2. Scope
 
@@ -71,6 +73,7 @@ None proposed. No attributes are added in this baseline.
 
 ## 9. Decisions still required
 
+- Universe inclusion is decided (**OSM-C-003**): CSDM stays.
 - Whether any OSM concept should ever be documented as a CSDM class
   mapping, or only as an integration example
 - How to talk about CSDM without implying OSM models applications

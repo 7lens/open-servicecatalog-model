@@ -10,7 +10,8 @@ been proven.
 Compatibility analysis has **not** been completed. No model in this
 baseline is marked compatible.
 
-Related decision: [`DECISIONS.md`](DECISIONS.md) — **OSM-C-001**.
+Related decisions: [`DECISIONS.md`](DECISIONS.md) — **OSM-C-001**
+(as amended by **OSM-C-002**, **OSM-C-003**).
 
 ---
 
@@ -18,8 +19,8 @@ Related decision: [`DECISIONS.md`](DECISIONS.md) — **OSM-C-001**.
 
 Technology organizations already live with several service, architecture
 and governance languages: TM Forum catalogs, ITIL, CSDM, ArchiMate,
-TOGAF, TBM, CMDB reference models, and a set of security, privacy and
-operational-resilience frameworks.
+TOGAF, TBM, and a set of security, privacy and operational-resilience
+frameworks.
 
 7lens OSM is being designed to bring together the **useful
 characteristics** of those languages in one deliberately small,
@@ -99,7 +100,7 @@ Optional reference mappings already exist on **Technology Stack**
 attributes** (ISO, NIST, GDPR, DORA-named and EU AI Act fields).
 
 No mapping fields currently exist for TM Forum TMF633, ITIL,
-ServiceNow CSDM, ArchiMate or PDMC.
+ServiceNow CSDM or ArchiMate.
 
 The presence of a field is **not** a completed compatibility analysis.
 
@@ -115,8 +116,9 @@ The presence of a field is **not** a completed compatibility analysis.
 ## Initial compatibility universe
 
 The following models and frameworks form the **initial compatibility
-baseline** for 7lens OSM (OSM-C-001). OSM is designed to be compatible
-with this universe. That design intent is not yet validated.
+baseline** for 7lens OSM (**OSM-C-001**, amended by **OSM-C-002** and
+**OSM-C-003**). OSM is designed to be compatible with this universe.
+That design intent is not yet validated.
 
 ### A. Models / taxonomies / architectural frameworks
 
@@ -128,7 +130,6 @@ with this universe. That design intent is not yet validated.
 | ArchiMate | [compatibility/ARCHIMATE.md](compatibility/ARCHIMATE.md) | NOT ANALYZED |
 | TOGAF | [compatibility/TOGAF.md](compatibility/TOGAF.md) | NOT ANALYZED |
 | TBM | [compatibility/TBM.md](compatibility/TBM.md) | NOT ANALYZED |
-| PDMC (Practical Data Model for CMDB) | [compatibility/PDMC.md](compatibility/PDMC.md) | NOT ANALYZED |
 
 ### B. Compliance / governance frameworks
 
