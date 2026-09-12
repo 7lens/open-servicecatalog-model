@@ -1,0 +1,175 @@
+# Example Service Attributes
+#
+# Synthetic health-record samples. Values are fictional and chosen to
+# show field patterns. They are not measurements from a real estate.
+#
+# Framework-named fields are OPTIONAL REFERENCE MAPPINGS, not legal
+# advice and not evidence of compliance or certification.
+
+service_attributes:
+
+  # Fully populated production service with two offerings.
+  - service_id: compute.kubernetes
+    lifecycle_state: production
+    tech_debt_score: 18
+    dora_criticality: important
+    data_classification: internal
+    vendor_support_status: active
+    ai_act_applicable: false
+    ai_act_risk_class: not-applicable
+    offering_attributes:
+      - offering_id: compute.kubernetes.shared-cluster
+        cloud_providers: [aws, azure]
+        cost_pool: compute-shared
+        chargeback_model: shared
+        automation_coverage: partial
+        manual_hours_week: 5
+        last_security_review: 2025-09-12
+        asset_coverage: partial
+        iso27001_controls: [A.8.8, A.8.9]
+        iso27701_pii_role: none
+        iso27701_pii_categories: [none]
+        iso27701_retention_days: null
+        nist_functions: [identify, protect]
+        nist_control_status: partially-implemented
+        gdpr_processing_activity: false
+        gdpr_dpia_required: false
+        gdpr_erasure_capable: not-applicable
+        dora_rto: PT8H
+        dora_rpo: PT2H
+        dora_third_party_deps: [aws, azure]
+        dora_resilience_tested: false
+      - offering_id: compute.kubernetes.dedicated-cluster
+        cloud_providers: [aws]
+        cost_pool: compute-dedicated
+        chargeback_model: dedicated
+        automation_coverage: partial
+        manual_hours_week: 3
+        last_security_review: 2025-09-12
+        asset_coverage: complete
+        iso27001_controls: [A.8.8, A.8.9]
+        iso27701_pii_role: none
+        iso27701_pii_categories: [none]
+        iso27701_retention_days: null
+        nist_functions: [identify, protect]
+        nist_control_status: implemented
+        gdpr_processing_activity: false
+        gdpr_dpia_required: false
+        gdpr_erasure_capable: not-applicable
+        dora_rto: PT6H
+        dora_rpo: PT30M
+        dora_third_party_deps: [aws]
+        dora_resilience_tested: true
+
+  # Restricted classification with privacy-related reference mappings.
+  - service_id: db.managed-postgres
+    lifecycle_state: production
+    tech_debt_score: null
+    dora_criticality: critical
+    data_classification: confidential
+    vendor_support_status: active
+    ai_act_applicable: false
+    ai_act_risk_class: not-applicable
+    offering_attributes:
+      - offering_id: db.managed-postgres.high-availability
+        cloud_providers: [aws]
+        cost_pool: data-stores
+        chargeback_model: consumption
+        automation_coverage: partial
+        manual_hours_week: 2
+        last_security_review: 2025-08-04
+        asset_coverage: complete
+        iso27001_controls: [A.8.24, A.8.10]
+        iso27701_pii_role: processor
+        iso27701_pii_categories: [identity]
+        iso27701_retention_days: 730
+        nist_functions: [identify, protect, detect]
+        nist_control_status: implemented
+        gdpr_processing_activity: true
+        gdpr_dpia_required: true
+        gdpr_erasure_capable: partial
+        dora_rto: PT3H
+        dora_rpo: PT30M
+        dora_third_party_deps: [aws]
+        dora_resilience_tested: true
+
+  # Valid incremental state: service posture only, no offering rows yet.
+  - service_id: compute.virtual-machines
+    lifecycle_state: production
+    tech_debt_score: 12
+    dora_criticality: important
+    data_classification: internal
+    vendor_support_status: active
+    ai_act_applicable: false
+    ai_act_risk_class: not-applicable
+    offering_attributes: []
+
+  # Illustrative AI-related fields on one offering. Not a legal classification.
+  - service_id: data.analytics-platform
+    lifecycle_state: pilot
+    tech_debt_score: 25
+    dora_criticality: standard
+    data_classification: internal
+    vendor_support_status: active
+    ai_act_applicable: true
+    ai_act_risk_class: limited-risk
+    offering_attributes:
+      - offering_id: data.analytics-platform.query-assistant
+        cloud_providers: [azure]
+        cost_pool: data-platform
+        chargeback_model: shared
+        automation_coverage: partial
+        manual_hours_week: 4
+        last_security_review: 2025-10-01
+        asset_coverage: partial
+        iso27001_controls: [A.8.11]
+        iso27701_pii_role: none
+        iso27701_pii_categories: [none]
+        iso27701_retention_days: null
+        nist_functions: [govern, identify]
+        nist_control_status: planned
+        gdpr_processing_activity: false
+        gdpr_dpia_required: false
+        gdpr_erasure_capable: not-applicable
+        dora_rto: PT24H
+        dora_rpo: PT8H
+        dora_third_party_deps: [azure]
+        dora_resilience_tested: false
+        ai_act_intended_purpose: >
+          Assist analysts in drafting analytical queries. Illustrative
+          example only — not a legal AI Act classification.
+        ai_act_human_oversight: human-in-the-loop
+        ai_act_transparency_level: explicit-disclosure
+        ai_act_conformity_assessment: null
+        ai_act_training_data_doc: not-applicable
+
+  - service_id: devops.continuous-delivery
+    lifecycle_state: production
+    tech_debt_score: 8
+    dora_criticality: important
+    data_classification: internal
+    vendor_support_status: active
+    ai_act_applicable: false
+    ai_act_risk_class: not-applicable
+    offering_attributes:
+      - offering_id: devops.continuous-delivery.pipeline
+        cloud_providers: [aws]
+        cost_pool: developer-platform
+        chargeback_model: shared
+        automation_coverage: full
+        manual_hours_week: 1
+        last_security_review: 2025-07-22
+        asset_coverage: complete
+        iso27001_controls: [A.8.25]
+        iso27701_pii_role: none
+        iso27701_pii_categories: [none]
+        iso27701_retention_days: null
+        nist_functions: [protect]
+        nist_control_status: implemented
+        gdpr_processing_activity: false
+        gdpr_dpia_required: false
+        gdpr_erasure_capable: not-applicable
+        dora_rto: PT12H
+        dora_rpo: PT4H
+        dora_third_party_deps: [github]
+        dora_resilience_tested: false

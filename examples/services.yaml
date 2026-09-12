@@ -1,0 +1,135 @@
+# Example Services
+#
+# Synthetic catalog for a fictional technology platform organization.
+# It demonstrates identity, ownership and offerings. It is not a real
+# service inventory and not a recommended technology estate.
+#
+# Service ID = 2 segments. Offering ID = 3 segments.
+
+services:
+
+  - id: compute.virtual-machines
+    name: Virtual Machines
+    description: Provisioned virtual machines with lifecycle and patching.
+    accountable: Service Owner
+    technology_stack: Compute
+    service_offerings:
+      - id: compute.virtual-machines.shared
+        name: Shared virtual machine pool
+      - id: compute.virtual-machines.dedicated
+        name: Dedicated virtual machine
+
+  - id: compute.kubernetes
+    name: Kubernetes
+    description: Managed Kubernetes clusters offered as a technological service.
+    accountable: Service Owner
+    technology_stack: Compute
+    service_offerings:
+      - id: compute.kubernetes.shared-cluster
+        name: Shared cluster
+      - id: compute.kubernetes.dedicated-cluster
+        name: Dedicated cluster
+
+  - id: db.managed-postgres
+    name: Managed PostgreSQL
+    description: Managed PostgreSQL database service.
+    accountable: Service Owner
+    technology_stack: Database
+    service_offerings:
+      - id: db.managed-postgres.standard
+        name: Standard instance
+      - id: db.managed-postgres.high-availability
+        name: Highly available instance
+
+  - id: db.managed-cache
+    name: Managed Cache
+    description: In-memory cache offered as a managed service.
+    accountable: Service Owner
+    technology_stack: Database
+    service_offerings:
+      - id: db.managed-cache.standard
+        name: Standard cache
+
+  - id: net.connectivity
+    name: Network Connectivity
+    description: Virtual networks and remote-access connectivity.
+    accountable: Service Owner
+    technology_stack: Network
+    service_offerings:
+      - id: net.connectivity.virtual-network
+        name: Virtual network
+      - id: net.connectivity.remote-access
+        name: Remote access VPN
+
+  - id: storage.object-storage
+    name: Object Storage
+    description: Object storage for unstructured data.
+    accountable: Service Owner
+    technology_stack: Storage
+    service_offerings:
+      - id: storage.object-storage.standard
+        name: Standard object storage
+      - id: storage.object-storage.archive
+        name: Archive object storage
+
+  - id: sec.identity-access
+    name: Identity and Access
+    description: Directory, authentication and access-governance services.
+    accountable: Service Owner
+    technology_stack: Security
+    service_offerings:
+      - id: sec.identity-access.directory
+        name: Directory lifecycle
+      - id: sec.identity-access.mfa
+        name: Multi-factor authentication
+
+  - id: devops.continuous-delivery
+    name: Continuous Delivery
+    description: Pipelines and artifact storage for building and releasing software.
+    accountable: Service Owner
+    technology_stack: DevOps
+    service_offerings:
+      - id: devops.continuous-delivery.pipeline
+        name: Delivery pipeline
+      - id: devops.continuous-delivery.artifacts
+        name: Artifact registry
+
+  - id: auto.infrastructure-as-code
+    name: Infrastructure as Code
+    description: Versioned infrastructure automation and guarded execution.
+    accountable: Service Owner
+    technology_stack: Automation
+    service_offerings:
+      - id: auto.infrastructure-as-code.execution
+        name: Guarded IaC execution
+
+  - id: data.analytics-platform
+    name: Analytics Platform
+    description: Analytical warehouse and ingestion services.
+    accountable: Service Owner
+    technology_stack: Data
+    service_offerings:
+      - id: data.analytics-platform.warehouse
+        name: Analytical warehouse
+      - id: data.analytics-platform.ingestion
+        name: Batch and streaming ingestion
+      - id: data.analytics-platform.query-assistant
+        name: Query assistance
+
+  - id: ops.observability
+    name: Observability
+    description: Metrics, logs, traces and alerting as a technological service.
+    accountable: Service Owner
+    technology_stack: Operations
+    service_offerings:
+      - id: ops.observability.metrics-alerting
+        name: Metrics and alerting
+
+  - id: finops.cloud-cost
+    name: Cloud Cost Visibility
+    description: Cost allocation, budgets and usage signals for cloud spend.
+    accountable: Service Owner
+    technology_stack: FinOps
+    service_offerings:
+      - id: finops.cloud-cost.visibility
+        name: Cost visibility

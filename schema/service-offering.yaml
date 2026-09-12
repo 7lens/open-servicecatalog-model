@@ -1,0 +1,24 @@
+# JSON Schema — Service Offering
+#
+# An offering is the atomic requestable / deliverable unit of a Service.
+# Offering ID has exactly 3 segments; the first 2 must equal the parent
+# service ID.
+
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: https://raw.githubusercontent.com/7lens/open-servicecatalog-model/main/schema/service-offering.yaml
+title: ServiceOffering
+type: object
+additionalProperties: false
+required:
+  - id
+  - name
+properties:
+  id:
+    type: string
+    description: Immutable 3-segment offering identifier.
+    pattern: ^[a-z0-9]+(?:-[a-z0-9]+)*\.[a-z0-9]+(?:-[a-z0-9]+)*\.[a-z0-9]+(?:-[a-z0-9]+)*$
+  name:
+    type: string
+    minLength: 1
+  description:
+    type: string
