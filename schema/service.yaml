@@ -73,8 +73,9 @@ properties:
     type: array
     description: >
       Optional ICT Provider ids when the provider is intrinsic to this
-      Service (OSM-M-006). References schema/ict-provider.yaml; do not
-      embed provider master data. Distinct from dora_third_party_deps.
+      Service (OSM-M-006, OSM-M-010). References schema/ict-provider.yaml;
+      do not embed provider master data. Canonical who-provides
+      association; DORA maps here. No reverse listing.
     uniqueItems: true
     items:
       type: string

@@ -3,7 +3,8 @@
 - **Status:** PARTIALLY COMPATIBLE (selective compatibility)
 - **Universe:** OSM-C-001 (model / taxonomy / architectural framework)
 - **Decisions:** OSM-C-003 (universe retained), OSM-C-005 (this analysis),
-  OSM-M-006 (canonical ICT Provider references)
+  OSM-M-006 (canonical ICT Provider references), OSM-M-010 (canonical
+  `providers` relationship)
 - **OSM schema fields today:** none dedicated to CSDM. Provider
   association uses existing ICT Provider ids (`providers` on Service
   and Service Offering).
@@ -75,10 +76,10 @@ Canonical provider association:
 Service / Offering  →  providers (ids)  →  ICT Provider
 ```
 
-That is not a generic Service → Service relationship. It is also
-not automatically the same as `dora_third_party_deps`. Whether those
-two fields represent genuinely different relationships is unresolved
-(**OSM-M-005**, **PROPOSED**).
+That is not a generic Service → Service relationship. DORA provider
+associations use the same `providers` field (OSM-M-010). Reverse
+Provider → Service links are derived from `providers`; there is no
+`services_consumed` listing.
 
 Service → Service relationships remain **deliberately outside the
 current OSM core**. Not a permanent rejection; reopen only if a
@@ -122,9 +123,6 @@ or `OSM-C-*` decision. Do not add them because CSDM has them
 
 - Service → Service relationships: outside current OSM core; reopen
   only if a concrete interoperability requirement appears.
-- Whether `ict_providers[].services_consumed` should stay an
-  independent reverse listing or be derived from canonical `providers`
-  (does not block this analysis).
 
 ## 10. Compatibility status
 

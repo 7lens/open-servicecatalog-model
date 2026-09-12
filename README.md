@@ -305,22 +305,23 @@ fields capture differences between requestable variants. An empty
 
 ICT Provider is the canonical provider entity.
 [`schema/ict-provider.yaml`](schema/ict-provider.yaml) holds provider
-identity, criticality, substitutability, contract and risk fields,
-and certifications.
+identity, substitutability, contract and risk fields, and
+certifications. `risk_level` is the canonical ICT Provider
+risk/severity assessment (OSM-M-009). There is no provider
+`criticality` field.
 
 A Service or Offering may list `providers` — ids into that register —
-when a provider delivers or underpins the capability (OSM-M-006).
-Use Service-level association when the provider is intrinsic to the
-Service; use Offering-level association when provider choice is the
-variant. Association is optional. Multiple providers are allowed.
-Do not copy provider master data onto Service or Offering.
-There is no separate `cloud_providers` field; a cloud provider is an
-ICT Provider.
+when a provider delivers or underpins the capability (OSM-M-006,
+OSM-M-010). Use Service-level association when the provider is
+intrinsic to the Service; use Offering-level association when
+provider choice is the variant. Association is optional. Multiple
+providers are allowed. Do not copy provider master data onto Service
+or Offering. There is no separate `cloud_providers` field; a cloud
+provider is an ICT Provider.
 
-`dora_third_party_deps` on offering attributes is a DORA-oriented
-listing. Whether it is a genuinely different relationship from
-canonical `providers` is unresolved (**OSM-M-005**, **PROPOSED**).
-Do not collapse the two fields yet.
+`providers` is the single canonical who-provides relationship. DORA
+maps to it. There is no `dora_third_party_deps` field and no
+`services_consumed` reverse list.
 
 The examples contain a **small fictional register** of well-known
 public providers. They are not a recommended vendor list and not an
@@ -444,6 +445,11 @@ Contributions are welcome when they keep 7lens OSM:
 - understandable
 - machine-readable
 - extensible without copying other models wholesale
+
+The current OSM architecture is **frozen**. See
+[`decisions/OSM-ARCHITECTURE-FREEZE.md`](decisions/OSM-ARCHITECTURE-FREEZE.md).
+Future architectural changes require a new explicit decision record
+before implementation.
 
 Model changes need an accepted decision in [`DECISIONS.md`](DECISIONS.md).
 See [`CONTRIBUTING.md`](CONTRIBUTING.md) and [`decisions/`](decisions/).

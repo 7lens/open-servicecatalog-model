@@ -8,9 +8,9 @@
 # Canonical OSM posture fields are unprefixed. Framework-named fields
 # are optional reference mappings, not certification or compliance.
 # Do not duplicate a canonical field under a framework prefix
-# (OSM-M-008). DORA maps to rto, rpo, operational_criticality and
-# resilience_tested. Provider association is `providers` on the
-# catalog record, not a posture enum.
+# (OSM-M-008). DORA maps to rto, rpo, operational_criticality,
+# resilience_tested and catalog `providers`. Provider association is
+# `providers` on the catalog record, not a posture field.
 
 $schema: https://json-schema.org/draft/2020-12/schema
 $id: https://raw.githubusercontent.com/7lens/open-servicecatalog-model/main/schema/service-attributes.yaml
@@ -292,17 +292,6 @@ $defs:
         oneOf:
           - type: string
           - type: "null"
-      dora_third_party_deps:
-        type: array
-        description: >
-          DORA-oriented third-party dependency listing (provider ids).
-          Not the canonical Service/Offering provider association
-          (`providers` on the catalog record). Whether these two
-          fields represent genuinely different relationships is an
-          open question (OSM-M-005, PROPOSED). Do not collapse them
-          until that decision is accepted.
-        items:
-          type: string
       provenance:
         description: Optional reusable provenance for this offering posture row (OSM-M-007).
         $ref: ./provenance.yaml

@@ -4,7 +4,9 @@ This document describes **7lens OSM** (7lens Open Service Catalog
 Model) as a standalone conceptual structure. The normative field
 definitions are in [`SPECIFICATION.md`](SPECIFICATION.md). Accepted
 model decisions are indexed in [`DECISIONS.md`](DECISIONS.md) and
-detailed under [`decisions/`](decisions/).
+detailed under [`decisions/`](decisions/). The architecture freeze
+record is
+[`decisions/OSM-ARCHITECTURE-FREEZE.md`](decisions/OSM-ARCHITECTURE-FREEZE.md).
 
 OSM-M-007 is **ACCEPTED** and implemented. The model distinguishes:
 
@@ -216,19 +218,17 @@ ids are allowed. Do not copy provider master data onto Service or
 Offering. Do not maintain a parallel `cloud_providers` list; a cloud
 provider is an ICT Provider (OSM-M-008).
 
-Separate, existing fields:
+`providers` is the single canonical Service / Offering → ICT Provider
+relationship (OSM-M-010). DORA uses this field. There is no
+`dora_third_party_deps` listing and no `services_consumed` reverse
+list; reverse links are derived from `providers`.
 
-- `dora_third_party_deps` on offering attributes — DORA-oriented
-  third-party listing. Whether this is a genuinely different
-  relationship from `providers` is unresolved (**OSM-M-005**,
-  **PROPOSED**). Do not collapse the two fields yet.
-- `services_consumed` on ICT Provider — reverse list of service ids
-  in the vendor register
+`risk_level` is the canonical ICT Provider risk/severity assessment
+(OSM-M-009). There is no provider `criticality` field.
 
 `providers` is not a generic Service → Service relationship.
 
-Those fields are ordinary references. Using DORA-named fields does not
-make a catalog a regulatory filing.
+Using DORA-named fields does not make a catalog a regulatory filing.
 
 ## Optional framework mappings
 

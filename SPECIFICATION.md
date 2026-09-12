@@ -34,7 +34,9 @@ EXTERNAL CONTEXT       owned by other systems — not modelled here
 
 Architectural reasoning is in
 [`decisions/OSM-M-007-complete-service-definition.md`](decisions/OSM-M-007-complete-service-definition.md).
-This specification is the implemented field model.
+This specification is the implemented field model. The architecture
+is frozen; see
+[`decisions/OSM-ARCHITECTURE-FREEZE.md`](decisions/OSM-ARCHITECTURE-FREEZE.md).
 
 ---
 
@@ -142,8 +144,7 @@ services.yaml                 ← the catalog
         │                       providers[] → ict-providers.yaml
         │ service_id
         v
-service-attributes.yaml  ───► ict-providers.yaml
-                              (dora_third_party_deps only)
+service-attributes.yaml
 ```
 
 JSON Schema for each entity is in `schema/`.
@@ -363,7 +364,8 @@ remain optional **mappings of concepts OSM does not already
 represent**. Do not add a framework-prefixed copy of a canonical
 field (OSM-M-008). DORA recovery and criticality information maps to
 canonical `rto`, `rpo`, `operational_criticality` and
-`resilience_tested`.
+`resilience_tested`. DORA provider associations map to canonical
+`providers` (OSM-M-010).
 
 OSM records lightweight **service-level expectations**
 (`availability_target`, `response_target`, `resolution_target`) on
@@ -479,15 +481,13 @@ They coexist; the tier is not a substitute for RTO/RPO.
 | `gdpr_dpia_required` | `true` \| `false` |
 | `gdpr_erasure_capable` | `true` \| `false` \| `partial` \| `not-applicable` |
 
-**DORA-oriented listing (not a copy of canonical resilience)**
+**DORA mapping (not a copy of canonical resilience or providers)**
 
 DORA recovery and testing semantics map to canonical `rto`, `rpo`
-and `resilience_tested` above. Do not duplicate those fields under
-DORA-prefixed names.
-
-| Field | Values |
-|-------|--------|
-| `dora_third_party_deps` | list of provider IDs from the ICT provider file (DORA-oriented listing). Distinct from canonical `providers` until OSM-M-005 decides otherwise. Status of that question: **PROPOSED**, unresolved. |
+and `resilience_tested` above. DORA provider associations map to
+canonical `providers` on Service or Offering (OSM-M-010). Do not
+duplicate those fields under DORA-prefixed names. There is no
+`dora_third_party_deps` field.
 
 An offering posture row may also carry `provenance`.
 
@@ -512,8 +512,7 @@ A register of third-party technology providers. This entity is the
 **canonical** provider definition (OSM-M-006). Service and Service
 Offering associate with a provider by listing its `id` in `providers`.
 Do not copy headquarters, locations, certifications, contracts, risk,
-substitutability, criticality or other provider attributes onto
-Service or Offering.
+substitutability or other provider attributes onto Service or Offering.
 
 ```
 Service / Offering
@@ -521,29 +520,28 @@ Service / Offering
 ICT Provider
 ```
 
-`providers` means the ICT provider delivering or underpinning that
-Service or Offering. It is not a generic Service → Service
-relationship.
+`providers` is the **single canonical** who-provides association
+(OSM-M-006, OSM-M-010). It means the ICT provider delivering or
+underpinning that Service or Offering. It is not a generic Service →
+Service relationship. DORA uses this field. There is no
+`dora_third_party_deps` listing and no `services_consumed` reverse
+list; reverse Provider → Service links are derived from `providers`.
 
-`dora_third_party_deps` on offering attributes remains a separate
-DORA-oriented listing. Whether that listing is a genuinely different
-relationship from canonical `providers` is an **unresolved
-architectural question** (**OSM-M-005**, status **PROPOSED**). Do not
-collapse, rename or replace either field until that decision is
-accepted. `services_consumed` on the provider remains the register's
-reverse list of service ids.
+`risk_level` is the canonical ICT Provider risk/severity assessment
+(OSM-M-009). There is no provider `criticality` field. Service
+`operational_criticality` and stack `mappings.dora.criticality` are
+different grains.
 
 Fields support vendor-risk conversations; they do not by themselves
 satisfy any regulatory filing.
 
 | Field | Required | Description |
 |-------|----------|-------------|
-| `id` | yes | Short identifier referenced by `providers` and `dora_third_party_deps` |
+| `id` | yes | Short identifier referenced by `providers` |
 | `name` | yes | Provider name |
 | `type` | yes | `cloud-infrastructure` \| `cloud-platform` \| `managed-service` \| `software-vendor` \| `network-provider` \| `data-center` |
 | `headquarters` | no | ISO 3166-1 alpha-2 country code |
 | `data_processing_locations` | no | Countries or regions as a list |
-| `criticality` | yes | `critical` \| `important` \| `standard` |
 | `substitutability` | yes | `low` \| `medium` \| `high` |
 | `contract_ref` | no | Local contract reference, or `null` |
 | `contract_start` | no | ISO 8601 date, or `null` |
@@ -553,14 +551,13 @@ satisfy any regulatory filing.
 | `subcontracting_allowed` | no | `true` \| `false` \| `conditional` \| `null` |
 | `subcontractors` | no | list of names |
 | `last_risk_assessment` | no | ISO 8601 date, or `null` |
-| `risk_level` | no | `low` \| `medium` \| `high` \| `critical` \| `null` |
+| `risk_level` | no | Canonical provider risk/severity: `low` \| `medium` \| `high` \| `critical` \| `null`. Not service `operational_criticality`. |
 | `exit_strategy_documented` | no | `true` \| `false` \| `null` |
 | `exit_strategy_tested` | no | `true` \| `false` \| `null` |
 | `concentration_risk` | no | `true` \| `false` \| `null` |
 | `certifications` | no | free-form list (e.g. `iso27001`, `soc2-type2`) |
 | `gdpr_dpa_signed` | no | `true` \| `false` \| `null` |
 | `dora_notification_clause` | no | `true` \| `false` \| `null` |
-| `services_consumed` | no | Service IDs from the services catalog |
 
 Do not publish a real vendor register as an example.
 
@@ -588,31 +585,32 @@ An implementation should enforce:
 4. Every `service_attributes[].service_id` exists in the services catalog.
 5. Every `offering_attributes[].offering_id` exists under its parent
    service in the services catalog.
-6. Every provider ID in `dora_third_party_deps` exists in the ICT
-   provider file.
-7. Every service ID in `ict_providers[].services_consumed` exists in
-   the services catalog.
-8. EU AI Act offering fields are present only where
+6. EU AI Act offering fields are present only where
    `ai_act_applicable: true`.
-9. Duplicate IDs are rejected for stacks, services, offerings and
+7. Duplicate IDs are rejected for stacks, services, offerings and
    providers.
-10. Characteristic `name` values are unique within a Service and
-    within each Offering. `value` must match `allowed_values` when
-    that list is present.
-11. Each Service has `version`, `valid_from` and `lifecycle_state`.
-    If `valid_to` is set, it must not be before `valid_from`.
-12. `service_attributes` must not contain `lifecycle_state`.
-13. Every id in Service or Offering `providers` exists in the ICT
+8. Characteristic `name` values are unique within a Service and
+   within each Offering. `value` must match `allowed_values` when
+   that list is present.
+9. Each Service has `version`, `valid_from` and `lifecycle_state`.
+   If `valid_to` is set, it must not be before `valid_from`.
+10. `service_attributes` must not contain `lifecycle_state`.
+11. Every id in Service or Offering `providers` exists in the ICT
     provider file. The field may be omitted. Duplicate ids in one
     list are rejected.
-14. If `provenance` is present, `confidence` and `discovery_method`
+12. If `provenance` is present, `confidence` and `discovery_method`
     must use the published enums; `last_verified` must be an ISO date.
-15. Service and Offering records must not declare Service-to-Service
+13. Service and Offering records must not declare Service-to-Service
     relationship fields (`depends_on`, `consumes`, `provides_to`,
     `related_service`, `related_services`).
-16. Posture records must not declare removed duplicate fields
+14. Posture records must not declare removed duplicate fields
     (`dora_rto`, `dora_rpo`, `dora_criticality`,
-    `dora_resilience_tested`, `cloud_providers`). Use the canonical
-    OSM field instead (OSM-M-008).
+    `dora_resilience_tested`, `cloud_providers`,
+    `dora_third_party_deps`, `services_consumed`). Use the canonical
+    OSM field instead (OSM-M-008, OSM-M-010).
+15. ICT Provider records must not declare `criticality` or
+    `services_consumed`. Provider risk/severity is `risk_level`
+    (OSM-M-009). Reverse Provider → Service links are derived from
+    `providers` (OSM-M-010).
 
 See [`validation/`](validation/) for a lightweight checker.

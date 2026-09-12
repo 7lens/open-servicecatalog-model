@@ -62,7 +62,6 @@ service_attributes:
         resilience_tested: false
         last_resilience_test: null
         resilience_evidence: synthetic://resilience/compute.kubernetes.aws
-        dora_third_party_deps: [aws]
         provenance:
           source_system: osm-catalog
           last_verified: 2025-09-12
@@ -92,7 +91,6 @@ service_attributes:
         resilience_tested: true
         last_resilience_test: 2025-08-20
         resilience_evidence: synthetic://resilience/compute.kubernetes.azure
-        dora_third_party_deps: [azure]
 
   # Restricted classification with privacy-related reference mappings.
   - service_id: db.managed-postgres
@@ -134,7 +132,6 @@ service_attributes:
         resilience_tested: true
         last_resilience_test: 2025-07-15
         resilience_evidence: synthetic://resilience/db.managed-postgres.high-availability
-        dora_third_party_deps: [aws]
 
   # Valid incremental state: service posture only, no offering rows yet.
   - service_id: compute.virtual-machines
@@ -176,7 +173,6 @@ service_attributes:
         rto: PT24H
         rpo: PT8H
         resilience_tested: false
-        dora_third_party_deps: [azure]
         ai_act_intended_purpose: >
           Assist analysts in drafting analytical queries. Illustrative
           example only — not a legal AI Act classification.
@@ -212,4 +208,3 @@ service_attributes:
         rto: PT12H
         rpo: PT4H
         resilience_tested: false
-        dora_third_party_deps: [github]

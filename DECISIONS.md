@@ -11,6 +11,9 @@ DECISIONS.md     Decision register / index
 decisions/       Detailed architectural decisions
 ```
 
+The current architecture is frozen. Authoritative freeze record:
+[`decisions/OSM-ARCHITECTURE-FREEZE.md`](decisions/OSM-ARCHITECTURE-FREEZE.md).
+
 **Agents and contributors do not make architectural or model
 decisions here.** They may only apply decisions whose status is
 `ACCEPTED`.
@@ -88,10 +91,12 @@ extraction was requested for `OSM-C-*`).
 | OSM-M-002 | Temporal semantics | ACCEPTED | 2026-09-12 | [`decisions/OSM-M-002-temporal-semantics.md`](decisions/OSM-M-002-temporal-semantics.md) |
 | OSM-M-003 | Service is the stable definition | ACCEPTED | 2026-09-12 | [`decisions/OSM-M-003-service-definition.md`](decisions/OSM-M-003-service-definition.md) |
 | OSM-M-004 | Best-of, not standards accumulation | ACCEPTED | 2026-09-12 | [`decisions/OSM-M-004-best-of-not-standards-accumulation.md`](decisions/OSM-M-004-best-of-not-standards-accumulation.md) |
-| OSM-M-005 | DORA provider-link grain | PROPOSED | 2026-09-12 | [`decisions/OSM-M-005-dora-provider-link-grain.md`](decisions/OSM-M-005-dora-provider-link-grain.md) |
+| OSM-M-005 | DORA provider-link grain | SUPERSEDED | 2026-09-12 | [`decisions/OSM-M-005-dora-provider-link-grain.md`](decisions/OSM-M-005-dora-provider-link-grain.md) |
 | OSM-M-006 | Canonical ICT Provider references | ACCEPTED | 2026-09-12 | [`decisions/OSM-M-006-ict-provider-references.md`](decisions/OSM-M-006-ict-provider-references.md) |
 | OSM-M-007 | Complete Service Definition | ACCEPTED | 2026-09-12 | [`decisions/OSM-M-007-complete-service-definition.md`](decisions/OSM-M-007-complete-service-definition.md) |
 | OSM-M-008 | One concept, one canonical parameter | ACCEPTED | 2026-09-12 | [`decisions/OSM-M-008-one-concept-one-canonical-parameter.md`](decisions/OSM-M-008-one-concept-one-canonical-parameter.md) |
+| OSM-M-009 | ICT Provider risk_level | ACCEPTED | 2026-09-12 | [`decisions/OSM-M-009-ict-provider-risk-level.md`](decisions/OSM-M-009-ict-provider-risk-level.md) |
+| OSM-M-010 | Canonical providers relationship | ACCEPTED | 2026-09-12 | [`decisions/OSM-M-010-canonical-providers-relationship.md`](decisions/OSM-M-010-canonical-providers-relationship.md) |
 
 **OSM-M-007** is ACCEPTED and implemented. Schema/examples/validation
 now include Complete Service Definition semantics (posture fields,
@@ -101,7 +106,30 @@ the status of OSM-M-001–OSM-M-006.
 **OSM-M-008** is ACCEPTED. OSM must not represent the same semantic
 concept through multiple canonical parameters. DORA RTO/RPO map to
 canonical `rto` / `rpo`. Provider association is `providers`;
-`cloud_providers` is not an OSM field.
+`cloud_providers` is not an OSM field. OSM-M-008 is the governing
+principle behind OSM-M-009 and OSM-M-010.
+
+**OSM-M-009** is ACCEPTED. ICT Provider has `risk_level`, not
+`criticality`. `risk_level` is the canonical assessment of ICT
+Provider risk/severity. Do not add another provider criticality
+field. Service `operational_criticality` and stack
+`mappings.dora.criticality` are different grains and remain.
+
+**OSM-M-010** is ACCEPTED and **supersedes OSM-M-005**. `providers`
+is the single canonical Service/Offering → ICT Provider
+relationship. `services_consumed` is removed because reverse
+relationships can be derived. `dora_third_party_deps` is removed
+because DORA does not justify duplicating the canonical provider
+relationship. DORA uses `providers`.
+
+OSM-M-009 and OSM-M-010 are the **final model corrections** of the
+current OSM architecture.
+
+**The current OSM architecture is frozen.** The authoritative freeze
+record is
+[`decisions/OSM-ARCHITECTURE-FREEZE.md`](decisions/OSM-ARCHITECTURE-FREEZE.md).
+Future architectural changes require a new explicit decision record
+before implementation.
 
 ---
 

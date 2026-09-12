@@ -25,14 +25,13 @@ Do not embed ICT Provider master data on Service or Offering. Do not
 add a provider-role taxonomy (primary / secondary / subcontractor /
 reseller).
 
-`providers` is not a generic Service → Service relationship and is
-not `dora_third_party_deps`. DORA copies of canonical recovery,
-criticality or testing fields are not OSM fields (OSM-M-008).
-`dora_third_party_deps` remains as a DORA-oriented listing until
-OSM-M-005 is decided. Whether it is a genuinely different
-relationship from `providers` is still open. ICT
-Provider remains the single canonical provider entity; no new
-Provider type and no `cloud_providers` list.
+`providers` is not a generic Service → Service relationship.
+DORA copies of canonical recovery, criticality or testing fields are
+not OSM fields (OSM-M-008). DORA provider association is `providers`
+(OSM-M-010). ICT Provider remains the single canonical provider
+entity; no new Provider type and no `cloud_providers` list. Provider
+risk/severity is `risk_level` (OSM-M-009); there is no provider
+`criticality` field.
 
 ```text
 Service / Offering
@@ -42,15 +41,17 @@ ICT Provider
 
 ## What this is not
 
-A CSDM Technology Provider CI; a new entity; a replacement for DORA
-third-party dependency listing; a decision on OSM-M-005.
+A CSDM Technology Provider CI; a new entity; a DORA-prefixed copy of
+`providers`. Amended by **OSM-M-010** (`dora_third_party_deps` and
+`services_consumed` removed) and **OSM-M-009** (provider
+`criticality` removed).
 
 ## Surfaces updated
 
 - `schema/service.yaml`
 - `schema/service-offering.yaml`
 - `schema/ict-provider.yaml` (comments)
-- `schema/service-attributes.yaml` (`dora_third_party_deps` comment)
+- `schema/service-attributes.yaml`
 - `examples/services.yaml`
 - `examples/ict-providers.yaml`
 - `examples/service-attributes.yaml`
@@ -66,4 +67,5 @@ third-party dependency listing; a decision on OSM-M-005.
 
 ## Notes
 
-Accepted with CSDM analysis OSM-C-005. Keep OSM small.
+Accepted with CSDM analysis OSM-C-005. Keep OSM small. OSM-M-010
+closes the former OSM-M-005 question: DORA uses `providers`.

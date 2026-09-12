@@ -83,10 +83,11 @@ DORA maps to canonical `rto` / `rpo` / `operational_criticality` /
 `resilience_tested`. A cloud provider is an ICT Provider; association
 is `providers`. No replacement fields are introduced.
 
-`dora_third_party_deps` is retained pending **OSM-M-005**
-(**PROPOSED**). Whether it is a genuinely different relationship from
-canonical `providers` is an unresolved architectural question. Do
-not collapse the two fields here.
+**OSM-M-010** completes the provider-association rule deferred here:
+`dora_third_party_deps` and `services_consumed` are removed. DORA
+uses `providers`. Reverse links are derived. **OSM-M-009** completes
+the provider-severity rule: ICT Provider has `risk_level`, not
+`criticality`.
 
 ## What this is not
 
@@ -115,3 +116,5 @@ genuinely different grains or subjects.
 Complements OSM-M-004 (compatibility does not mean copying) and
 OSM-M-007 (classification of candidate concepts). OSM-M-008 is the
 anti-duplication rule: one authoritative fact, then mappings.
+OSM-M-009 and OSM-M-010 apply that rule to provider severity and
+the provider relationship.
