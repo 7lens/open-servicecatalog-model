@@ -1,11 +1,11 @@
-# 7lens Open Services Data Model — Specification
+# 7lens OSM — Specification
 
 Version: 1.0.0
 
-This is the normative specification of the **7lens Open Services Data
-Model**: a small, opinionated way to describe *what* a technology
-organization delivers as technological services, who runs them, how
-healthy they are, and which third parties they depend on.
+This is the normative specification of **7lens OSM** (7lens Open
+Service Catalog Model): a small, opinionated way to describe *what* a
+technology organization delivers as technological services, who runs
+them, how healthy they are, and which third parties they depend on.
 
 The specification is vendor-neutral and framework-neutral. Nothing
 here requires a particular product, cloud, or methodology.
@@ -49,8 +49,9 @@ model.
    stack).
 5. **Framework mappings, not framework lock-in.** Optional mappings
    to TBM, TOGAF, ISO, NIST, GDPR, DORA and the EU AI Act let
-   different readers translate the catalog. The model is not an
-   implementation of those frameworks.
+   different readers translate the catalog. 7lens OSM is not an
+   implementation of those frameworks. The initial compatibility
+   universe and analysis status live in [`COMPATIBILITY.md`](COMPATIBILITY.md).
 
 ---
 
