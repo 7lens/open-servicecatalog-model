@@ -51,9 +51,11 @@ NOT YET ANALYZED.
 DORA RTS register-of-information fields, entity identifiers, and
 supervisory reporting layouts are not in OSM.
 
-There is a grain mismatch already visible and **not yet decided**:
-`dora_third_party_deps` is offering-level; `services_consumed` is
-service-level.
+There is a grain mismatch already visible and **not yet decided**
+(**OSM-M-001**, status PROPOSED): `dora_third_party_deps` is
+offering-level; `services_consumed` is service-level. Do not change
+those fields until OSM-M-001 is accepted. Address it during DORA
+compliance analysis.
 
 ## 6. Potential extensions
 
