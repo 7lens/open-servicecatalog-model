@@ -12,7 +12,7 @@
 # `providers` lists ICT Provider ids (see ict-providers.yaml).
 # Use it on Service when the provider is intrinsic to the capability,
 # or on Offering when provider choice distinguishes the variant.
-# Omit it when not applicable. It is not DORA `dora_third_party_deps`.
+# Omit it when not applicable. DORA uses this field (OSM-M-010).
 
 services:
 

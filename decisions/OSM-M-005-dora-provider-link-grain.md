@@ -1,17 +1,14 @@
 # OSM-M-005 — DORA provider-link grain (offering vs service)
 
-- **Status:** PROPOSED
+- **Status:** SUPERSEDED
 - **Date:** 2026-09-12
 - **Type:** Model
 - **Register:** [`DECISIONS.md`](../DECISIONS.md)
-
-This record is extracted from the repository decision log. No
-architectural content has been added beyond what was already
-recorded. Status remains **PROPOSED**.
+- **Superseded by:** [`OSM-M-010`](OSM-M-010-canonical-providers-relationship.md)
 
 ## Decision
 
-Not decided. Two open questions remain, and neither is resolved here:
+Originally not decided. Two open questions were recorded:
 
 1. Grain: `dora_third_party_deps` is offering-level;
    `services_consumed` is service-level.
@@ -19,27 +16,22 @@ Not decided. Two open questions remain, and neither is resolved here:
    `providers` represent genuinely different relationships, or the
    same association under two names.
 
-Maintainers will address both during DORA compliance analysis.
-Until this decision is **ACCEPTED**, keep both fields as they are.
-
-**Do not change schema, examples or validation for this decision
-until it is ACCEPTED.** Do not collapse `dora_third_party_deps` into
-`providers`, rename it, or add another provider relationship.
-
-Canonical Service/Offering `providers` (**OSM-M-006**) is the
-canonical who-delivers association. It does not, by itself, close
-this DORA grain/relationship question.
+**OSM-M-010** closes both questions. `providers` is the single
+canonical Service / Offering → ICT Provider relationship. DORA uses
+that field. `dora_third_party_deps` and `services_consumed` are
+removed. Reverse Provider → Service links are derived from
+`providers`.
 
 ## What this is not
 
-An accepted model change.
+An independent accepted model. See OSM-M-010.
 
 ## Surfaces to update
 
-None until this decision is ACCEPTED.
+Named on OSM-M-010.
 
 ## Notes
 
 Logged during P0 as `OSM-M-001`. Renumbered to `OSM-M-005` when
 7lens assigned OSM-M-001–OSM-M-004 to the TM Forum follow-up
-decisions.
+decisions. Superseded by OSM-M-010 under OSM-M-008.

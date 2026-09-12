@@ -16,7 +16,9 @@ Related decisions: [`DECISIONS.md`](DECISIONS.md) — **OSM-C-001**
 (as amended by **OSM-C-002**, **OSM-C-003**); TM Forum follow-up
 **OSM-M-001**–**OSM-M-004**; ITIL v5 **OSM-C-004**; CSDM **OSM-C-005**
 and provider references **OSM-M-006**; Complete Service Definition
-**OSM-M-007**; One concept, one canonical parameter **OSM-M-008**.
+**OSM-M-007**; One concept, one canonical parameter **OSM-M-008**;
+ICT Provider `risk_level` **OSM-M-009**; canonical `providers`
+relationship **OSM-M-010** (supersedes **OSM-M-005**).
 
 ---
 
@@ -128,9 +130,7 @@ any private source catalog.
 - Service / Offering / posture `0 : 1` Provenance (nested; OSM-M-007)
 - Service `1 : 0..1` Service Attributes (`service_id`)
 - Service Attributes `1 : many` Offering Attributes (`offering_id`)
-- Service / Offering `0 : many` ICT Provider (`providers` ids; OSM-M-006)
-- Offering attributes → ICT Provider (`dora_third_party_deps`; DORA-oriented listing. Whether this is a genuinely different relationship from `providers` is unresolved — OSM-M-005, PROPOSED)
-- ICT Provider → Service (`services_consumed`; register reverse list)
+- Service / Offering `0 : many` ICT Provider (`providers` ids; OSM-M-006, OSM-M-010)
 
 Consumers of a technological service are out of scope. No application,
 Application Service, Business Service, Digital Product, Value Stream,
@@ -143,11 +143,11 @@ relationships are deliberately outside the current OSM core
 Optional reference mappings already exist on **Technology Stack**
 (`tbm_tower`, `tbm_sub_tower`, `togaf_domain`, `iso27001`, `iso27701`,
 `nist_csf`, `gdpr`, `dora`, `ai_act`) and on **service / offering
-attributes** (ISO, NIST, GDPR and EU AI Act fields, plus
-`dora_third_party_deps`). DORA recovery, criticality and resilience
-testing map to canonical `rto`, `rpo`, `operational_criticality` and
-`resilience_tested`; there are no DORA-prefixed copies of those
-fields (OSM-M-008). Canonical provider association is `providers`.
+attributes** (ISO, NIST, GDPR and EU AI Act fields). DORA recovery,
+criticality and resilience testing map to canonical `rto`, `rpo`,
+`operational_criticality` and `resilience_tested`; DORA provider
+associations map to canonical `providers` (OSM-M-010). There are no
+DORA-prefixed copies of those fields (OSM-M-008).
 
 No mapping fields currently exist for ArchiMate. TM Forum analysis is
 recorded in

@@ -13,8 +13,10 @@
 > implementation. Framework-specific information is expressed through
 > mappings when the underlying concept is already represented
 > canonically. Canonical resilience and provider fields are `rto`,
-> `rpo`, and `providers`. `dora_rto`, `dora_rpo`, and
-> `cloud_providers` are not OSM fields.
+> `rpo`, and `providers`. `dora_rto`, `dora_rpo`,
+> `dora_third_party_deps`, `cloud_providers`, `services_consumed`,
+> and ICT Provider `criticality` are not OSM fields (OSM-M-008,
+> OSM-M-009, OSM-M-010).
 
 ---
 
@@ -754,9 +756,11 @@ M-007 does not invalidate:
 - OSM-M-002 — Temporal semantics
 - OSM-M-003 — Service is stable definition
 - OSM-M-004 — Best-of, not standards accumulation
-- OSM-M-005 — DORA provider-link grain
+- OSM-M-005 — DORA provider-link grain (SUPERSEDED by OSM-M-010)
 - OSM-M-006 — Canonical ICT Provider references
 - OSM-M-008 — One concept, one canonical parameter
+- OSM-M-009 — ICT Provider risk_level
+- OSM-M-010 — Canonical providers relationship
 
 Instead, M-007 builds on them.
 

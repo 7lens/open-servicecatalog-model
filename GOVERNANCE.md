@@ -75,3 +75,11 @@ products, or application portfolios.
 - a GRC methodology
 
 Those concerns belong in other systems.
+
+## Architecture freeze
+
+The current OSM architecture is frozen. The authoritative record is
+[`decisions/OSM-ARCHITECTURE-FREEZE.md`](decisions/OSM-ARCHITECTURE-FREEZE.md).
+Future architectural changes require a new explicit decision record
+before implementation. This file continues to define only the two
+ownership roles.

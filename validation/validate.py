@@ -66,6 +66,7 @@ PROVIDER_TYPE = {
     "data-center",
 }
 SUBSTITUTABILITY = {"low", "medium", "high"}
+RISK_LEVEL = {"low", "medium", "high", "critical"}
 VALUE_TYPES = {"string", "number", "boolean", "date"}
 NAME_KEY = re.compile(r"^[a-z0-9]+(?:_[a-z0-9]+)*$")
 CONFIDENCE = {"high", "medium", "low", "unknown"}
@@ -93,6 +94,12 @@ REMOVED_CANONICAL_COPIES = {
     "dora_resilience_tested",
     "dora_criticality",
     "cloud_providers",
+    "dora_third_party_deps",
+    "services_consumed",
+}
+REMOVED_PROVIDER_FIELDS = {
+    "criticality",
+    "services_consumed",
 }
 
 
@@ -288,10 +295,17 @@ def validate_catalog(catalog_dir: Path) -> list[str]:
         provider_type = provider.get("type")
         if provider_type not in PROVIDER_TYPE:
             reporter.error(f"provider {provider_id!r} has invalid type {provider_type!r}")
-        if provider.get("criticality") not in CRITICALITY:
-            reporter.error(f"provider {provider_id!r} has invalid criticality")
         if provider.get("substitutability") not in SUBSTITUTABILITY:
             reporter.error(f"provider {provider_id!r} has invalid substitutability")
+        extra_provider = sorted(REMOVED_PROVIDER_FIELDS.intersection(provider))
+        if extra_provider:
+            reporter.error(
+                f"provider {provider_id!r} uses removed fields {extra_provider}; "
+                "use risk_level for severity (OSM-M-009) and derive reverse "
+                "links from providers (OSM-M-010)"
+            )
+        if "risk_level" in provider and provider["risk_level"] not in RISK_LEVEL | {None}:
+            reporter.error(f"provider {provider_id!r} has invalid risk_level")
 
     stack_ids: set[str] = set()
     stack_names: set[str] = set()
@@ -385,16 +399,6 @@ def validate_catalog(catalog_dir: Path) -> list[str]:
             validate_provider_refs(str(offering_id), offering.get("providers"), provider_ids, reporter)
             validate_provenance(str(offering_id), offering.get("provenance"), reporter)
             reject_service_relationships(str(offering_id), offering, reporter)
-
-    for provider in providers:
-        if not isinstance(provider, dict):
-            continue
-        provider_id = provider.get("id")
-        for consumed in provider.get("services_consumed") or []:
-            if consumed not in service_ids:
-                reporter.error(
-                    f"provider {provider_id!r} services_consumed references unknown service {consumed}"
-                )
 
     seen_attribute_services: set[str] = set()
     for record in attributes:
@@ -505,11 +509,6 @@ def validate_catalog(catalog_dir: Path) -> list[str]:
                 reporter.error(f"{offering_id} has invalid nist_control_status")
             if "gdpr_erasure_capable" in row and row["gdpr_erasure_capable"] not in ERASURE:
                 reporter.error(f"{offering_id} has invalid gdpr_erasure_capable")
-            for dep in row.get("dora_third_party_deps") or []:
-                if dep not in provider_ids:
-                    reporter.error(
-                        f"{offering_id} dora_third_party_deps references unknown provider {dep}"
-                    )
 
     return reporter.errors
 

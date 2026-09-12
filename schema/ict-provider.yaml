@@ -5,6 +5,11 @@
 # entity. Services and offerings reference it by id (`providers`);
 # they must not copy these attributes.
 #
+# risk_level is the canonical ICT Provider risk/severity assessment
+# (OSM-M-009). There is no provider criticality field.
+# Provider-to-Service links are derived from Service/Offering
+# providers (OSM-M-010). There is no services_consumed reverse list.
+#
 # Fields may support vendor-risk conversations. They are not a
 # regulatory filing and not a real organization's vendor register.
 
@@ -17,7 +22,6 @@ required:
   - id
   - name
   - type
-  - criticality
   - substitutability
 properties:
   id:
@@ -43,12 +47,6 @@ properties:
     type: array
     items:
       type: string
-  criticality:
-    type: string
-    enum:
-      - critical
-      - important
-      - standard
   substitutability:
     type: string
     enum:
@@ -95,6 +93,10 @@ properties:
         format: date
       - type: "null"
   risk_level:
+    description: >
+      Canonical assessment of ICT Provider risk/severity (OSM-M-009).
+      Not service operational_criticality and not stack
+      mappings.dora.criticality. There is no provider criticality field.
     oneOf:
       - type: string
         enum:
@@ -127,8 +129,3 @@ properties:
     oneOf:
       - type: boolean
       - type: "null"
-  services_consumed:
-    type: array
-    items:
-      type: string
-      pattern: ^[a-z0-9]+(?:-[a-z0-9]+)*\.[a-z0-9]+(?:-[a-z0-9]+)*$

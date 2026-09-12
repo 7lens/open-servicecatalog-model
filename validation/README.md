@@ -36,9 +36,6 @@ Expected files in that directory:
 - service-attribute and offering-attribute references exist
 - ICT Provider ids in Service/Offering `providers` exist in the
   provider register (omitted `providers` is valid)
-- ICT provider `services_consumed` references exist
-- `dora_third_party_deps` references exist (DORA-oriented listing;
-  relationship to canonical `providers` is unresolved — OSM-M-005)
 - EU AI Act offering fields appear only when `ai_act_applicable` is true
 - each service has `lifecycle_state`, `version` and `valid_from`; `valid_to` is not before `valid_from`
 - `service_attributes` must not contain `lifecycle_state`
@@ -47,7 +44,9 @@ Expected files in that directory:
 - Service/Offering records must not declare Service-to-Service relationship fields
 - posture records must not use removed duplicate fields (`dora_rto`,
   `dora_rpo`, `dora_criticality`, `dora_resilience_tested`,
-  `cloud_providers`)
+  `cloud_providers`, `dora_third_party_deps`, `services_consumed`)
+- ICT Provider must not use removed fields (`criticality`,
+  `services_consumed`); `risk_level` is the sole provider risk/severity field
 - canonical posture enums (`operational_criticality`, `privacy_classification`, `provisioning_automation`)
 
 The checker exits `0` when the catalog is valid and `1` when it is not.

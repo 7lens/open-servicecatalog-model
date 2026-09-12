@@ -57,8 +57,10 @@ Not in scope:
 Do not add Service → Service relationships unless maintainers accept
 a later decision; they are outside the current OSM core (OSM-C-004,
 OSM-C-005). Canonical provider association is `providers` → ICT
-Provider (OSM-M-006), not a service-to-service link and not a
-separate `cloud_providers` list.
+Provider (OSM-M-006, OSM-M-010), not a service-to-service link, not a
+separate `cloud_providers` list, and not a DORA-prefixed copy.
+ICT Provider risk/severity is `risk_level` (OSM-M-009), not
+`criticality`.
 
 If a change would require a reader to understand a broader enterprise
 model in order to use this catalog, it does not belong here.

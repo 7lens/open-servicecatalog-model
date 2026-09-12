@@ -4,6 +4,11 @@
 # a real vendor register, not a recommended supplier list, and not a
 # regulatory filing. Contract, risk and resilience fields are left
 # unset on purpose.
+#
+# risk_level is the canonical ICT Provider risk/severity field
+# (OSM-M-009). There is no provider criticality field.
+# Provider-to-Service links are derived from catalog `providers`
+# (OSM-M-010). There is no services_consumed reverse list.
 
 ict_providers:
 
@@ -12,7 +17,6 @@ ict_providers:
     type: cloud-infrastructure
     headquarters: us
     data_processing_locations: [eu, us]
-    criticality: critical
     substitutability: medium
     contract_ref: null
     contract_start: null
@@ -29,24 +33,12 @@ ict_providers:
     certifications: [iso27001, soc2-type2]
     gdpr_dpa_signed: null
     dora_notification_clause: null
-    services_consumed:
-      - compute.virtual-machines
-      - compute.kubernetes
-      - db.managed-postgres
-      - db.managed-cache
-      - net.connectivity
-      - storage.object-storage
-      - devops.continuous-delivery
-      - auto.infrastructure-as-code
-      - ops.observability
-      - finops.cloud-cost
 
   - id: azure
     name: Microsoft Azure
     type: cloud-infrastructure
     headquarters: us
     data_processing_locations: [eu, us]
-    criticality: important
     substitutability: medium
     contract_ref: null
     contract_start: null
@@ -63,18 +55,12 @@ ict_providers:
     certifications: [iso27001, soc2-type2]
     gdpr_dpa_signed: null
     dora_notification_clause: null
-    services_consumed:
-      - compute.virtual-machines
-      - compute.kubernetes
-      - data.analytics-platform
-      - sec.identity-access
 
   - id: github
     name: GitHub, Inc.
     type: cloud-platform
     headquarters: us
     data_processing_locations: [us]
-    criticality: important
     substitutability: medium
     contract_ref: null
     contract_start: null
@@ -91,15 +77,12 @@ ict_providers:
     certifications: [iso27001, soc2-type2]
     gdpr_dpa_signed: null
     dora_notification_clause: null
-    services_consumed:
-      - devops.continuous-delivery
 
   - id: infoblox
     name: Infoblox
     type: software-vendor
     headquarters: us
     data_processing_locations: [us]
-    criticality: important
     substitutability: medium
     contract_ref: null
     contract_start: null
@@ -116,5 +99,3 @@ ict_providers:
     certifications: [iso27001, soc2-type2]
     gdpr_dpa_signed: null
     dora_notification_clause: null
-    services_consumed:
-      - net.enterprise-dns
