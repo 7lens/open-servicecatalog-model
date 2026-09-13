@@ -4,7 +4,7 @@
 # Catalog files wrap instances in a top-level `technology_stacks` array.
 
 $schema: https://json-schema.org/draft/2020-12/schema
-$id: https://raw.githubusercontent.com/7lens/open-servicecatalog-model/main/schema/technology-stack.yaml
+$id: https://raw.githubusercontent.com/7lens/open-servicecatalog-model/main/schema/catalog/technology-stack.yaml
 title: TechnologyStack
 type: object
 additionalProperties: false

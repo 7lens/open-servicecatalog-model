@@ -1,0 +1,548 @@
+# Investigation ICT Providers
+#
+# Publicly researched third-party organisations. Not a customer vendor
+# register. Contract, signed-DPA, DORA-clause, risk_level, exit and
+# last_risk_assessment fields are null because they are customer-
+# dependent (evidence class C).
+#
+# certifications[] lists published program names only. Scope lives in
+# provenance.evidence_reference and in research_matrix.md. A listed
+# token is NOT certification of every service, region or edition.
+#
+# subcontractors is empty: public subprocessor lists exist but the
+# applicable subset is customer/service/region dependent. URLs are in
+# provenance.
+#
+# substitutability for AWS and Microsoft is a Flexera 2025 market
+# observation (low switching at hyperscaler grain), not a customer
+# score. Other values are conservative medium observations.
+
+ict_providers:
+
+  - id: aws
+    name: Amazon Web Services
+    type: cloud-infrastructure
+    headquarters: us
+    data_processing_locations: [us, eu, apac, me, sa, af, ca]
+    substitutability: low
+    contract_ref: null
+    contract_start: null
+    contract_end: null
+    notice_period_days: null
+    audit_rights: null
+    subcontracting_allowed: conditional
+    subcontractors: []
+    last_risk_assessment: null
+    risk_level: null
+    exit_strategy_documented: null
+    exit_strategy_tested: null
+    concentration_risk: true
+    certifications: [iso27001-2022, iso27701-2019, iso27017, iso27018, soc2-type2, soc1, soc3, pci-dss]
+    gdpr_dpa_signed: null
+    dora_notification_clause: null
+
+  - id: microsoft
+    name: Microsoft Corporation
+    type: cloud-infrastructure
+    headquarters: us
+    data_processing_locations: [us, eu, apac, me, sa, af, ca]
+    substitutability: low
+    contract_ref: null
+    contract_start: null
+    contract_end: null
+    notice_period_days: null
+    audit_rights: null
+    subcontracting_allowed: conditional
+    subcontractors: []
+    last_risk_assessment: null
+    risk_level: null
+    exit_strategy_documented: null
+    exit_strategy_tested: null
+    concentration_risk: true
+    certifications: [iso27001, iso27701, soc2-type2, soc1, pci-dss]
+    gdpr_dpa_signed: null
+    dora_notification_clause: null
+
+  - id: google-cloud
+    name: Google Cloud
+    type: cloud-infrastructure
+    headquarters: us
+    data_processing_locations: [us, eu, apac, me, sa, af, ca]
+    substitutability: medium
+    contract_ref: null
+    contract_start: null
+    contract_end: null
+    notice_period_days: null
+    audit_rights: null
+    subcontracting_allowed: conditional
+    subcontractors: []
+    last_risk_assessment: null
+    risk_level: null
+    exit_strategy_documented: null
+    exit_strategy_tested: null
+    concentration_risk: true
+    certifications: [iso27001-2022, iso27017, iso27018, iso27701, soc2-type2, soc3, pci-dss]
+    gdpr_dpa_signed: null
+    dora_notification_clause: null
+
+  - id: oracle
+    name: Oracle Corporation
+    type: cloud-infrastructure
+    headquarters: us
+    data_processing_locations: [us, eu, apac, me, ca]
+    substitutability: medium
+    contract_ref: null
+    contract_start: null
+    contract_end: null
+    notice_period_days: null
+    audit_rights: null
+    subcontracting_allowed: conditional
+    subcontractors: []
+    last_risk_assessment: null
+    risk_level: null
+    exit_strategy_documented: null
+    exit_strategy_tested: null
+    concentration_risk: null
+    certifications: [iso27001, iso27017, iso27018, iso27701, soc2, soc1, soc3]
+    gdpr_dpa_signed: null
+    dora_notification_clause: null
+
+  - id: ibm
+    name: International Business Machines Corporation
+    type: cloud-infrastructure
+    headquarters: us
+    data_processing_locations: [us, eu, apac, ca, sa]
+    substitutability: medium
+    contract_ref: null
+    contract_start: null
+    contract_end: null
+    notice_period_days: null
+    audit_rights: null
+    subcontracting_allowed: conditional
+    subcontractors: []
+    last_risk_assessment: null
+    risk_level: null
+    exit_strategy_documented: null
+    exit_strategy_tested: null
+    concentration_risk: null
+    certifications: [iso27001, iso27701, soc2-type2, soc3]
+    gdpr_dpa_signed: null
+    dora_notification_clause: null
+
+  - id: redhat
+    name: Red Hat
+    type: software-vendor
+    headquarters: us
+    data_processing_locations: []
+    substitutability: medium
+    contract_ref: null
+    contract_start: null
+    contract_end: null
+    notice_period_days: null
+    audit_rights: null
+    subcontracting_allowed: null
+    subcontractors: []
+    last_risk_assessment: null
+    risk_level: null
+    exit_strategy_documented: null
+    exit_strategy_tested: null
+    concentration_risk: null
+    certifications: []
+    gdpr_dpa_signed: null
+    dora_notification_clause: null
+
+  - id: alibaba-cloud
+    name: Alibaba Cloud
+    type: cloud-infrastructure
+    headquarters: cn
+    data_processing_locations: [cn, sg, eu, us, apac, me]
+    substitutability: medium
+    contract_ref: null
+    contract_start: null
+    contract_end: null
+    notice_period_days: null
+    audit_rights: null
+    subcontracting_allowed: conditional
+    subcontractors: []
+    last_risk_assessment: null
+    risk_level: null
+    exit_strategy_documented: null
+    exit_strategy_tested: null
+    concentration_risk: null
+    certifications: [iso27001]
+    gdpr_dpa_signed: null
+    dora_notification_clause: null
+
+  - id: cloudflare
+    name: Cloudflare, Inc.
+    type: network-provider
+    headquarters: us
+    data_processing_locations: [global-edge]
+    substitutability: medium
+    contract_ref: null
+    contract_start: null
+    contract_end: null
+    notice_period_days: null
+    audit_rights: null
+    subcontracting_allowed: conditional
+    subcontractors: []
+    last_risk_assessment: null
+    risk_level: null
+    exit_strategy_documented: null
+    exit_strategy_tested: null
+    concentration_risk: null
+    certifications: [iso27001, soc2]
+    gdpr_dpa_signed: null
+    dora_notification_clause: null
+
+  - id: salesforce
+    name: Salesforce, Inc.
+    type: software-vendor
+    headquarters: us
+    data_processing_locations: [us, eu]
+    substitutability: medium
+    contract_ref: null
+    contract_start: null
+    contract_end: null
+    notice_period_days: null
+    audit_rights: null
+    subcontracting_allowed: conditional
+    subcontractors: []
+    last_risk_assessment: null
+    risk_level: null
+    exit_strategy_documented: null
+    exit_strategy_tested: null
+    concentration_risk: null
+    certifications: [iso27001, soc2]
+    gdpr_dpa_signed: null
+    dora_notification_clause: null
+
+  - id: servicenow
+    name: ServiceNow, Inc.
+    type: software-vendor
+    headquarters: us
+    data_processing_locations: [us, eu]
+    substitutability: medium
+    contract_ref: null
+    contract_start: null
+    contract_end: null
+    notice_period_days: null
+    audit_rights: null
+    subcontracting_allowed: conditional
+    subcontractors: []
+    last_risk_assessment: null
+    risk_level: null
+    exit_strategy_documented: null
+    exit_strategy_tested: null
+    concentration_risk: null
+    certifications: [iso27001, soc2]
+    gdpr_dpa_signed: null
+    dora_notification_clause: null
+
+  - id: sap
+    name: SAP SE
+    type: software-vendor
+    headquarters: de
+    data_processing_locations: [eu, us]
+    substitutability: low
+    contract_ref: null
+    contract_start: null
+    contract_end: null
+    notice_period_days: null
+    audit_rights: null
+    subcontracting_allowed: conditional
+    subcontractors: []
+    last_risk_assessment: null
+    risk_level: null
+    exit_strategy_documented: null
+    exit_strategy_tested: null
+    concentration_risk: null
+    certifications: [iso27001]
+    gdpr_dpa_signed: null
+    dora_notification_clause: null
+
+  - id: atlassian
+    name: Atlassian Corporation
+    type: cloud-platform
+    headquarters: au
+    data_processing_locations: [us, eu, au, apac, ca, gb, ch]
+    substitutability: medium
+    contract_ref: null
+    contract_start: null
+    contract_end: null
+    notice_period_days: null
+    audit_rights: null
+    subcontracting_allowed: conditional
+    subcontractors: []
+    last_risk_assessment: null
+    risk_level: null
+    exit_strategy_documented: null
+    exit_strategy_tested: null
+    concentration_risk: null
+    certifications: [iso27001-2022, iso27018, soc2-type2]
+    gdpr_dpa_signed: null
+    dora_notification_clause: null
+
+  - id: okta
+    name: Okta, Inc.
+    type: cloud-platform
+    headquarters: us
+    data_processing_locations: [us, eu, au, jp, ca, in]
+    substitutability: medium
+    contract_ref: null
+    contract_start: null
+    contract_end: null
+    notice_period_days: null
+    audit_rights: null
+    subcontracting_allowed: conditional
+    subcontractors: []
+    last_risk_assessment: null
+    risk_level: null
+    exit_strategy_documented: null
+    exit_strategy_tested: null
+    concentration_risk: null
+    certifications: [iso27001-2022, iso27017, iso27018, soc2, soc1, soc3]
+    gdpr_dpa_signed: null
+    dora_notification_clause: null
+
+  - id: crowdstrike
+    name: CrowdStrike Holdings, Inc.
+    type: cloud-platform
+    headquarters: us
+    data_processing_locations: [us, eu]
+    substitutability: medium
+    contract_ref: null
+    contract_start: null
+    contract_end: null
+    notice_period_days: null
+    audit_rights: null
+    subcontracting_allowed: conditional
+    subcontractors: []
+    last_risk_assessment: null
+    risk_level: null
+    exit_strategy_documented: null
+    exit_strategy_tested: null
+    concentration_risk: null
+    certifications: [iso27001, soc2]
+    gdpr_dpa_signed: null
+    dora_notification_clause: null
+
+  - id: palo-alto-networks
+    name: Palo Alto Networks
+    type: software-vendor
+    headquarters: us
+    data_processing_locations: [us, eu]
+    substitutability: medium
+    contract_ref: null
+    contract_start: null
+    contract_end: null
+    notice_period_days: null
+    audit_rights: null
+    subcontracting_allowed: conditional
+    subcontractors: []
+    last_risk_assessment: null
+    risk_level: null
+    exit_strategy_documented: null
+    exit_strategy_tested: null
+    concentration_risk: null
+    certifications: [iso27001, soc2]
+    gdpr_dpa_signed: null
+    dora_notification_clause: null
+
+  - id: zscaler
+    name: Zscaler, Inc.
+    type: cloud-platform
+    headquarters: us
+    data_processing_locations: [global-edge]
+    substitutability: medium
+    contract_ref: null
+    contract_start: null
+    contract_end: null
+    notice_period_days: null
+    audit_rights: null
+    subcontracting_allowed: conditional
+    subcontractors: []
+    last_risk_assessment: null
+    risk_level: null
+    exit_strategy_documented: null
+    exit_strategy_tested: null
+    concentration_risk: null
+    certifications: [iso27001, soc2]
+    gdpr_dpa_signed: null
+    dora_notification_clause: null
+
+  - id: datadog
+    name: Datadog, Inc.
+    type: cloud-platform
+    headquarters: us
+    data_processing_locations: [us, eu]
+    substitutability: medium
+    contract_ref: null
+    contract_start: null
+    contract_end: null
+    notice_period_days: null
+    audit_rights: null
+    subcontracting_allowed: conditional
+    subcontractors: []
+    last_risk_assessment: null
+    risk_level: null
+    exit_strategy_documented: null
+    exit_strategy_tested: null
+    concentration_risk: null
+    certifications: [iso27001, soc2]
+    gdpr_dpa_signed: null
+    dora_notification_clause: null
+
+  - id: dynatrace
+    name: Dynatrace, Inc.
+    type: cloud-platform
+    headquarters: us
+    data_processing_locations: [us, eu]
+    substitutability: medium
+    contract_ref: null
+    contract_start: null
+    contract_end: null
+    notice_period_days: null
+    audit_rights: null
+    subcontracting_allowed: conditional
+    subcontractors: []
+    last_risk_assessment: null
+    risk_level: null
+    exit_strategy_documented: null
+    exit_strategy_tested: null
+    concentration_risk: null
+    certifications: [iso27001, soc2]
+    gdpr_dpa_signed: null
+    dora_notification_clause: null
+
+  - id: snowflake
+    name: Snowflake Inc.
+    type: cloud-platform
+    headquarters: us
+    data_processing_locations: [us, eu, apac]
+    substitutability: medium
+    contract_ref: null
+    contract_start: null
+    contract_end: null
+    notice_period_days: null
+    audit_rights: null
+    subcontracting_allowed: conditional
+    subcontractors: []
+    last_risk_assessment: null
+    risk_level: null
+    exit_strategy_documented: null
+    exit_strategy_tested: null
+    concentration_risk: null
+    certifications: [iso27001, soc2-type2]
+    gdpr_dpa_signed: null
+    dora_notification_clause: null
+
+  - id: databricks
+    name: Databricks, Inc.
+    type: cloud-platform
+    headquarters: us
+    data_processing_locations: [us, eu, apac]
+    substitutability: medium
+    contract_ref: null
+    contract_start: null
+    contract_end: null
+    notice_period_days: null
+    audit_rights: null
+    subcontracting_allowed: conditional
+    subcontractors: []
+    last_risk_assessment: null
+    risk_level: null
+    exit_strategy_documented: null
+    exit_strategy_tested: null
+    concentration_risk: null
+    certifications: [iso27001-2022, iso27017, iso27018, soc2-type2]
+    gdpr_dpa_signed: null
+    dora_notification_clause: null
+
+  - id: github
+    name: GitHub, Inc.
+    type: cloud-platform
+    headquarters: us
+    data_processing_locations: [us, eu]
+    substitutability: medium
+    contract_ref: null
+    contract_start: null
+    contract_end: null
+    notice_period_days: null
+    audit_rights: null
+    subcontracting_allowed: conditional
+    subcontractors: []
+    last_risk_assessment: null
+    risk_level: null
+    exit_strategy_documented: null
+    exit_strategy_tested: null
+    concentration_risk: null
+    certifications: [iso27001, iso27701, iso27018, soc2]
+    gdpr_dpa_signed: null
+    dora_notification_clause: null
+
+  - id: gitlab
+    name: GitLab Inc.
+    type: cloud-platform
+    headquarters: us
+    data_processing_locations: [us, eu]
+    substitutability: medium
+    contract_ref: null
+    contract_start: null
+    contract_end: null
+    notice_period_days: null
+    audit_rights: null
+    subcontracting_allowed: conditional
+    subcontractors: []
+    last_risk_assessment: null
+    risk_level: null
+    exit_strategy_documented: null
+    exit_strategy_tested: null
+    concentration_risk: null
+    certifications: [iso27001-2022, iso27017, iso27018, soc2-type2]
+    gdpr_dpa_signed: null
+    dora_notification_clause: null
+
+  - id: workday
+    name: Workday, Inc.
+    type: software-vendor
+    headquarters: us
+    data_processing_locations: [us, eu]
+    substitutability: medium
+    contract_ref: null
+    contract_start: null
+    contract_end: null
+    notice_period_days: null
+    audit_rights: null
+    subcontracting_allowed: conditional
+    subcontractors: []
+    last_risk_assessment: null
+    risk_level: null
+    exit_strategy_documented: null
+    exit_strategy_tested: null
+    concentration_risk: null
+    certifications: [iso27001, soc2]
+    gdpr_dpa_signed: null
+    dora_notification_clause: null
+
+  - id: broadcom
+    name: Broadcom Inc.
+    type: software-vendor
+    headquarters: us
+    data_processing_locations: []
+    substitutability: medium
+    contract_ref: null
+    contract_start: null
+    contract_end: null
+    notice_period_days: null
+    audit_rights: null
+    subcontracting_allowed: null
+    subcontractors: []
+    last_risk_assessment: null
+    risk_level: null
+    exit_strategy_documented: null
+    exit_strategy_tested: null
+    concentration_risk: null
+    certifications: []
+    gdpr_dpa_signed: null
+    dora_notification_clause: null

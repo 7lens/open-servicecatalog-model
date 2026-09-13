@@ -6,6 +6,11 @@
 #
 # Framework mappings below are OPTIONAL REFERENCE MAPPINGS. They are
 # not legal advice and not evidence of compliance or certification.
+# tbm_tower values use TBM Taxonomy 5.0.1 Technology Resource Tower
+# names (not legacy "IT Tower" / Infrastructure / Management).
+# togaf_domain uses TOGAF 10th Edition core domains (Business, Data,
+# Application, Technology) — not "Security Architecture".
+# EU AI Act max_risk_class is an OSM label, not Article 6 / Annex III.
 
 technology_stacks:
 
@@ -15,7 +20,7 @@ technology_stacks:
       Virtual machines, containers and serverless execution environments
       operated as technological services.
     mappings:
-      tbm_tower: Infrastructure
+      tbm_tower: Compute
       tbm_sub_tower: Compute
       togaf_domain: Technology Architecture
       iso27001: "A.8.9 Configuration management; A.8.8 Technical vulnerability management"
@@ -35,7 +40,7 @@ technology_stacks:
       Managed relational and non-relational data stores, including
       provisioning, health and capacity of database services.
     mappings:
-      tbm_tower: Infrastructure
+      tbm_tower: Data
       tbm_sub_tower: Database
       togaf_domain: Technology Architecture
       iso27001: "A.8.24 Cryptography; A.8.10 Information deletion"
@@ -55,7 +60,7 @@ technology_stacks:
       Connectivity, name resolution, segmentation, load balancing and
       remote access offered as technological services.
     mappings:
-      tbm_tower: Infrastructure
+      tbm_tower: Network
       tbm_sub_tower: Network
       togaf_domain: Technology Architecture
       nist_csf: [protect, detect]
@@ -71,7 +76,7 @@ technology_stacks:
     description: >
       Object storage, file storage, backup and archive services.
     mappings:
-      tbm_tower: Infrastructure
+      tbm_tower: Storage
       tbm_sub_tower: Storage
       togaf_domain: Technology Architecture
       nist_csf: [protect, recover]
@@ -90,7 +95,7 @@ technology_stacks:
     mappings:
       tbm_tower: Security
       tbm_sub_tower: Security Operations
-      togaf_domain: Security Architecture
+      togaf_domain: Technology Architecture
       nist_csf: [identify, protect, detect, respond]
       dora:
         pillar: ICT Risk Management
@@ -105,7 +110,7 @@ technology_stacks:
       Source control, continuous delivery, artifact storage and related
       developer-platform services.
     mappings:
-      tbm_tower: Applications
+      tbm_tower: Application
       tbm_sub_tower: Application Development and Support
       togaf_domain: Technology Architecture
       nist_csf: [protect]
@@ -122,7 +127,7 @@ technology_stacks:
       Infrastructure-as-code, configuration automation and workflow
       execution services.
     mappings:
-      tbm_tower: Applications
+      tbm_tower: Application
       tbm_sub_tower: Application Development and Support
       togaf_domain: Technology Architecture
       nist_csf: [protect, recover]
@@ -138,7 +143,7 @@ technology_stacks:
     description: >
       Analytics platforms, ingestion pipelines and data-platform services.
     mappings:
-      tbm_tower: Data Management
+      tbm_tower: Data
       tbm_sub_tower: Data Platform and Analytics
       togaf_domain: Data Architecture
       nist_csf: [identify, protect]
@@ -155,7 +160,7 @@ technology_stacks:
     description: >
       Observability, event management and operational-tooling services.
     mappings:
-      tbm_tower: Management
+      tbm_tower: Application
       tbm_sub_tower: IT Service Management
       togaf_domain: Technology Architecture
       nist_csf: [detect, respond]
@@ -171,7 +176,7 @@ technology_stacks:
     description: >
       Cloud cost visibility, budget signals and license-tracking services.
     mappings:
-      tbm_tower: Management
+      tbm_tower: Risk & Compliance
       tbm_sub_tower: IT Financial Management
       togaf_domain: Technology Architecture
       nist_csf: [identify]

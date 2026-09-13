@@ -1,0 +1,21 @@
+# Reference-enterprise Service Posture
+#
+# Posture is optional. The predecessor health file was a field-pattern
+# demonstration, not an assessed estate record. Those demo values are
+# not copied here.
+#
+# auto.aiops is catalogued as AI-bearing in the source Service
+# definition. ai_act_applicable records that fact. It is not a legal
+# AI Act classification.
+
+service_posture:
+
+  - service_id: auto.aiops
+    ai_act_applicable: true
+    provenance:
+      authoritative_source: Service Owner
+      source_system: predecessor-catalog
+      source_record_id: auto.aiops
+      confidence: high
+      discovery_method: imported
+    offering_posture: []

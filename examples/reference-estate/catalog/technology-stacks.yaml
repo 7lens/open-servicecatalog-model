@@ -1,0 +1,69 @@
+# Reference-estate Technology Stacks
+#
+# Anonymized financial-sector multinational. Stacks are operational
+# competency domains of the adopting organization, not vendor towers
+# and not a required taxonomy.
+
+technology_stacks:
+
+  - id: compute
+    name: Compute
+    description: >
+      Virtual machines, containers and serverless execution offered
+      as technological services.
+
+  - id: storage
+    name: Storage
+    description: >
+      Object storage and related unstructured-data storage services.
+
+  - id: database
+    name: Database
+    description: >
+      Managed relational and related data-store services.
+
+  - id: network
+    name: Network
+    description: >
+      Virtual networks, CDN, secure access and related connectivity
+      services.
+
+  - id: security
+    name: Security
+    description: >
+      Endpoint and related security-platform services. Identity is a
+      separate stack because cloud IAM and enterprise IdP are not the
+      same service.
+
+  - id: identity
+    name: Identity
+    description: >
+      Directory, workforce identity, and cloud-platform authorization
+      services.
+
+  - id: devops
+    name: DevOps
+    description: >
+      Source control and continuous-delivery services.
+
+  - id: automation
+    name: Automation
+    description: >
+      Infrastructure-as-code execution services.
+
+  - id: data
+    name: Data
+    description: >
+      Analytical warehouses, lakehouses and vendor-operated AI
+      features attached to data platforms.
+
+  - id: operations
+    name: Operations
+    description: >
+      Observability and IT service-management tooling.
+
+  - id: collaboration
+    name: Collaboration
+    description: >
+      Issue tracking, wiki, email, content and team-chat
+      technological services.

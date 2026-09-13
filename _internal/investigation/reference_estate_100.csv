@@ -1,0 +1,95 @@
+rank,category,candidate,research_status,osm_treatment,notes
+1,Cloud / hyperscaler,AWS,RESEARCHED,ICT Provider `aws`,Legal seller Amazon Web Services; EU CTPP is AWS EMEA SARL (not stored). Class A/B public facts encoded; contract/risk C unset.
+2,Cloud / hyperscaler,Microsoft Azure,RESEARCHED,ICT Provider `microsoft` plus Azure offerings,Azure is not a separate legal entity from Microsoft Corporation. MIOL is EU CTPP.
+3,Cloud / hyperscaler,Google Cloud,RESEARCHED,ICT Provider `google-cloud`,Google LLC / local Cloud entities. EMEA contractor often Google Cloud EMEA Limited.
+4,Cloud / hyperscaler,Oracle Cloud Infrastructure,RESEARCHED,ICT Provider `oracle` plus OCI Compute offering,CTPP is Oracle Nederland B.V.
+5,Cloud / hyperscaler,IBM Cloud,RESEARCHED,ICT Provider `ibm`,Red Hat kept as a separate provider.
+6,Cloud / hyperscaler,Alibaba Cloud,RESEARCHED,ICT Provider `alibaba-cloud`,`headquarters: cn` collapses Cayman parent and Singapore international HQ.
+7,Cloud / hyperscaler,Cloudflare,RESEARCHED,ICT Provider `cloudflare`; Services `net.cdn-waf` and `net.ztna`,Type `network-provider` is a compromise vs cloud-platform. Not an ESA CTPP.
+8,Compute,Amazon EC2,RESEARCHED,Offering `compute.virtual-machines.aws-ec2`,Vendor SLA as characteristic not availability_target.
+9,Compute,Azure Virtual Machines,RESEARCHED,Offering `compute.virtual-machines.azure-vm`,SLA configuration-conditional.
+10,Compute,Google Compute Engine,RESEARCHED,Offering `compute.virtual-machines.gce`,
+11,Storage,Amazon S3,RESEARCHED,Offering `storage.object-storage.aws-s3`,Class-conditional SLA; durability claims are not the SLA.
+12,Storage,Azure Blob Storage,RESEARCHED,Offering `storage.object-storage.azure-blob`,
+13,Storage,Google Cloud Storage,RESEARCHED,Offering `storage.object-storage.gcs`,
+14,Database,Amazon RDS,RESEARCHED,Offering `db.managed-relational.aws-rds`,Aurora not merged into this offering.
+15,Database,Azure SQL Database,RESEARCHED,Offering `db.managed-relational.azure-sql`,Not Managed Instance or SQL on VMs.
+16,Database,Google Cloud SQL,RESEARCHED,Offering `db.managed-relational.cloud-sql`,
+17,Kubernetes,Amazon EKS,RESEARCHED,Offering `compute.kubernetes.aws-eks`,Control-plane SLA only.
+18,Kubernetes,Azure Kubernetes Service,RESEARCHED,Offering `compute.kubernetes.azure-aks`,Free tier has no financially backed SLA.
+19,Kubernetes,Google Kubernetes Engine,RESEARCHED,Offering `compute.kubernetes.gke`,
+20,Serverless,AWS Lambda,RESEARCHED,Offering `compute.functions.aws-lambda`,
+21,Serverless,Azure Functions,RESEARCHED,Offering `compute.functions.azure-functions`,
+22,Serverless,Google Cloud Run,RESEARCHED,Offering `compute.functions.cloud-run` (mismatch test),CaaS not functions; execution_model characteristic records the mismatch.
+23,Networking,Amazon VPC,RESEARCHED,Offering `net.virtual-network.aws-vpc`,No general VPC SLA; NAT Gateway 99.9% only.
+24,Networking,Azure Virtual Network,RESEARCHED,Offering `net.virtual-network.azure-vnet`,
+25,Networking,Google VPC,RESEARCHED,Offering `net.virtual-network.gcp-vpc`,
+26,Identity,AWS IAM,RESEARCHED,Offering `identity.cloud-authorization.aws-iam`,Not an enterprise IdP. No public SLA found.
+27,Identity,Microsoft Entra ID,RESEARCHED,Offering `identity.directory-idp.entra-id`,Shared substrate for M365 and Azure.
+28,Identity,Google Cloud IAM,RESEARCHED,Offering `identity.cloud-authorization.gcp-iam`,Officially no SLA.
+29,Infrastructure,Kubernetes,RESEARCHED,Not a Service/Provider; `compute.kubernetes.self-operated` has no provider,CNCF project.
+30,Infrastructure,Docker,RESEARCHED NOT ENCODED,Product/runtime/Hub name collision,Do not catalog as Service or ICT Provider.
+31,Infrastructure,VMware vSphere,RESEARCHED NOT ENCODED AS SERVICE,ICT Provider `broadcom` available,Product family; catalog VM compute if the estate offers it.
+32,Infrastructure,VMware Cloud Foundation,RESEARCHED NOT ENCODED AS SERVICE,ICT Provider `broadcom` available,Same as vSphere.
+33,Infrastructure,Red Hat OpenShift,RESEARCHED,Offering `compute.kubernetes.openshift-ibm-cloud` (managed on IBM Cloud),Self-managed OpenShift would list `redhat` as software-vendor; not separately encoded.
+34,Infrastructure,Red Hat Enterprise Linux,RESEARCHED NOT ENCODED,ICT Provider `redhat` only,OS is not a technological Service.
+35,Infrastructure,Ubuntu,RESEARCHED NOT ENCODED,Not encoded,OS; Canonical not added as provider without a Pro/managed contract in evidence.
+36,Infrastructure as Code,Terraform,RESEARCHED,Service `auto.infrastructure-as-code`,Self-operated offering has no provider; HCP Terraform providers `[ibm]`.
+37,Automation,Ansible,RESEARCHED NOT ENCODED,Product/engine,Encode an automation Service only if the enterprise offers one.
+38,CI/CD,GitHub Actions,RESEARCHED,Offerings `devops.continuous-delivery.github-hosted` and `.github-self-hosted`,Provider `github` not `microsoft`.
+39,CI/CD,GitLab CI/CD,RESEARCHED,Offering `devops.continuous-delivery.gitlab-com`,Self-Managed not encoded this round.
+40,CI/CD,Jenkins,RESEARCHED NOT ENCODED,Community project,Self-operated CI offering would omit providers.
+41,CI/CD,Azure DevOps,RESEARCHED NOT ENCODED,Suite of several services,Same suite-boundary as M365.
+42,CD,Argo CD,RESEARCHED NOT ENCODED,CNCF project,
+43,Database,PostgreSQL,RESEARCHED NOT ENCODED AS ITSELF,Covered only as an RDS engine option,Open-source project/product.
+44,Database,MySQL,RESEARCHED NOT ENCODED AS ITSELF,Covered only as an RDS engine option,
+45,Database,Microsoft SQL Server,RESEARCHED NOT ENCODED AS ITSELF,Product; Azure SQL Database is a different offering,
+46,Database,Oracle Database,RESEARCHED,Autonomous Database offering encoded; licensed DB is a product,Do not collapse Autonomous and on-premises Database.
+47,Database,MongoDB,SURVEYED NOT ENCODED,Product vs Atlas service not split in this test suite,
+48,Database,Redis,SURVEYED NOT ENCODED,Name collision Redis Inc vs compatible caches,
+49,Search,OpenSearch,SURVEYED NOT ENCODED,Foundation project vs Amazon OpenSearch Service,
+50,Data Platform,Snowflake,RESEARCHED,Service `data.cloud-warehouse` plus `data.vendor-ai-assist.snowflake-cortex`,Dual providers with hosting CSP.
+51,Data Platform,Databricks,RESEARCHED,Service `data.lakehouse` plus Mosaic hosted offering,Control plane vs customer data plane.
+52,Streaming,Apache Kafka,SURVEYED NOT ENCODED,Project,
+53,Enterprise SaaS,Microsoft 365,RESEARCHED DECOMPOSED,Not one Service,SKU/suite; see Teams Exchange SharePoint Entra.
+54,Enterprise SaaS,Microsoft Teams,RESEARCHED,Offering `collab.team-chat.teams`,Cannot record Entra/Exchange/SharePoint dependency.
+55,Enterprise SaaS,Exchange Online,RESEARCHED,Offering `collab.email.exchange-online`,
+56,Enterprise SaaS,SharePoint Online,RESEARCHED,Offering `collab.content.sharepoint-online`,
+57,CRM,Salesforce,RESEARCHED BOUNDARY TEST,Service `crm.sales-cloud`,Application vs technological service clash (D-019).
+58,ITSM,ServiceNow ITSM,RESEARCHED,Service `ops.itsm`,
+59,CMDB,ServiceNow CMDB,OUT OF SCOPE,Not encoded,CMDB CI inventory excluded by MODEL.md.
+60,ERP,SAP S/4HANA,RESEARCHED BOUNDARY TEST,Service `erp.s4hana-cloud`,ERP application; encoded only to stress the boundary. SAP SE is a DORA CTPP.
+61,HCM,Workday,RESEARCHED BOUNDARY TEST,Service `hcm.core`,Application vs technological service.
+62,Collaboration,Atlassian Jira,RESEARCHED,Service `collab.issue-tracking`,Cloud vs Data Center offerings; Cloud ISO does not cover DC.
+63,Collaboration,Atlassian Confluence,RESEARCHED,Service `collab.wiki`,
+64,Collaboration,Slack,RESEARCHED,Offering `collab.team-chat.slack` providers `[salesforce]`,Same parent as Sales Cloud; Slack legal entities may still appear on DPA.
+65,Collaboration,Zoom,SURVEYED NOT ENCODED,Short note only in saas-security-data.md,
+66,Security / Identity,Okta,RESEARCHED,Offering `identity.directory-idp.okta-workforce`,Auth0 not merged.
+67,Security,CyberArk,SURVEYED NOT ENCODED,Short note only,
+68,Endpoint Security,CrowdStrike Falcon,RESEARCHED,Service `sec.endpoint-protection`,Falcon vs Falcon Complete operating_model.
+69,Endpoint Security,Microsoft Defender,SURVEYED NOT ENCODED,Product family not one Service,
+70,Network Security,Palo Alto Networks,RESEARCHED,Offering `net.ztna.prisma-access`,Strata NGFW not separately encoded.
+71,WAF / CDN,Cloudflare,RESEARCHED,Same as rank 7 at service grain,Duplicate estate row (provider + service).
+72,Secure Access,Zscaler,RESEARCHED,Services `net.secure-web-gateway` and `net.ztna`,ZIA + ZPA.
+73,Security Analytics,Splunk,SURVEYED NOT ENCODED,Cisco acquisition; short note,
+74,Endpoint Security,SentinelOne,SURVEYED NOT ENCODED,Short note,
+75,Connectivity,Enterprise Internet Connectivity,SURVEYED NOT ENCODED,Capability Service pattern; no vendor selected,
+76,Connectivity,Enterprise WAN,SURVEYED NOT ENCODED,Capability,
+77,Connectivity,SD-WAN,SURVEYED NOT ENCODED,Capability,
+78,Network Service,DNS,SURVEYED NOT ENCODED,Capability (example net.enterprise-dns remains synthetic),
+79,Network Service,CDN,RESEARCHED,Service `net.cdn-waf`,Cloudflare offering.
+80,Network Service,Load Balancing,SURVEYED NOT ENCODED,Capability,
+81,Network Service,API Gateway,SURVEYED NOT ENCODED,Capability; Service-to-Service deps out of scope,
+82,Network Security,Network Firewall,SURVEYED NOT ENCODED,Capability,
+83,Remote Access,VPN,SURVEYED NOT ENCODED,Capability,
+84,Zero Trust,Zero Trust Network Access,RESEARCHED,Service `net.ztna`,Cloudflare Access ZPA Prisma Access.
+85,Observability,Datadog,RESEARCHED,Offering `ops.observability.datadog`,
+86,Observability,Dynatrace,RESEARCHED,Offering `ops.observability.dynatrace`,HQ Boston not Waltham; Linz not stored.
+87,Observability,New Relic,SURVEYED NOT ENCODED,Short note; Pixie scope caveat,
+88,Observability,Grafana,SURVEYED NOT ENCODED,OSS vs Cloud,
+89,Monitoring,Prometheus,SURVEYED NOT ENCODED,CNCF project,
+90,Observability / Analytics,Splunk,SURVEYED NOT ENCODED,Duplicate of rank 73,
+91,Telemetry,OpenTelemetry,SURVEYED NOT ENCODED,CNCF project,
+92,API Management,Enterprise API Management,SURVEYED NOT ENCODED,Capability,
+93,AI Platform,Enterprise AI / ML Platform,SURVEYED NOT ENCODED,Capability; do not invent a platform,
+94,AI Platform,Generative AI / LLM Platform,RESEARCHED IN PART,Service `data.vendor-ai-assist` only,Cortex and Mosaic hosted models; no customer risk class. CSV has 94 rows not 100.
