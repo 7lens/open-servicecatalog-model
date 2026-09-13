@@ -1,18 +1,22 @@
 # Example Services
 #
-# Synthetic catalog for a fictional technology platform organization.
-# It demonstrates identity, definition version/validity, offerings,
-# optional characteristics, and optional ICT Provider references.
-# It is not a real service inventory.
+# SYNTAX TUTORIAL. This catalog is synthetic. It shows YAML shape
+# (identity, version/validity, nested offerings, characteristics,
+# providers). Modelling follows the same core rules as
+# examples/reference-enterprise/golden-example/:
+#
+#   Service  = technological service (not a product, not a request)
+#   Offering = meaningful technological variant (provider/product/engine)
+#   providers[] on the Offering when the seller distinguishes the variant
+#   Characteristic is not a substitute for provider identity
+#   Posture is current customer/service state (see examples/posture/)
+#
+# lifecycle_state, version and valid_from are required catalog metadata
+# in this tutorial; they are not sourced operational truth.
+# Do not copy request-catalogue grains (MFA, password reset) as Offerings.
 #
 # Service ID = 2 segments. Offering ID = 3 segments.
-# Identity is immutable; version, validity and lifecycle_state
-# describe this definition. Offerings have no independent version.
-#
 # `providers` lists ICT Provider ids (see ict-providers.yaml).
-# Use it on Service when the provider is intrinsic to the capability,
-# or on Offering when provider choice distinguishes the variant.
-# Omit it when not applicable. DORA maps to this field.
 
 services:
 
@@ -25,14 +29,13 @@ services:
     valid_from: 2025-01-01
     valid_to: null
     lifecycle_state: production
-    # Service-level: both clouds underpin the VM capability as a whole.
-    # Offerings distinguish tenancy, not provider.
-    providers: [aws, azure]
     service_offerings:
-      - id: compute.virtual-machines.shared
-        name: Shared virtual machine pool
-      - id: compute.virtual-machines.dedicated
-        name: Dedicated virtual machine
+      - id: compute.virtual-machines.aws
+        name: Virtual machines (AWS)
+        providers: [aws]
+      - id: compute.virtual-machines.azure
+        name: Virtual machines (Azure)
+        providers: [microsoft]
 
   - id: compute.kubernetes
     name: Kubernetes
@@ -66,9 +69,10 @@ services:
         name: AWS
         providers: [aws]
         characteristics:
-          - name: environment
+          # Syntax sample: delivery stage, not cloud identity.
+          - name: delivery_stage
             value_type: string
-            description: Delivery environment of this offering.
+            description: Illustrative delivery stage of this offering (not the cloud/provider).
             allowed_values: [production, development]
             value: production
             default_value: production
@@ -103,11 +107,11 @@ services:
             configurable: false
       - id: compute.kubernetes.azure
         name: Azure
-        providers: [azure]
+        providers: [microsoft]
         characteristics:
-          - name: environment
+          - name: delivery_stage
             value_type: string
-            description: Delivery environment of this offering.
+            description: Illustrative delivery stage of this offering (not the cloud/provider).
             allowed_values: [production, development]
             value: production
             default_value: production
@@ -206,11 +210,10 @@ services:
     valid_from: 2025-01-01
     valid_to: null
     lifecycle_state: production
-    # Service-level: Infoblox is intrinsic to this DNS capability.
-    providers: [infoblox]
     service_offerings:
       - id: net.enterprise-dns.managed
         name: Managed DNS
+        providers: [infoblox]
 
   - id: storage.object-storage
     name: Object Storage
@@ -229,7 +232,10 @@ services:
 
   - id: sec.identity-access
     name: Identity and Access
-    description: Directory, authentication and access-governance services.
+    description: >
+      Workforce directory / identity provider as a technological service.
+      MFA, password reset and directory-lifecycle requests belong in an
+      ITSM/request catalogue, not as OSM Offerings.
     accountable: Service Owner
     technology_stack: Security
     version: "1.0.0"
@@ -238,9 +244,8 @@ services:
     lifecycle_state: production
     service_offerings:
       - id: sec.identity-access.directory
-        name: Directory lifecycle
-      - id: sec.identity-access.mfa
-        name: Multi-factor authentication
+        name: Directory / identity provider
+        providers: [microsoft]
 
   - id: devops.continuous-delivery
     name: Continuous Delivery

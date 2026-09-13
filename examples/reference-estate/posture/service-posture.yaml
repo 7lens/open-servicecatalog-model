@@ -1,0 +1,141 @@
+# Reference-estate Service Posture
+#
+# Intentionally thin. Customer-dependent operational_criticality, rto,
+# rpo, data_classification, cost and resilience tests are omitted.
+# vendor_support_status is recorded only where the product is generally
+# available.
+#
+# `service_posture` / `offering_posture` are the current public OSM
+# vocabulary.
+#
+# AI Act fields on data.vendor-ai-assist record that vendor-operated AI
+# features exist. They are not a legal classification.
+
+service_posture:
+
+  - service_id: compute.virtual-machines
+    vendor_support_status: active
+    privacy_classification: not-assessed
+    ai_act_applicable: false
+    ai_act_risk_class: not-applicable
+    provenance:
+      authoritative_source: Service Owner
+      source_system: osm-catalog
+      last_verified: 2026-09-13
+      evidence_reference: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/concepts.html
+      confidence: high
+      discovery_method: declared
+    offering_posture: []
+
+  - service_id: compute.kubernetes
+    vendor_support_status: active
+    privacy_classification: not-assessed
+    ai_act_applicable: false
+    ai_act_risk_class: not-applicable
+    provenance:
+      authoritative_source: Service Owner
+      source_system: osm-catalog
+      last_verified: 2026-09-13
+      confidence: high
+      discovery_method: declared
+    offering_posture: []
+
+  - service_id: compute.functions
+    vendor_support_status: active
+    privacy_classification: not-assessed
+    ai_act_applicable: false
+    ai_act_risk_class: not-applicable
+    offering_posture: []
+
+  - service_id: compute.container-service
+    vendor_support_status: active
+    privacy_classification: not-assessed
+    ai_act_applicable: false
+    ai_act_risk_class: not-applicable
+    offering_posture: []
+
+  - service_id: storage.object-storage
+    vendor_support_status: active
+    privacy_classification: not-assessed
+    ai_act_applicable: false
+    ai_act_risk_class: not-applicable
+    offering_posture: []
+
+  - service_id: db.managed-relational
+    vendor_support_status: active
+    privacy_classification: not-assessed
+    ai_act_applicable: false
+    ai_act_risk_class: not-applicable
+    offering_posture: []
+
+  - service_id: identity.directory-idp
+    vendor_support_status: active
+    privacy_classification: not-assessed
+    ai_act_applicable: false
+    ai_act_risk_class: not-applicable
+    offering_posture: []
+
+  - service_id: identity.cloud-authorization
+    vendor_support_status: active
+    privacy_classification: not-assessed
+    ai_act_applicable: false
+    ai_act_risk_class: not-applicable
+    offering_posture: []
+
+  - service_id: collab.issue-tracking
+    vendor_support_status: active
+    privacy_classification: not-assessed
+    ai_act_applicable: false
+    ai_act_risk_class: not-applicable
+    offering_posture: []
+
+  - service_id: data.cloud-warehouse
+    vendor_support_status: active
+    privacy_classification: not-assessed
+    ai_act_applicable: false
+    ai_act_risk_class: not-applicable
+    offering_posture: []
+
+  - service_id: data.lakehouse
+    vendor_support_status: active
+    privacy_classification: not-assessed
+    ai_act_applicable: false
+    ai_act_risk_class: not-applicable
+    offering_posture: []
+
+  - service_id: data.vendor-ai-assist
+    vendor_support_status: active
+    privacy_classification: not-assessed
+    ai_act_applicable: true
+    provenance:
+      authoritative_source: Service Owner
+      source_system: osm-catalog
+      last_verified: 2026-09-13
+      evidence_reference: https://docs.snowflake.com/en/user-guide/snowflake-cortex/cross-region-inference
+      confidence: medium
+      discovery_method: declared
+    offering_posture:
+      - offering_id: data.vendor-ai-assist.snowflake-cortex
+        ai_act_intended_purpose: >
+          Vendor-operated Cortex AI features on Snowflake. Recorded
+          because the product is an AI system family. Not a customer
+          AI Act risk classification.
+        ai_act_training_data_doc: not-applicable
+        provenance:
+          source_system: osm-catalog
+          last_verified: 2026-09-13
+          evidence_reference: https://docs.snowflake.com/en/user-guide/snowflake-cortex/cross-region-inference
+          confidence: medium
+          discovery_method: declared
+      - offering_id: data.vendor-ai-assist.mosaic-hosted
+        ai_act_intended_purpose: >
+          Databricks-hosted Mosaic AI model endpoints. Distinct from
+          customer-built agents on the same platform. Not a legal
+          classification.
+        ai_act_training_data_doc: not-applicable
+        provenance:
+          source_system: osm-catalog
+          last_verified: 2026-09-13
+          evidence_reference: https://docs.databricks.com/aws/en/agents/gen-ai-capabilities
+          confidence: medium
+          discovery_method: declared

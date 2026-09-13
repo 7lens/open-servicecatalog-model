@@ -1,9 +1,8 @@
-# JSON Schema — Service Posture (file: service-attributes.yaml)
+# JSON Schema — Service Posture
 #
-# Current operational / governance state of a technological service
-# (Service Posture). Catalog files wrap instances in a top-level
-# `service_attributes` array. The file and key names are kept for
-# file compatibility; they are not a second catalog entity.
+# Current operational / governance state of a technological service.
+# Catalog files wrap instances in a top-level `service_posture` array.
+# Nested `offering_posture` holds Offering Posture for each variant.
 #
 # Canonical OSM posture fields are unprefixed. Framework-named fields
 # are optional reference mappings, not certification or compliance.
@@ -13,13 +12,13 @@
 # the catalog record, not a posture field.
 
 $schema: https://json-schema.org/draft/2020-12/schema
-$id: https://raw.githubusercontent.com/7lens/open-servicecatalog-model/main/schema/service-attributes.yaml
-title: ServiceAttributes
+$id: https://raw.githubusercontent.com/7lens/open-servicecatalog-model/main/schema/posture/service-posture.yaml
+title: ServicePosture
 type: object
 additionalProperties: false
 required:
   - service_id
-  - offering_attributes
+  - offering_posture
 properties:
   service_id:
     type: string
@@ -111,7 +110,7 @@ properties:
     minLength: 1
   provenance:
     description: Optional reusable provenance for this posture record.
-    $ref: ./provenance.yaml
+    $ref: ../shared/provenance.yaml
   ai_act_applicable:
     type: boolean
   ai_act_risk_class:
@@ -122,13 +121,13 @@ properties:
       - limited-risk
       - minimal-risk
       - not-applicable
-  offering_attributes:
+  offering_posture:
     type: array
     items:
-      $ref: "#/$defs/OfferingAttributes"
+      $ref: "#/$defs/OfferingPosture"
 
 $defs:
-  OfferingAttributes:
+  OfferingPosture:
     type: object
     additionalProperties: false
     required:
@@ -294,7 +293,7 @@ $defs:
           - type: "null"
       provenance:
         description: Optional reusable provenance for this offering posture row.
-        $ref: ./provenance.yaml
+        $ref: ../shared/provenance.yaml
       ai_act_intended_purpose:
         type: string
       ai_act_human_oversight:

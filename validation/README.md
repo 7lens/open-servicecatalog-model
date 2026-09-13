@@ -1,6 +1,6 @@
 # Validation
 
-Lightweight checks for the example catalog. This is not a platform
+Lightweight checks for OSM catalogs. This is not a platform
 and not a full JSON Schema compiler — it enforces the identity and
 reference rules in `SPECIFICATION.md`.
 
@@ -11,20 +11,28 @@ From the repository root:
 ```bash
 python3 -m pip install -r validation/requirements.txt
 python3 validation/validate.py
+python3 validation/validate.py --catalog examples/reference-enterprise
+python3 validation/validate.py --catalog examples/reference-enterprise/golden-example
+python3 validation/validate.py --catalog examples/reference-estate
+python3 validation/validate.py --catalog examples/reference-estate/golden-example
 ```
 
-PyYAML is the only dependency. Point at another catalog directory:
+Default `--catalog` is `examples/` (the small synthetic set).
+`examples/reference-enterprise/` is the onboarded predecessor catalog.
+`examples/reference-estate/` is the researched public-provider estate.
+PyYAML is the only dependency. Point at another catalog
+directory that uses the same layout:
 
 ```bash
 python3 validation/validate.py --catalog path/to/your/yaml
 ```
 
-Expected files in that directory:
+Expected files:
 
-- `technology-stacks.yaml`
-- `services.yaml`
-- `service-attributes.yaml`
-- `ict-providers.yaml`
+- `catalog/technology-stacks.yaml`
+- `catalog/services.yaml`
+- `catalog/ict-providers.yaml`
+- `posture/service-posture.yaml`
 
 ## What is checked
 
@@ -33,12 +41,12 @@ Expected files in that directory:
 - service IDs have 2 segments; offering IDs have 3
 - offering IDs are children of their parent service ID
 - `technology_stack` matches a stack `name`
-- service-attribute and offering-attribute references exist
+- service-posture and offering-posture references exist
 - ICT Provider ids in Service/Offering `providers` exist in the
   provider register (omitted `providers` is valid)
 - EU AI Act offering fields appear only when `ai_act_applicable` is true
 - each service has `lifecycle_state`, `version` and `valid_from`; `valid_to` is not before `valid_from`
-- `service_attributes` must not contain `lifecycle_state`
+- `service_posture` must not contain `lifecycle_state`
 - characteristic names are unique per parent; values respect `allowed_values`
 - provenance objects use published `confidence` / `discovery_method` enums
 - Service/Offering records must not declare Service-to-Service relationship fields

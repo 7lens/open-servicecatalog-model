@@ -26,7 +26,7 @@ There was no prior numbering scheme in this repository. New IDs use:
 |--------|-----|
 | `OSM-C-nnn` | Compatibility universe and mapping decisions |
 | `OSM-M-nnn` | Model / schema decisions |
-| `OSM-D-nnn` | Documentation / naming decisions (none yet) |
+| `OSM-D-nnn` | Documentation / naming decisions |
 
 ---
 
@@ -82,6 +82,10 @@ extraction was requested for `OSM-C-*`).
 | OSM-C-003 | Retain ServiceNow CSDM in the universe | ACCEPTED | 2026-09-12 | [below](#osm-c-003--retain-servicenow-csdm-in-the-compatibility-universe) |
 | OSM-C-004 | ITIL v5 selective compatibility | ACCEPTED | 2026-09-12 | [below](#osm-c-004--itil-v5-selective-compatibility) |
 | OSM-C-005 | CSDM selective compatibility | ACCEPTED | 2026-09-12 | [below](#osm-c-005--csdm-selective-compatibility) |
+| OSM-C-006 | ICT Provider semantics | ACCEPTED | 2026-09-13 | [below](#osm-c-006--ict-provider-semantics) |
+| OSM-C-007 | DORA arrangements remain external | ACCEPTED | 2026-09-13 | [below](#osm-c-007--dora-arrangements-remain-external) |
+| OSM-C-008 | Service→Service remains forbidden | ACCEPTED | 2026-09-13 | [below](#osm-c-008--serviceservice-remains-forbidden) |
+| OSM-C-009 | Canonical concept first, framework mapping second | ACCEPTED | 2026-09-13 | [below](#osm-c-009--canonical-concept-first-framework-mapping-second) |
 
 ---
 
@@ -99,6 +103,23 @@ extraction was requested for `OSM-C-*`).
 | OSM-M-008 | One concept, one canonical parameter | ACCEPTED | 2026-09-12 | [`OSM-M-008-one-concept-one-canonical-parameter.md`](OSM-M-008-one-concept-one-canonical-parameter.md) |
 | OSM-M-009 | ICT Provider risk_level | ACCEPTED | 2026-09-12 | [`OSM-M-009-ict-provider-risk-level.md`](OSM-M-009-ict-provider-risk-level.md) |
 | OSM-M-010 | Canonical providers relationship | ACCEPTED | 2026-09-12 | [`OSM-M-010-canonical-providers-relationship.md`](OSM-M-010-canonical-providers-relationship.md) |
+| OSM-M-011 | ICT Provider provenance (principle) | ACCEPTED | 2026-09-13 | [`OSM-M-011-ict-provider-provenance.md`](OSM-M-011-ict-provider-provenance.md) |
+
+**OSM-M-011** is ACCEPTED as an architectural *principle*: ICT Provider
+must reuse the existing `provenance` object; there is no
+provider-specific provenance system and no per-field provenance.
+The ICT Provider schema does **not** currently allow `provenance`.
+That schema change is **not implemented**. See the decision file.
+
+---
+
+## Documentation decisions
+
+| ID | Decision | Status | Date | Record |
+|----|----------|--------|------|--------|
+| OSM-D-001 | Location / residency via characteristics | ACCEPTED | 2026-09-13 | [below](#osm-d-001--location--residency-via-characteristics) |
+| OSM-D-002 | Purpose as a characteristic | ACCEPTED | 2026-09-13 | [below](#osm-d-002--purpose-as-a-characteristic) |
+| OSM-D-003 | Privacy classification precedence | ACCEPTED | 2026-09-13 | [below](#osm-d-003--privacy-classification-precedence) |
 
 **OSM-M-007** is ACCEPTED and implemented. Schema/examples/validation
 now include Complete Service Definition semantics (posture fields,
@@ -322,3 +343,175 @@ compatibility. Semantically they are posture, not a second catalog.
   - [x] `DECISIONS.md` (this record)
 - **Notes:** Completes the analysis whose universe membership was
   retained by OSM-C-003.
+
+### OSM-C-006 — ICT Provider semantics
+
+- **Status:** ACCEPTED
+- **Date:** 2026-09-13
+- **Type:** Compatibility
+- **Decision:** `providers` names the ICT Provider that materially
+  delivers, operates, or underpins the technological Service or
+  Service Offering. Use ICT Provider for that party. Do **not** use
+  ICT Provider as a generic vendor, tool, or product inventory.
+  A licensor is an ICT Provider only when it materially provides or
+  underpins the Service/Offering. Generic software tools, products,
+  suppliers, or commercial parties are not automatically ICT
+  Providers. Do not introduce provider-role fields
+  (`operator_provider`, `licensor_provider`, `vendor_role`,
+  `provider_role`). Keep `Service.providers` and
+  `ServiceOffering.providers`. If an offering is provider-specific,
+  put the id on the Offering. If the provider is intrinsic to the
+  whole Service, put it on the Service.
+- **What this is not:** a new relationship; a DORA arrangement model;
+  permission to list every brand in a technology chain.
+- **Surfaces to update:**
+  - [x] `SPECIFICATION.md`
+  - [x] `MODEL.md`
+  - [x] `models/` and `compliance/DORA.md`
+  - [x] examples (provider placement; operator vs licensor notes)
+  - [x] `DECISIONS.md` (this record)
+- **Notes:** Clarifies OSM-M-006 / OSM-M-010. Does not change schema.
+
+### OSM-C-007 — DORA arrangements remain external
+
+- **Status:** ACCEPTED
+- **Date:** 2026-09-13
+- **Type:** Compatibility
+- **Decision:** Do not introduce an Arrangement entity. Do not model
+  the DORA register of information or contractual-arrangement
+  structure inside OSM. Existing ICT Provider contract-related
+  fields remain **characterization** of the provider record, not a
+  DORA Arrangement model. DORA RoI remains EXTERNAL. The canonical
+  OSM relationship is Service / Offering → ICT Provider. DORA
+  reporting may consume or enrich that relationship **outside** OSM.
+  OSM provider linkage is **not** a DORA RoI or
+  contractual-arrangement model. `providers` is not
+  `dora_third_party_deps`.
+- **What this is not:** a claim that OSM satisfies DORA; permission
+  to add LEI, CIF, RoI templates, or incident feeds.
+- **Surfaces to update:**
+  - [x] `compliance/DORA.md`
+  - [x] `SPECIFICATION.md`
+  - [x] `MODEL.md`
+  - [x] `_internal/notes/COMPATIBILITY.md`
+  - [x] `DECISIONS.md` (this record)
+- **Notes:** Closes the OSM-M-005 *arrangement-entity* question as
+  **rejected for OSM core**. Dual Service/Offering `providers`
+  placement from OSM-M-010 remains. Grain vs RoI stays documented,
+  not modelled.
+
+### OSM-C-008 — Service→Service remains forbidden
+
+- **Status:** ACCEPTED
+- **Date:** 2026-09-13
+- **Type:** Compatibility
+- **Decision:** Service→Service dependency remains **forbidden**.
+  Do not add `depends_on`, `depends_on_services`, `dependencies`,
+  `service_dependencies`, `requires_service`, `consumes_service`, or
+  a generic relationship mechanism that circumvents this rule.
+  Frameworks that need service dependencies map them in an external
+  integration layer. Canonical OSM relationships remain:
+  Technology Stack → Service → Service Offering, and
+  Service / Offering → ICT Provider.
+- **What this is not:** a permanent metaphysical ban forever; a
+  change to OSM-C-004 / OSM-C-005 except to **confirm** the
+  exclusion after the 2026-09-13 compatibility investigation
+  (GAP-002).
+- **Surfaces to update:**
+  - [x] `SPECIFICATION.md` / `MODEL.md` / `CONTRIBUTING.md`
+  - [x] `models/`
+  - [x] `DECISIONS.md` (this record)
+- **Notes:** Confirms OSM-C-004 and OSM-C-005. No schema change.
+
+### OSM-C-009 — Canonical concept first, framework mapping second
+
+- **Status:** ACCEPTED
+- **Date:** 2026-09-13
+- **Type:** Compatibility
+- **Decision:** Keep useful framework-specific mapping fields. They
+  are mappings, not claims that OSM implements the framework.
+  Canonical OSM concept first; framework mapping second. Do not
+  duplicate canonical concepts under framework prefixes. Forbidden
+  copies remain forbidden: `dora_rto`, `dora_rpo`,
+  `dora_criticality` (as a *copy* of service criticality),
+  `dora_resilience_tested`, `cloud_providers`, `services_consumed`,
+  `dora_third_party_deps`. Stack `mappings.dora.criticality` stays a
+  **different grain** (OSM-M-009).
+- **What this is not:** deletion of existing mapping fields;
+  certification or legal interpretation.
+- **Surfaces to update:**
+  - [x] `models/`, `compliance/`
+  - [x] `SPECIFICATION.md`
+  - [x] `_internal/notes/COMPATIBILITY.md`
+  - [x] `DECISIONS.md` (this record)
+- **Notes:** Applies OSM-M-008 to the post-investigation mapping
+  documentation. Does not change schema.
+
+### OSM-D-001 — Location / residency via characteristics
+
+- **Status:** ACCEPTED
+- **Date:** 2026-09-13
+- **Type:** Documentation
+- **Decision:** Do not add dedicated location/residency fields to the
+  core schema. Represent region, geography, deployment_region,
+  service_region, data_residency, processing_location,
+  storage_location, and operating_region as **characteristics**.
+  Processing location and storage location are **different**
+  concepts; use distinct characteristic names. Do not collapse
+  processing location, storage location, service availability
+  region, and provider `headquarters`. Provider
+  `data_processing_locations` is a **capability / possible
+  location** list, not actual Service/Offering residency.
+- **What this is not:** a Location entity; a schema change.
+- **Surfaces to update:**
+  - [x] `SPECIFICATION.md` §5.1
+  - [x] `MODEL.md`
+  - [x] `compliance/DORA.md`, `compliance/GDPR.md`
+  - [x] `DECISIONS.md` (this record)
+- **Notes:** GAP-001 and GAP-006 closed as documentation /
+  characteristic convention.
+
+### OSM-D-002 — Purpose as a characteristic
+
+- **Status:** ACCEPTED
+- **Date:** 2026-09-13
+- **Type:** Documentation
+- **Decision:** When an implementation needs a canonical purpose
+  concept, use a characteristic named `purpose`. Do not add a
+  top-level Service property. Purpose is generic and must not be
+  framework-prefixed (`gdpr_purpose`, `iso27701_purpose`,
+  `dora_purpose`, `ai_act_purpose` are not OSM fields). Frameworks
+  map their terminology onto `purpose`. Existing
+  `ai_act_intended_purpose` remains an EU AI Act **mapping** field
+  on offering posture when `ai_act_applicable` is true; it is not a
+  second canonical purpose.
+- **What this is not:** a new entity or lifecycle object; deletion
+  of `ai_act_intended_purpose`.
+- **Surfaces to update:**
+  - [x] `SPECIFICATION.md` §5.1
+  - [x] `compliance/GDPR.md`, `compliance/ISO-27701.md`,
+    `compliance/EU-AI-ACT.md`
+  - [x] `DECISIONS.md` (this record)
+- **Notes:** GAP-003. A first-class `purpose` field is a future
+  option only if the characteristic proves load-bearing.
+
+### OSM-D-003 — Privacy classification precedence
+
+- **Status:** ACCEPTED
+- **Date:** 2026-09-13
+- **Type:** Documentation
+- **Decision:** `privacy_classification` remains the canonical OSM
+  high-level privacy classification. Keep `iso27701_pii_role` and
+  related 27701/GDPR mapping fields as **compatibility
+  representations**, not a PIMS or RoPA. Precedence: (1)
+  `privacy_classification` = canonical OSM class; (2)
+  framework-specific fields = mapping semantics. Do not create
+  `gdpr_privacy_classification`, `iso27701_privacy_classification`,
+  or `dora_privacy_classification`.
+- **What this is not:** removal of mapping fields; a claim that OSM
+  models all 27701 processing activities, legal bases, or contracts.
+- **Surfaces to update:**
+  - [x] `SPECIFICATION.md`
+  - [x] `compliance/ISO-27701.md`, `compliance/GDPR.md`
+  - [x] `DECISIONS.md` (this record)
+- **Notes:** Does not change schema.

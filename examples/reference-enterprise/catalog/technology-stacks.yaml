@@ -1,0 +1,208 @@
+# Reference-enterprise Technology Stacks
+#
+# Competency domains taken from the predecessor enterprise catalog.
+# mappings[] are OPTIONAL REFERENCE MAPPINGS. They are not a
+# compliance claim, certification, or legal interpretation.
+# tbm_tower uses TBM Taxonomy 5.0.1 Technology Resource Tower names.
+# togaf_domain uses TOGAF 10th Edition core domains (not "Security
+# Architecture"). GDPR / ISO strings are illustrative locators.
+# ISO 27701 locators in the source used 2019-style ids; they are
+# not a 27701:2025 control catalogue.
+# EU AI Act max_risk_class is an OSM label, not Article 6 / Annex III.
+
+technology_stacks:
+
+  - id: lz
+    name: Landing Zone
+    description: >
+      Cloud landing zones, account/subscription vending, organization
+      policies, multi-cloud guardrails and cloud billing structure.
+    mappings:
+      tbm_tower: Compute
+      tbm_sub_tower: Cloud Services
+      togaf_domain: Technology Architecture
+      iso27001: "A.5.23 - Cloud Services, A.8.1 - Asset Management"
+      iso27701: "A.7.2.1 - Purpose Identification"
+      nist_csf: [identify, protect]
+      gdpr: "Illustrative locator — not a legal interpretation: Art.28 - Processor obligations, Art.32 - Security of processing"
+      dora:
+        pillar: ICT Risk Management
+        criticality: critical
+      ai_act:
+        contains_ai_systems: false
+        max_risk_class: not-applicable
+
+  - id: compute
+    name: Compute
+    description: >
+      Virtual machines, containers and serverless execution offered as
+      technological services.
+    mappings:
+      tbm_tower: Compute
+      tbm_sub_tower: Compute
+      togaf_domain: Technology Architecture
+      iso27001: "A.8.9 - Configuration Management, A.8.8 - Technical Vulnerability Management"
+      iso27701: "A.7.4.5 - PII de-identification and deletion"
+      nist_csf: [identify, protect, recover]
+      gdpr: "Illustrative locator — not a legal interpretation: Art.32 - Security of processing, Art.25 - Data protection by design"
+      dora:
+        pillar: Digital Operational Resilience Testing
+        criticality: critical
+      ai_act:
+        contains_ai_systems: false
+        max_risk_class: not-applicable
+
+  - id: db
+    name: Database
+    description: >
+      Managed relational database services. Engine products are
+      offerings, not separate OSM Services.
+    mappings:
+      tbm_tower: Data
+      tbm_sub_tower: Database
+      togaf_domain: Technology Architecture
+      iso27001: "A.8.11 - Data Masking, A.8.10 - Information Deletion, A.8.24 - Cryptography"
+      iso27701: "A.7.4.4 - PII minimization, A.7.4.5 - PII de-identification and deletion"
+      nist_csf: [identify, protect, detect]
+      gdpr: "Illustrative locator — not a legal interpretation: Art.5 - Data minimization, Art.17 - Right to erasure, Art.32 - Security"
+      dora:
+        pillar: ICT Risk Management
+        criticality: critical
+      ai_act:
+        contains_ai_systems: false
+        max_risk_class: not-applicable
+
+  - id: storage
+    name: Storage
+    description: Object storage and backup offered as technological services.
+    mappings:
+      tbm_tower: Storage
+      tbm_sub_tower: Storage
+      togaf_domain: Technology Architecture
+      iso27001: "A.8.10 - Information Deletion, A.8.13 - Information Backup, A.8.24 - Cryptography"
+      iso27701: "A.7.4.5 - PII de-identification and deletion, A.7.4.7 - PII retention"
+      nist_csf: [protect, recover]
+      gdpr: "Illustrative locator — not a legal interpretation: Art.5(1)(e) - Storage limitation, Art.17 - Right to erasure"
+      dora:
+        pillar: ICT Risk Management
+        criticality: critical
+      ai_act:
+        contains_ai_systems: false
+        max_risk_class: not-applicable
+
+  - id: net
+    name: Network
+    description: >
+      Virtual networks, CDN and related connectivity offered as
+      technological services.
+    mappings:
+      tbm_tower: Network
+      tbm_sub_tower: Network
+      togaf_domain: Technology Architecture
+      iso27001: "A.8.20 - Network Security, A.8.21 - Web Filtering, A.8.22 - Network Segregation"
+      iso27701: "A.7.4.9 - PII transmission controls"
+      nist_csf: [protect, detect]
+      gdpr: "Illustrative locator — not a legal interpretation: Art.32 - Security of processing (encryption in transit)"
+      dora:
+        pillar: ICT Risk Management
+        criticality: critical
+      ai_act:
+        contains_ai_systems: false
+        max_risk_class: not-applicable
+
+  - id: sec
+    name: Security
+    description: >
+      Workforce identity and secrets management. Source also listed
+      SIEM/SOC/WAF; those are not all technological services.
+    mappings:
+      tbm_tower: Security
+      tbm_sub_tower: Security Operations
+      togaf_domain: Technology Architecture
+      iso27001: "A.5.15 - Access Control, A.5.16 - Identity Management, A.5.17 - Authentication"
+      iso27701: "A.7.3.9 - PII access controls"
+      nist_csf: [identify, protect, detect, respond]
+      gdpr: "Illustrative locator — not a legal interpretation: Art.32 - Security of processing, Art.5(1)(f) - Integrity and confidentiality"
+      dora:
+        pillar: ICT Risk Management
+        criticality: critical
+      ai_act:
+        contains_ai_systems: false
+        max_risk_class: not-applicable
+
+  - id: mw
+    name: Middleware & Integration
+    description: API gateways and enterprise event streaming.
+    mappings:
+      tbm_tower: Application
+      tbm_sub_tower: Middleware
+      togaf_domain: Application Architecture
+      iso27001: "A.8.26 - Application Security, A.8.9 - Configuration Management"
+      iso27701: "A.7.4.9 - PII transmission controls"
+      nist_csf: [protect, detect]
+      gdpr: "Illustrative locator — not a legal interpretation: Art.32 - Security of processing, Art.25 - Data protection by design"
+      dora:
+        pillar: ICT Risk Management
+        criticality: important
+      ai_act:
+        contains_ai_systems: false
+        max_risk_class: not-applicable
+
+  - id: devops
+    name: DevOps
+    description: Source control and continuous-delivery services.
+    mappings:
+      tbm_tower: Application
+      tbm_sub_tower: Application Development & Support
+      togaf_domain: Application Architecture
+      iso27001: "A.8.25 - Secure Development Lifecycle, A.8.31 - Separation of Environments"
+      iso27701: "A.7.2.5 - Privacy impact assessment"
+      nist_csf: [protect, identify]
+      gdpr: "Illustrative locator — not a legal interpretation: Art.25 - Data protection by design and by default"
+      dora:
+        pillar: ICT Risk Management
+        criticality: important
+      ai_act:
+        contains_ai_systems: false
+        max_risk_class: not-applicable
+
+  - id: ops
+    name: Operations
+    description: >
+      Observability as a technological service. CMDB inventory and ITSM
+      process names from the source catalog are out of OSM.
+    mappings:
+      tbm_tower: Application
+      tbm_sub_tower: Monitoring & Event Management
+      togaf_domain: Technology Architecture
+      iso27001: "A.8.15 - Logging, A.8.16 - Monitoring Activities"
+      iso27701: "A.7.2.8 - Records relating to processing PII"
+      nist_csf: [detect, respond]
+      gdpr: "Illustrative locator — not a legal interpretation: Art.33 - Notification of breach (detection capability)"
+      dora:
+        pillar: ICT-related Incident Management
+        criticality: critical
+      ai_act:
+        contains_ai_systems: false
+        max_risk_class: not-applicable
+
+  - id: auto
+    name: Automation
+    description: >
+      Configuration automation and AIOps. Local automation-fabric names
+      from the source catalog are not promoted.
+    mappings:
+      tbm_tower: Application
+      tbm_sub_tower: Application Development & Support
+      togaf_domain: Technology Architecture
+      iso27001: "A.8.9 - Configuration Management, A.5.23 - Cloud Services"
+      iso27701: "A.7.2.1 - Purpose Identification"
+      nist_csf: [protect, respond, recover]
+      gdpr: "Illustrative locator — not a legal interpretation: Art.32 - Security of processing (automated decision-making controls)"
+      dora:
+        pillar: ICT Risk Management
+        criticality: important
+      ai_act:
+        contains_ai_systems: true
+        max_risk_class: high-risk
+        reference: "OSM compatibility label only — not a legal Annex III classification"

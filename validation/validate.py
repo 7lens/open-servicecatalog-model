@@ -83,6 +83,11 @@ PROVENANCE_KEYS = {
 }
 PROHIBITED_REL = {
     "depends_on",
+    "depends_on_services",
+    "dependencies",
+    "service_dependencies",
+    "requires_service",
+    "consumes_service",
     "consumes",
     "provides_to",
     "related_service",
@@ -244,10 +249,10 @@ def validate_provider_refs(owner_id: str, refs: Any, provider_ids: set[str], rep
 def validate_catalog(catalog_dir: Path) -> list[str]:
     reporter = Reporter()
     files = {
-        "stacks": catalog_dir / "technology-stacks.yaml",
-        "services": catalog_dir / "services.yaml",
-        "attributes": catalog_dir / "service-attributes.yaml",
-        "providers": catalog_dir / "ict-providers.yaml",
+        "stacks": catalog_dir / "catalog" / "technology-stacks.yaml",
+        "services": catalog_dir / "catalog" / "services.yaml",
+        "posture": catalog_dir / "posture" / "service-posture.yaml",
+        "providers": catalog_dir / "catalog" / "ict-providers.yaml",
     }
     for label, path in files.items():
         if not path.is_file():
@@ -257,25 +262,25 @@ def validate_catalog(catalog_dir: Path) -> list[str]:
 
     stacks_doc = load_yaml(files["stacks"]) or {}
     services_doc = load_yaml(files["services"]) or {}
-    attributes_doc = load_yaml(files["attributes"]) or {}
+    posture_doc = load_yaml(files["posture"]) or {}
     providers_doc = load_yaml(files["providers"]) or {}
 
     stacks = stacks_doc.get("technology_stacks")
     services = services_doc.get("services")
-    attributes = attributes_doc.get("service_attributes")
+    posture = posture_doc.get("service_posture")
     providers = providers_doc.get("ict_providers")
 
     if not isinstance(stacks, list):
-        reporter.error("technology-stacks.yaml must contain a technology_stacks list")
+        reporter.error("catalog/technology-stacks.yaml must contain a technology_stacks list")
         stacks = []
     if not isinstance(services, list):
-        reporter.error("services.yaml must contain a services list")
+        reporter.error("catalog/services.yaml must contain a services list")
         services = []
-    if not isinstance(attributes, list):
-        reporter.error("service-attributes.yaml must contain a service_attributes list")
-        attributes = []
+    if not isinstance(posture, list):
+        reporter.error("posture/service-posture.yaml must contain a service_posture list")
+        posture = []
     if not isinstance(providers, list):
-        reporter.error("ict-providers.yaml must contain an ict_providers list")
+        reporter.error("catalog/ict-providers.yaml must contain an ict_providers list")
         providers = []
 
     provider_ids: set[str] = set()
@@ -400,26 +405,26 @@ def validate_catalog(catalog_dir: Path) -> list[str]:
             validate_provenance(str(offering_id), offering.get("provenance"), reporter)
             reject_service_relationships(str(offering_id), offering, reporter)
 
-    seen_attribute_services: set[str] = set()
-    for record in attributes:
+    seen_posture_services: set[str] = set()
+    for record in posture:
         if not isinstance(record, dict):
-            reporter.error("service_attributes entry must be a mapping")
+            reporter.error("service_posture entry must be a mapping")
             continue
         service_id = record.get("service_id")
         if service_id not in service_ids:
-            reporter.error(f"service_attributes references unknown service_id {service_id!r}")
+            reporter.error(f"service_posture references unknown service_id {service_id!r}")
             continue
-        if service_id in seen_attribute_services:
-            reporter.error(f"duplicate service_attributes for {service_id}")
-        seen_attribute_services.add(service_id)
+        if service_id in seen_posture_services:
+            reporter.error(f"duplicate service_posture for {service_id}")
+        seen_posture_services.add(service_id)
         if "lifecycle_state" in record:
             reporter.error(
-                f"{service_id} service_attributes must not include lifecycle_state; it belongs on Service"
+                f"{service_id} service_posture must not include lifecycle_state; it belongs on Service"
             )
         extra_copies = sorted(REMOVED_CANONICAL_COPIES.intersection(record))
         if extra_copies:
             reporter.error(
-                f"{service_id} service_attributes uses fields outside the "
+                f"{service_id} service_posture uses fields outside the "
                 f"specification {extra_copies}; use the canonical OSM field"
             )
         score = record.get("tech_debt_score", None)
@@ -440,28 +445,28 @@ def validate_catalog(catalog_dir: Path) -> list[str]:
         validate_provenance(str(service_id), record.get("provenance"), reporter)
 
         ai_applicable = bool(record.get("ai_act_applicable"))
-        offering_rows = record.get("offering_attributes")
+        offering_rows = record.get("offering_posture")
         if not isinstance(offering_rows, list):
-            reporter.error(f"{service_id} offering_attributes must be a list")
+            reporter.error(f"{service_id} offering_posture must be a list")
             continue
         seen_offerings: set[str] = set()
         known_offerings = offerings_by_service.get(service_id, set())
         for row in offering_rows:
             if not isinstance(row, dict):
-                reporter.error(f"{service_id} offering_attributes row must be a mapping")
+                reporter.error(f"{service_id} offering_posture row must be a mapping")
                 continue
             offering_id = row.get("offering_id")
             if offering_id not in known_offerings:
                 reporter.error(
-                    f"{service_id} offering_attributes references unknown offering {offering_id!r}"
+                    f"{service_id} offering_posture references unknown offering {offering_id!r}"
                 )
             if offering_id in seen_offerings:
-                reporter.error(f"duplicate offering_attributes for {offering_id}")
+                reporter.error(f"duplicate offering_posture for {offering_id}")
             seen_offerings.add(offering_id)
             extra_copies = sorted(REMOVED_CANONICAL_COPIES.intersection(row))
             if extra_copies:
                 reporter.error(
-                    f"{offering_id} offering_attributes uses fields outside the "
+                    f"{offering_id} offering_posture uses fields outside the "
                     f"specification {extra_copies}; use the canonical OSM field"
                 )
 
@@ -518,7 +523,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--catalog",
         default=str(Path(__file__).resolve().parents[1] / "examples"),
-        help="Directory containing catalog YAML files (default: examples/)",
+        help="Directory containing catalog/ and posture/ YAML (default: examples/)",
     )
     args = parser.parse_args(argv)
     catalog_dir = Path(args.catalog)

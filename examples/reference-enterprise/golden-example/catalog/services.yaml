@@ -1,0 +1,292 @@
+# Golden-example Services
+#
+# Ten technological services. Learn this chain:
+#   Service → Offering → ICT Provider → Characteristic
+#   → Service Posture → Provenance
+#
+# OSM requires lifecycle_state, version and valid_from on every Service.
+# Only auto.aiops.lifecycle_state (pilot) is source-derived. Other
+# Services use draft: the predecessor did not establish production.
+# version / valid_from are cataloguing metadata, not operational facts.
+#
+# Request types (MFA, password reset, directory lifecycle) are not
+# Offerings. See the golden README.
+
+services:
+
+  - id: compute.virtual-machines
+    name: Virtual Machines
+    description: >
+      Virtual-machine compute. Source split Linux and Windows as two
+      Services. OSM uses one Service; guest OS is a Characteristic.
+    accountable: Service Owner
+    technology_stack: Compute
+    version: "1.0.0"
+    valid_from: 2026-01-01
+    valid_to: null
+    lifecycle_state: draft
+    characteristics:
+      - name: os_family
+        value_type: string
+        description: Guest OS family. Source catalogued Linux and Windows separately.
+        allowed_values: [linux, windows]
+        configurable: true
+    provenance:
+      authoritative_source: Service Owner
+      source_system: predecessor-catalog
+      evidence_reference: predecessor://services#compute.vm-linux+compute.vm-windows
+      confidence: high
+      discovery_method: imported
+    service_offerings:
+      - id: compute.virtual-machines.aws
+        name: VM provisioning and lifecycle (AWS)
+        providers: [aws]
+      - id: compute.virtual-machines.azure
+        name: VM provisioning and lifecycle (Azure)
+        providers: [microsoft]
+      - id: compute.virtual-machines.on-prem
+        name: VM provisioning and lifecycle (on-prem)
+
+  - id: compute.kubernetes
+    name: Managed Kubernetes
+    description: >
+      Kubernetes clusters as a technological service. Amazon EKS, AKS
+      and OpenShift are Offerings, not three OSM Services. OpenShift is
+      catalogued here as a Kubernetes offering because this estate
+      consumed it as managed Kubernetes — not because OSM requires that
+      collapse.
+    accountable: Service Owner
+    technology_stack: Compute
+    version: "1.0.0"
+    valid_from: 2026-01-01
+    valid_to: null
+    lifecycle_state: draft
+    provenance:
+      authoritative_source: Service Owner
+      source_system: predecessor-catalog
+      evidence_reference: predecessor://services#compute.eks+compute.aks+compute.openshift
+      confidence: high
+      discovery_method: imported
+    service_offerings:
+      - id: compute.kubernetes.aws-eks
+        name: Managed Kubernetes (EKS)
+        providers: [aws]
+        provenance:
+          authoritative_source: Service Owner
+          source_system: predecessor-catalog
+          source_record_id: compute.eks.managed-k8s
+          confidence: high
+          discovery_method: imported
+      - id: compute.kubernetes.azure-aks
+        name: Managed Kubernetes (AKS)
+        providers: [microsoft]
+        provenance:
+          authoritative_source: Service Owner
+          source_system: predecessor-catalog
+          source_record_id: compute.aks.managed-k8s
+          confidence: high
+          discovery_method: imported
+      - id: compute.kubernetes.openshift
+        name: Managed OpenShift platform
+        providers: [redhat]
+        provenance:
+          authoritative_source: Service Owner
+          source_system: predecessor-catalog
+          source_record_id: compute.openshift.openshift-platform
+          confidence: high
+          discovery_method: imported
+
+  - id: compute.functions
+    name: Serverless Execution
+    description: Requestable serverless execution (AWS Lambda in the source catalog).
+    accountable: Service Owner
+    technology_stack: Compute
+    version: "1.0.0"
+    valid_from: 2026-01-01
+    valid_to: null
+    lifecycle_state: draft
+    provenance:
+      authoritative_source: Service Owner
+      source_system: predecessor-catalog
+      source_record_id: compute.lambda
+      confidence: high
+      discovery_method: imported
+    service_offerings:
+      - id: compute.functions.lambda
+        name: Managed serverless compute (Lambda)
+        providers: [aws]
+
+  - id: storage.object-storage
+    name: Object Storage
+    description: Object storage. Amazon S3 and Azure Blob are Offerings of this Service.
+    accountable: Service Owner
+    technology_stack: Storage
+    version: "1.0.0"
+    valid_from: 2026-01-01
+    valid_to: null
+    lifecycle_state: draft
+    provenance:
+      authoritative_source: Service Owner
+      source_system: predecessor-catalog
+      evidence_reference: predecessor://services#storage.s3+storage.azure-blob
+      confidence: high
+      discovery_method: imported
+    service_offerings:
+      - id: storage.object-storage.s3
+        name: Managed object storage (S3)
+        providers: [aws]
+      - id: storage.object-storage.azure-blob
+        name: Azure Blob Storage
+        providers: [microsoft]
+
+  - id: storage.backup
+    name: Backup
+    description: Backup as a technological service.
+    accountable: Service Owner
+    technology_stack: Storage
+    version: "1.0.0"
+    valid_from: 2026-01-01
+    valid_to: null
+    lifecycle_state: draft
+    provenance:
+      authoritative_source: Service Owner
+      source_system: predecessor-catalog
+      source_record_id: storage.backup
+      confidence: high
+      discovery_method: imported
+    service_offerings:
+      - id: storage.backup.backup
+        name: Backup service
+
+  - id: db.managed-relational
+    name: Managed Relational Database
+    description: Managed relational database. Engine products are Offerings.
+    accountable: Service Owner
+    technology_stack: Database
+    version: "1.0.0"
+    valid_from: 2026-01-01
+    valid_to: null
+    lifecycle_state: draft
+    provenance:
+      authoritative_source: Service Owner
+      source_system: predecessor-catalog
+      evidence_reference: predecessor://services#db.rds-oracle+db.rds-postgresql
+      confidence: high
+      discovery_method: imported
+    service_offerings:
+      - id: db.managed-relational.rds-oracle
+        name: Managed RDS Oracle
+        providers: [aws]
+        # AWS operates RDS. Oracle is the engine licensor — recorded
+        # as characteristic `engine`, not as a second ICT Provider
+        # (OSM-C-006).
+        characteristics:
+          - name: engine
+            value_type: string
+            value: oracle
+            configurable: false
+        provenance:
+          authoritative_source: Service Owner
+          source_system: predecessor-catalog
+          source_record_id: db.rds-oracle.rds-oracle
+          confidence: high
+          discovery_method: imported
+      - id: db.managed-relational.rds-postgresql
+        name: Managed RDS PostgreSQL
+        providers: [aws]
+        characteristics:
+          - name: engine
+            value_type: string
+            value: postgresql
+            configurable: false
+
+  - id: sec.iam
+    name: Workforce Identity
+    description: >
+      Workforce directory and identity. The technological variant in
+      this estate is Microsoft Entra ID / AD. MFA, password reset and
+      directory-lifecycle requests are ITSM/request-catalogue items,
+      not OSM Offerings.
+    accountable: Service Owner
+    technology_stack: Security
+    version: "1.0.0"
+    valid_from: 2026-01-01
+    valid_to: null
+    lifecycle_state: draft
+    provenance:
+      authoritative_source: Service Owner
+      source_system: predecessor-catalog
+      source_record_id: sec.iam
+      confidence: high
+      discovery_method: imported
+    service_offerings:
+      - id: sec.iam.entra-id
+        name: Microsoft Entra ID
+        providers: [microsoft]
+
+  - id: sec.secrets
+    name: Secrets Management
+    description: Secrets and credential vault management.
+    accountable: Service Owner
+    technology_stack: Security
+    version: "1.0.0"
+    valid_from: 2026-01-01
+    valid_to: null
+    lifecycle_state: draft
+    provenance:
+      authoritative_source: Service Owner
+      source_system: predecessor-catalog
+      source_record_id: sec.secrets
+      confidence: high
+      discovery_method: imported
+    service_offerings:
+      - id: sec.secrets.secrets-mgmt
+        name: Secrets management
+
+  - id: auto.configuration-automation
+    name: Configuration Automation
+    description: Configuration-management automation. Ansible is the Offering.
+    accountable: Service Owner
+    technology_stack: Automation
+    version: "1.0.0"
+    valid_from: 2026-01-01
+    valid_to: null
+    lifecycle_state: draft
+    provenance:
+      authoritative_source: Service Owner
+      source_system: predecessor-catalog
+      source_record_id: auto.ansible
+      confidence: high
+      discovery_method: imported
+    service_offerings:
+      - id: auto.configuration-automation.ansible
+        name: Managed Ansible Automation Platform
+        providers: [redhat]
+
+  - id: auto.aiops
+    name: AIOps
+    description: AIOps and autonomous operations. Source classified this as AI-bearing.
+    accountable: Service Owner
+    technology_stack: Automation
+    version: "1.0.0"
+    valid_from: 2026-01-01
+    valid_to: null
+    lifecycle_state: pilot
+    provenance:
+      authoritative_source: Service Owner
+      source_system: predecessor-catalog
+      source_record_id: auto.aiops
+      confidence: high
+      discovery_method: imported
+    service_offerings:
+      - id: auto.aiops.aiops
+        name: Managed AIOps / autonomous operations
+        characteristics:
+          - name: operating_model
+            value_type: string
+            description: >
+              Source listed cloud and on-prem as where this offering
+              can run. Not a duplicate of provider identity (do not
+              use a cloud vendor name as the characteristic value).
+            allowed_values: [cloud, on-prem]
+            configurable: true

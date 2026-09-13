@@ -10,10 +10,15 @@
 # providers.
 #
 # Fields may support vendor-risk conversations. They are not a
-# regulatory filing and not a real organization's vendor register.
+# regulatory filing, not a DORA RoI or contractual-arrangement model,
+# and not a real organization's vendor register.
+# OSM-C-006: this entity is the ICT provider that materially delivers,
+# operates, or underpins a Service/Offering — not a generic vendor
+# inventory. Provenance is not a property on this schema (OSM-M-011
+# candidate).
 
 $schema: https://json-schema.org/draft/2020-12/schema
-$id: https://raw.githubusercontent.com/7lens/open-servicecatalog-model/main/schema/ict-provider.yaml
+$id: https://raw.githubusercontent.com/7lens/open-servicecatalog-model/main/schema/catalog/ict-provider.yaml
 title: IctProvider
 type: object
 additionalProperties: false

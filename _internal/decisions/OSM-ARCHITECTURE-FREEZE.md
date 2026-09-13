@@ -329,9 +329,13 @@ with, and mappable to, external frameworks. It is not an
 implementation of those frameworks. Frameworks must not become
 additional canonical OSM schemas (OSM-M-004, OSM-M-008).
 
-Status is taken from [`COMPATIBILITY.md`](../notes/COMPATIBILITY.md). This
-freeze does not perform new analysis. No entry is marked fully
-COMPATIBLE.
+Status is taken from [`COMPATIBILITY.md`](../notes/COMPATIBILITY.md) **as of this freeze**. This freeze does not perform new analysis. No entry is marked fully COMPATIBLE.
+
+The table below is a **freeze-time snapshot (2026-09-12)**. Current
+status after OSM-C-006–C-009 is in
+[`COMPATIBILITY.md`](../notes/COMPATIBILITY.md), [`models/`](../../models/),
+and [`compliance/`](../../compliance/). Do not treat NOT ANALYZED
+rows below as current.
 
 **Models / taxonomies / architectural frameworks**
 

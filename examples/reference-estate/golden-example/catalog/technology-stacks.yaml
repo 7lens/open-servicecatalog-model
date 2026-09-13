@@ -1,0 +1,33 @@
+# Golden-example Technology Stacks
+#
+# Five competency domains. Enough to learn OSM; not the whole estate.
+
+technology_stacks:
+
+  - id: compute
+    name: Compute
+    description: >
+      Virtual machines and container orchestration offered as
+      technological services.
+
+  - id: storage
+    name: Storage
+    description: Object storage offered as a technological service.
+
+  - id: identity
+    name: Identity
+    description: >
+      Workforce directory/IdP and cloud-platform authorization.
+      These are different services.
+
+  - id: collaboration
+    name: Collaboration
+    description: >
+      Issue tracking, email and team chat as technological services.
+      Not a product-suite SKU.
+
+  - id: data
+    name: Data
+    description: >
+      Analytical warehouse and vendor-operated AI features attached
+      to that platform.

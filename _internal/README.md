@@ -12,6 +12,8 @@ Public users should start at the repository root `README.md`.
 |------|----------|
 | `decisions/` | Decision register and OSM-M / freeze records |
 | `notes/` | Historical compatibility and compliance working notes |
+| `investigation/` | Reference-estate stress test (2026-09-13). Public examples: `examples/reference-estate/`. |
+| `example-enterprise-analysis.md` | Working notes for onboarding the predecessor catalog into `examples/reference-enterprise/`. |
 
 Do not treat files here as the current public explanation of OSM.
 

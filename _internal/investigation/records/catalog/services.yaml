@@ -1,0 +1,1179 @@
+# Investigation Services
+#
+# Capability-first encoding: the OSM Service is the technological
+# service an enterprise would catalog; vendor products are Offerings
+# (or intrinsic providers). This file is a model test suite, not a
+# product inventory and not a real estate.
+#
+# accountable is a placeholder. lifecycle_state is draft.
+# Vendor SLAs are characteristics, not availability_target.
+# Customer criticality / RTO / RPO / classification are not set here.
+
+services:
+
+  - id: compute.virtual-machines
+    name: Virtual Machines
+    description: >
+      On-demand virtual-machine compute offered as a technological
+      service. Vendor products in scope for this investigation are
+      Amazon EC2, Azure Virtual Machines, Google Compute Engine,
+      OCI Compute and Alibaba Cloud ECS.
+    accountable: Reference Estate Service Owner
+    technology_stack: Compute
+    version: "0.1.0-investigation"
+    valid_from: 2026-09-13
+    valid_to: null
+    lifecycle_state: draft
+    provenance:
+      authoritative_source: Vendor product documentation
+      source_system: public-web
+      source_record_id: compute.virtual-machines
+      last_verified: 2026-09-13
+      evidence_reference: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/concepts.html
+      confidence: high
+      discovery_method: manual
+    service_offerings:
+      - id: compute.virtual-machines.aws-ec2
+        name: Amazon EC2
+        description: >
+          Amazon Elastic Compute Cloud — on-demand scalable computing
+          capacity in the AWS Cloud.
+        providers: [aws]
+        characteristics:
+          - name: vendor_availability_sla
+            value_type: string
+            description: >
+              Vendor credit SLA, not the enterprise availability_target.
+              Region-level 99.99% when instances span two or more AZs;
+              instance-level 99.5%. Configuration-conditional.
+            value: "99.99%-multi-az-region / 99.5%-instance"
+            configurable: false
+          - name: region_selectable
+            value_type: boolean
+            value: true
+            configurable: true
+        provenance:
+          authoritative_source: Amazon Web Services
+          source_system: public-web
+          last_verified: 2026-09-13
+          evidence_reference: https://aws.amazon.com/compute/sla/
+          confidence: high
+          discovery_method: manual
+      - id: compute.virtual-machines.azure-vm
+        name: Azure Virtual Machines
+        description: IaaS virtual machines in Microsoft Azure.
+        providers: [microsoft]
+        characteristics:
+          - name: vendor_availability_sla
+            value_type: string
+            description: >
+              Conditional on availability zones / availability sets /
+              disk type. Authoritative text is the Online Services SLA.
+            value: "99.99%-two-vms-two-azs-conditional"
+            configurable: false
+          - name: region_selectable
+            value_type: boolean
+            value: true
+            configurable: true
+        provenance:
+          authoritative_source: Microsoft
+          source_system: public-web
+          last_verified: 2026-09-13
+          evidence_reference: https://learn.microsoft.com/en-us/azure/virtual-machines/availability
+          confidence: high
+          discovery_method: manual
+      - id: compute.virtual-machines.gce
+        name: Google Compute Engine
+        description: Virtual machines on Google Cloud.
+        providers: [google-cloud]
+        characteristics:
+          - name: vendor_availability_sla
+            value_type: string
+            value: "see-compute-sla-instance-and-region-classes"
+            configurable: false
+          - name: region_selectable
+            value_type: boolean
+            value: true
+            configurable: true
+        provenance:
+          authoritative_source: Google Cloud
+          source_system: public-web
+          last_verified: 2026-09-13
+          evidence_reference: https://cloud.google.com/compute/sla
+          confidence: high
+          discovery_method: manual
+      - id: compute.virtual-machines.oci
+        name: OCI Compute
+        description: Oracle Cloud Infrastructure compute instances.
+        providers: [oracle]
+        characteristics:
+          - name: region_selectable
+            value_type: boolean
+            value: true
+            configurable: true
+        provenance:
+          authoritative_source: Oracle
+          source_system: public-web
+          last_verified: 2026-09-13
+          evidence_reference: https://docs.oracle.com/en-us/iaas/Content/Compute/Concepts/computeoverview.htm
+          confidence: high
+          discovery_method: manual
+      - id: compute.virtual-machines.alibaba-ecs
+        name: Alibaba Cloud ECS
+        description: Elastic Compute Service virtual machines.
+        providers: [alibaba-cloud]
+        characteristics:
+          - name: region_selectable
+            value_type: boolean
+            value: true
+            configurable: true
+        provenance:
+          authoritative_source: Alibaba Cloud
+          source_system: public-web
+          last_verified: 2026-09-13
+          evidence_reference: https://www.alibabacloud.com/help/en/ecs/user-guide/regions-and-zones
+          confidence: high
+          discovery_method: manual
+
+  - id: storage.object-storage
+    name: Object Storage
+    description: >
+      Object storage for unstructured data. Vendor products in scope
+      are Amazon S3, Azure Blob Storage, Google Cloud Storage and
+      Alibaba Cloud OSS.
+    accountable: Reference Estate Service Owner
+    technology_stack: Storage
+    version: "0.1.0-investigation"
+    valid_from: 2026-09-13
+    valid_to: null
+    lifecycle_state: draft
+    provenance:
+      authoritative_source: Vendor product documentation
+      source_system: public-web
+      last_verified: 2026-09-13
+      evidence_reference: https://aws.amazon.com/s3/
+      confidence: high
+      discovery_method: manual
+    service_offerings:
+      - id: storage.object-storage.aws-s3
+        name: Amazon S3
+        description: Amazon Simple Storage Service.
+        providers: [aws]
+        characteristics:
+          - name: vendor_availability_sla
+            value_type: string
+            description: >
+              Credit SLA by storage class. Distinct from S3 durability
+              design claims.
+            value: "99.9%-standard-class / 99.0%-infrequent-access-classes"
+            configurable: false
+          - name: storage_class_selectable
+            value_type: boolean
+            value: true
+            configurable: true
+        provenance:
+          authoritative_source: Amazon Web Services
+          source_system: public-web
+          last_verified: 2026-09-13
+          evidence_reference: https://aws.amazon.com/s3/sla/
+          confidence: high
+          discovery_method: manual
+      - id: storage.object-storage.azure-blob
+        name: Azure Blob Storage
+        providers: [microsoft]
+        characteristics:
+          - name: vendor_availability_sla
+            value_type: string
+            value: "redundancy-and-tier-conditional"
+            configurable: false
+        provenance:
+          authoritative_source: Microsoft
+          source_system: public-web
+          last_verified: 2026-09-13
+          evidence_reference: https://learn.microsoft.com/en-us/azure/storage/common/storage-redundancy
+          confidence: high
+          discovery_method: manual
+      - id: storage.object-storage.gcs
+        name: Google Cloud Storage
+        providers: [google-cloud]
+        provenance:
+          authoritative_source: Google Cloud
+          source_system: public-web
+          last_verified: 2026-09-13
+          evidence_reference: https://cloud.google.com/storage/sla
+          confidence: high
+          discovery_method: manual
+      - id: storage.object-storage.alibaba-oss
+        name: Alibaba Cloud OSS
+        providers: [alibaba-cloud]
+        provenance:
+          authoritative_source: Alibaba Cloud
+          source_system: public-web
+          last_verified: 2026-09-13
+          evidence_reference: https://www.alibabacloud.com/help/en/oss/user-guide/what-is-oss
+          confidence: high
+          discovery_method: manual
+
+  - id: db.managed-relational
+    name: Managed Relational Database
+    description: >
+      Managed relational database service. Distinct from self-operated
+      PostgreSQL/MySQL/SQL Server/Oracle Database software, which are
+      products not OSM Services.
+    accountable: Reference Estate Service Owner
+    technology_stack: Database
+    version: "0.1.0-investigation"
+    valid_from: 2026-09-13
+    valid_to: null
+    lifecycle_state: draft
+    provenance:
+      authoritative_source: Vendor product documentation
+      source_system: public-web
+      last_verified: 2026-09-13
+      evidence_reference: https://aws.amazon.com/rds/
+      confidence: high
+      discovery_method: manual
+    service_offerings:
+      - id: db.managed-relational.aws-rds
+        name: Amazon RDS
+        description: >
+          Managed relational database. Engines include PostgreSQL,
+          MySQL, MariaDB, SQL Server, Oracle and Db2. Aurora is a
+          sibling product, not this offering.
+        providers: [aws]
+        characteristics:
+          - name: vendor_availability_sla
+            value_type: string
+            value: "99.95%-multi-az / 99.5%-single-az"
+            configurable: false
+          - name: engine_selectable
+            value_type: boolean
+            value: true
+            configurable: true
+        provenance:
+          authoritative_source: Amazon Web Services
+          source_system: public-web
+          last_verified: 2026-09-13
+          evidence_reference: https://aws.amazon.com/rds/sla/
+          confidence: high
+          discovery_method: manual
+      - id: db.managed-relational.azure-sql
+        name: Azure SQL Database
+        description: Fully managed Azure SQL Database (not Managed Instance, not SQL Server on VMs).
+        providers: [microsoft]
+        characteristics:
+          - name: vendor_availability_sla
+            value_type: string
+            value: "tier-and-zone-redundancy-conditional"
+            configurable: false
+        provenance:
+          authoritative_source: Microsoft
+          source_system: public-web
+          last_verified: 2026-09-13
+          evidence_reference: https://learn.microsoft.com/en-us/azure/reliability/reliability-sql-database
+          confidence: high
+          discovery_method: manual
+      - id: db.managed-relational.cloud-sql
+        name: Google Cloud SQL
+        providers: [google-cloud]
+        provenance:
+          authoritative_source: Google Cloud
+          source_system: public-web
+          last_verified: 2026-09-13
+          evidence_reference: https://cloud.google.com/sql/sla
+          confidence: high
+          discovery_method: manual
+      - id: db.managed-relational.oracle-autonomous
+        name: Oracle Autonomous Database
+        providers: [oracle]
+        provenance:
+          authoritative_source: Oracle
+          source_system: public-web
+          last_verified: 2026-09-13
+          evidence_reference: https://www.oracle.com/autonomous-database/
+          confidence: high
+          discovery_method: manual
+
+  - id: compute.kubernetes
+    name: Managed Kubernetes
+    description: >
+      Managed Kubernetes clusters offered as a technological service.
+      This is not the CNCF Kubernetes project.
+    accountable: Reference Estate Service Owner
+    technology_stack: Compute
+    version: "0.1.0-investigation"
+    valid_from: 2026-09-13
+    valid_to: null
+    lifecycle_state: draft
+    characteristics:
+      - name: orchestration_api
+        value_type: string
+        description: Kubernetes API compatibility advertised by the service definition.
+        configurable: false
+    provenance:
+      authoritative_source: Vendor product documentation
+      source_system: public-web
+      last_verified: 2026-09-13
+      evidence_reference: https://aws.amazon.com/eks/
+      confidence: high
+      discovery_method: manual
+    service_offerings:
+      - id: compute.kubernetes.aws-eks
+        name: Amazon EKS
+        providers: [aws]
+        characteristics:
+          - name: vendor_availability_sla
+            value_type: string
+            description: Control-plane endpoint SLA. Worker nodes are under Compute SLA.
+            value: "99.95%-standard-control-plane / 99.99%-provisioned"
+            configurable: false
+        provenance:
+          authoritative_source: Amazon Web Services
+          source_system: public-web
+          last_verified: 2026-09-13
+          evidence_reference: https://aws.amazon.com/eks/sla/
+          confidence: high
+          discovery_method: manual
+      - id: compute.kubernetes.azure-aks
+        name: Azure Kubernetes Service
+        providers: [microsoft]
+        characteristics:
+          - name: vendor_availability_sla
+            value_type: string
+            description: Free tier has no financially backed SLA.
+            value: "99.95%-standard-with-az / 99.9%-standard-without-az / none-free-tier"
+            configurable: false
+        provenance:
+          authoritative_source: Microsoft
+          source_system: public-web
+          last_verified: 2026-09-13
+          evidence_reference: https://learn.microsoft.com/en-us/azure/aks/free-standard-pricing-tiers
+          confidence: high
+          discovery_method: manual
+      - id: compute.kubernetes.gke
+        name: Google Kubernetes Engine
+        providers: [google-cloud]
+        provenance:
+          authoritative_source: Google Cloud
+          source_system: public-web
+          last_verified: 2026-09-13
+          evidence_reference: https://cloud.google.com/kubernetes-engine/sla
+          confidence: high
+          discovery_method: manual
+      - id: compute.kubernetes.ibm-iks
+        name: IBM Cloud Kubernetes Service
+        providers: [ibm]
+        provenance:
+          authoritative_source: IBM
+          source_system: public-web
+          last_verified: 2026-09-13
+          evidence_reference: https://www.ibm.com/products/kubernetes-service
+          confidence: high
+          discovery_method: manual
+      - id: compute.kubernetes.openshift-ibm-cloud
+        name: Red Hat OpenShift on IBM Cloud
+        description: >
+          Managed OpenShift. IBM is the ICT Provider of the managed
+          service. Red Hat is the software origin and IBM subsidiary,
+          not a second catalog Service.
+        providers: [ibm]
+        provenance:
+          authoritative_source: IBM / Red Hat
+          source_system: public-web
+          last_verified: 2026-09-13
+          evidence_reference: https://www.redhat.com/en/technologies/cloud-computing/openshift/ibm
+          confidence: high
+          discovery_method: manual
+      - id: compute.kubernetes.self-operated
+        name: Self-operated Kubernetes
+        description: >
+          Customer-operated clusters. No ICT Provider. Upstream
+          Kubernetes is a project, not a provider.
+        characteristics:
+          - name: operating_model
+            value_type: string
+            allowed_values: [self-operated]
+            value: self-operated
+            configurable: false
+
+  - id: compute.functions
+    name: Serverless Execution
+    description: >
+      Requestable serverless execution. AWS Lambda and Azure Functions
+      are function platforms. Google Cloud Run is container-as-a-service
+      and is included as an offering only to test capability mismatch.
+    accountable: Reference Estate Service Owner
+    technology_stack: Compute
+    version: "0.1.0-investigation"
+    valid_from: 2026-09-13
+    valid_to: null
+    lifecycle_state: draft
+    provenance:
+      authoritative_source: Vendor product documentation
+      source_system: public-web
+      last_verified: 2026-09-13
+      evidence_reference: https://aws.amazon.com/lambda/
+      confidence: high
+      discovery_method: manual
+    service_offerings:
+      - id: compute.functions.aws-lambda
+        name: AWS Lambda
+        providers: [aws]
+        characteristics:
+          - name: execution_model
+            value_type: string
+            allowed_values: [function, container-service]
+            value: function
+            configurable: false
+          - name: vendor_availability_sla
+            value_type: string
+            value: "99.95%-per-region"
+            configurable: false
+        provenance:
+          authoritative_source: Amazon Web Services
+          source_system: public-web
+          last_verified: 2026-09-13
+          evidence_reference: https://aws.amazon.com/lambda/sla/
+          confidence: high
+          discovery_method: manual
+      - id: compute.functions.azure-functions
+        name: Azure Functions
+        providers: [microsoft]
+        characteristics:
+          - name: execution_model
+            value_type: string
+            allowed_values: [function, container-service]
+            value: function
+            configurable: false
+          - name: vendor_availability_sla
+            value_type: string
+            value: "99.95%-flex-consumption-or-app-service-plan"
+            configurable: false
+        provenance:
+          authoritative_source: Microsoft
+          source_system: public-web
+          last_verified: 2026-09-13
+          evidence_reference: https://azure.microsoft.com/en-us/products/functions
+          confidence: high
+          discovery_method: manual
+      - id: compute.functions.cloud-run
+        name: Google Cloud Run
+        description: >
+          Container-as-a-service, not a function runtime. Encoded here
+          only as a capability-mismatch test against Lambda/Functions.
+        providers: [google-cloud]
+        characteristics:
+          - name: execution_model
+            value_type: string
+            allowed_values: [function, container-service]
+            value: container-service
+            configurable: false
+        provenance:
+          authoritative_source: Google Cloud
+          source_system: public-web
+          last_verified: 2026-09-13
+          evidence_reference: https://cloud.google.com/run
+          confidence: high
+          discovery_method: manual
+
+  - id: net.virtual-network
+    name: Virtual Network
+    description: >
+      Logically isolated virtual network in which cloud resources are
+      placed. Also functions as a tenancy/isolation boundary, which
+      OSM cannot represent as a separate entity.
+    accountable: Reference Estate Service Owner
+    technology_stack: Network
+    version: "0.1.0-investigation"
+    valid_from: 2026-09-13
+    valid_to: null
+    lifecycle_state: draft
+    provenance:
+      authoritative_source: Vendor product documentation
+      source_system: public-web
+      last_verified: 2026-09-13
+      evidence_reference: https://aws.amazon.com/vpc/
+      confidence: high
+      discovery_method: manual
+    service_offerings:
+      - id: net.virtual-network.aws-vpc
+        name: Amazon VPC
+        description: >
+          Amazon Virtual Private Cloud. No general VPC uptime SLA was
+          found; NAT Gateway has a separate 99.9% SLA.
+        providers: [aws]
+        provenance:
+          authoritative_source: Amazon Web Services
+          source_system: public-web
+          last_verified: 2026-09-13
+          evidence_reference: https://aws.amazon.com/vpc/sla/
+          confidence: high
+          discovery_method: manual
+      - id: net.virtual-network.azure-vnet
+        name: Azure Virtual Network
+        providers: [microsoft]
+        provenance:
+          authoritative_source: Microsoft
+          source_system: public-web
+          last_verified: 2026-09-13
+          evidence_reference: https://azure.microsoft.com/en-us/products/virtual-network
+          confidence: high
+          discovery_method: manual
+      - id: net.virtual-network.gcp-vpc
+        name: Google Cloud VPC
+        providers: [google-cloud]
+        provenance:
+          authoritative_source: Google Cloud
+          source_system: public-web
+          last_verified: 2026-09-13
+          evidence_reference: https://docs.cloud.google.com/vpc/docs/resources
+          confidence: high
+          discovery_method: manual
+
+  - id: identity.cloud-authorization
+    name: Cloud Platform Authorization
+    description: >
+      Account, project or resource authorization for a cloud platform
+      (AWS IAM, Google Cloud IAM). This is not an enterprise directory
+      or IdP. Do not unify with Entra ID or Okta.
+    accountable: Reference Estate Service Owner
+    technology_stack: Identity
+    version: "0.1.0-investigation"
+    valid_from: 2026-09-13
+    valid_to: null
+    lifecycle_state: draft
+    provenance:
+      authoritative_source: Vendor product documentation
+      source_system: public-web
+      last_verified: 2026-09-13
+      evidence_reference: https://aws.amazon.com/iam/
+      confidence: high
+      discovery_method: manual
+    service_offerings:
+      - id: identity.cloud-authorization.aws-iam
+        name: AWS IAM
+        description: >
+          AWS Identity and Access Management. Distinct from IAM
+          Identity Center. No public availability SLA found.
+        providers: [aws]
+        provenance:
+          authoritative_source: Amazon Web Services
+          source_system: public-web
+          last_verified: 2026-09-13
+          evidence_reference: https://aws.amazon.com/iam/
+          confidence: high
+          discovery_method: manual
+      - id: identity.cloud-authorization.gcp-iam
+        name: Google Cloud IAM
+        description: Officially has no SLA.
+        providers: [google-cloud]
+        provenance:
+          authoritative_source: Google Cloud
+          source_system: public-web
+          last_verified: 2026-09-13
+          evidence_reference: https://cloud.google.com/iam/sla
+          confidence: high
+          discovery_method: manual
+
+  - id: identity.directory-idp
+    name: Workforce Directory and IdP
+    description: >
+      Enterprise directory, authentication and federation. Microsoft
+      Entra ID and Okta Workforce Identity Cloud. Not AWS IAM.
+    accountable: Reference Estate Service Owner
+    technology_stack: Identity
+    version: "0.1.0-investigation"
+    valid_from: 2026-09-13
+    valid_to: null
+    lifecycle_state: draft
+    provenance:
+      authoritative_source: Vendor product documentation
+      source_system: public-web
+      last_verified: 2026-09-13
+      evidence_reference: https://learn.microsoft.com/en-us/entra/fundamentals/whatis
+      confidence: high
+      discovery_method: manual
+    service_offerings:
+      - id: identity.directory-idp.entra-id
+        name: Microsoft Entra ID
+        description: >
+          Enterprise identity service underpinning Microsoft 365, Azure
+          and Dynamics. Shared substrate, not an Azure-only product.
+        providers: [microsoft]
+        provenance:
+          authoritative_source: Microsoft
+          source_system: public-web
+          last_verified: 2026-09-13
+          evidence_reference: https://learn.microsoft.com/en-us/entra/fundamentals/whatis
+          confidence: high
+          discovery_method: manual
+      - id: identity.directory-idp.okta-workforce
+        name: Okta Workforce Identity Cloud
+        description: Okta Platform workforce IAM. Auth0/CIC is a different service.
+        providers: [okta]
+        provenance:
+          authoritative_source: Okta
+          source_system: public-web
+          last_verified: 2026-09-13
+          evidence_reference: https://security.okta.com/
+          confidence: high
+          discovery_method: manual
+
+  - id: collab.issue-tracking
+    name: Issue Tracking
+    description: Issue and work-item tracking as a technological service.
+    accountable: Reference Estate Service Owner
+    technology_stack: Collaboration
+    version: "0.1.0-investigation"
+    valid_from: 2026-09-13
+    valid_to: null
+    lifecycle_state: draft
+    providers: [atlassian]
+    provenance:
+      authoritative_source: Atlassian
+      source_system: public-web
+      last_verified: 2026-09-13
+      evidence_reference: https://www.atlassian.com/trust/compliance
+      confidence: high
+      discovery_method: manual
+    service_offerings:
+      - id: collab.issue-tracking.jira-cloud
+        name: Jira Cloud
+        providers: [atlassian]
+        characteristics:
+          - name: deployment_model
+            value_type: string
+            allowed_values: [cloud, data-center]
+            value: cloud
+            configurable: false
+          - name: data_residency_option
+            value_type: string
+            description: >
+              Pin locations are published; selected pin is customer-dependent.
+              In-scope app data only.
+            value: pin-or-global
+            configurable: true
+      - id: collab.issue-tracking.jira-data-center
+        name: Jira Data Center
+        description: >
+          Self-managed. Atlassian Cloud ISO/SOC evidence does not cover
+          this offering.
+        providers: [atlassian]
+        characteristics:
+          - name: deployment_model
+            value_type: string
+            allowed_values: [cloud, data-center]
+            value: data-center
+            configurable: false
+
+  - id: collab.wiki
+    name: Team Wiki
+    description: Team documentation wiki as a technological service.
+    accountable: Reference Estate Service Owner
+    technology_stack: Collaboration
+    version: "0.1.0-investigation"
+    valid_from: 2026-09-13
+    valid_to: null
+    lifecycle_state: draft
+    providers: [atlassian]
+    provenance:
+      authoritative_source: Atlassian
+      source_system: public-web
+      last_verified: 2026-09-13
+      evidence_reference: https://www.atlassian.com/trust/compliance
+      confidence: high
+      discovery_method: manual
+    service_offerings:
+      - id: collab.wiki.confluence-cloud
+        name: Confluence Cloud
+        providers: [atlassian]
+        characteristics:
+          - name: deployment_model
+            value_type: string
+            allowed_values: [cloud, data-center]
+            value: cloud
+            configurable: false
+      - id: collab.wiki.confluence-data-center
+        name: Confluence Data Center
+        providers: [atlassian]
+        characteristics:
+          - name: deployment_model
+            value_type: string
+            allowed_values: [cloud, data-center]
+            value: data-center
+            configurable: false
+
+  - id: collab.email
+    name: Enterprise Email
+    description: >
+      Mailbox and calendaring as a technological service. Encoded as
+      Exchange Online, not as the Microsoft 365 suite SKU.
+    accountable: Reference Estate Service Owner
+    technology_stack: Collaboration
+    version: "0.1.0-investigation"
+    valid_from: 2026-09-13
+    valid_to: null
+    lifecycle_state: draft
+    providers: [microsoft]
+    provenance:
+      authoritative_source: Microsoft
+      source_system: public-web
+      last_verified: 2026-09-13
+      evidence_reference: https://learn.microsoft.com/en-us/office365/servicedescriptions/exchange-online-service-description/exchange-online-service-description
+      confidence: high
+      discovery_method: manual
+    service_offerings:
+      - id: collab.email.exchange-online
+        name: Exchange Online
+        providers: [microsoft]
+
+  - id: collab.content
+    name: Team Content
+    description: Team files and sites as a technological service (SharePoint Online).
+    accountable: Reference Estate Service Owner
+    technology_stack: Collaboration
+    version: "0.1.0-investigation"
+    valid_from: 2026-09-13
+    valid_to: null
+    lifecycle_state: draft
+    providers: [microsoft]
+    provenance:
+      authoritative_source: Microsoft
+      source_system: public-web
+      last_verified: 2026-09-13
+      evidence_reference: https://learn.microsoft.com/en-us/sharepoint/introduction
+      confidence: high
+      discovery_method: manual
+    service_offerings:
+      - id: collab.content.sharepoint-online
+        name: SharePoint Online
+        providers: [microsoft]
+
+  - id: collab.team-chat
+    name: Team Chat
+    description: >
+      Persistent team messaging. Microsoft Teams and Slack are
+      offerings. Teams depends on Entra and other Microsoft 365
+      workloads; OSM cannot record that Service-to-Service dependency.
+    accountable: Reference Estate Service Owner
+    technology_stack: Collaboration
+    version: "0.1.0-investigation"
+    valid_from: 2026-09-13
+    valid_to: null
+    lifecycle_state: draft
+    provenance:
+      authoritative_source: Vendor product documentation
+      source_system: public-web
+      last_verified: 2026-09-13
+      evidence_reference: https://learn.microsoft.com/en-us/microsoftteams/teams-overview
+      confidence: high
+      discovery_method: manual
+    service_offerings:
+      - id: collab.team-chat.teams
+        name: Microsoft Teams
+        providers: [microsoft]
+      - id: collab.team-chat.slack
+        name: Slack
+        description: Slack is a Salesforce product; contracting entities may still name Slack Technologies.
+        providers: [salesforce]
+
+  - id: net.cdn-waf
+    name: CDN and Web Application Firewall
+    description: Content delivery and HTTP application protection.
+    accountable: Reference Estate Service Owner
+    technology_stack: Network
+    version: "0.1.0-investigation"
+    valid_from: 2026-09-13
+    valid_to: null
+    lifecycle_state: draft
+    providers: [cloudflare]
+    provenance:
+      authoritative_source: Cloudflare
+      source_system: public-web
+      last_verified: 2026-09-13
+      evidence_reference: https://www.cloudflare.com/trust-hub/
+      confidence: high
+      discovery_method: manual
+    service_offerings:
+      - id: net.cdn-waf.cloudflare
+        name: Cloudflare CDN and WAF
+        providers: [cloudflare]
+
+  - id: net.ztna
+    name: Zero Trust Network Access
+    description: Zero-trust application access as a technological service.
+    accountable: Reference Estate Service Owner
+    technology_stack: Network
+    version: "0.1.0-investigation"
+    valid_from: 2026-09-13
+    valid_to: null
+    lifecycle_state: draft
+    provenance:
+      authoritative_source: Vendor product documentation
+      source_system: public-web
+      last_verified: 2026-09-13
+      evidence_reference: https://developers.cloudflare.com/cloudflare-one/
+      confidence: high
+      discovery_method: manual
+    service_offerings:
+      - id: net.ztna.cloudflare-access
+        name: Cloudflare Access
+        providers: [cloudflare]
+      - id: net.ztna.zscaler-zpa
+        name: Zscaler Private Access
+        providers: [zscaler]
+      - id: net.ztna.prisma-access
+        name: Prisma Access
+        providers: [palo-alto-networks]
+
+  - id: net.secure-web-gateway
+    name: Secure Web Gateway
+    description: Cloud-delivered inspection of outbound web traffic.
+    accountable: Reference Estate Service Owner
+    technology_stack: Network
+    version: "0.1.0-investigation"
+    valid_from: 2026-09-13
+    valid_to: null
+    lifecycle_state: draft
+    providers: [zscaler]
+    provenance:
+      authoritative_source: Zscaler
+      source_system: public-web
+      last_verified: 2026-09-13
+      evidence_reference: https://www.zscaler.com/company/contact
+      confidence: medium
+      discovery_method: manual
+    service_offerings:
+      - id: net.secure-web-gateway.zscaler-zia
+        name: Zscaler Internet Access
+        providers: [zscaler]
+
+  - id: sec.endpoint-protection
+    name: Endpoint Protection
+    description: Endpoint detection, prevention and related platform services.
+    accountable: Reference Estate Service Owner
+    technology_stack: Security
+    version: "0.1.0-investigation"
+    valid_from: 2026-09-13
+    valid_to: null
+    lifecycle_state: draft
+    providers: [crowdstrike]
+    provenance:
+      authoritative_source: CrowdStrike
+      source_system: public-web
+      last_verified: 2026-09-13
+      evidence_reference: https://ir.crowdstrike.com/shareholder-services/investor-faqs
+      confidence: high
+      discovery_method: manual
+    service_offerings:
+      - id: sec.endpoint-protection.falcon
+        name: CrowdStrike Falcon
+        providers: [crowdstrike]
+        characteristics:
+          - name: operating_model
+            value_type: string
+            allowed_values: [saas-platform, managed-detection]
+            value: saas-platform
+            configurable: false
+      - id: sec.endpoint-protection.falcon-complete
+        name: CrowdStrike Falcon Complete
+        description: MDR on the Falcon platform. Same ICT Provider; different operating model.
+        providers: [crowdstrike]
+        characteristics:
+          - name: operating_model
+            value_type: string
+            allowed_values: [saas-platform, managed-detection]
+            value: managed-detection
+            configurable: false
+
+  - id: ops.observability
+    name: Observability
+    description: Metrics, traces, logs and alerting as a technological service.
+    accountable: Reference Estate Service Owner
+    technology_stack: Operations
+    version: "0.1.0-investigation"
+    valid_from: 2026-09-13
+    valid_to: null
+    lifecycle_state: draft
+    provenance:
+      authoritative_source: Vendor product documentation
+      source_system: public-web
+      last_verified: 2026-09-13
+      evidence_reference: https://www.datadoghq.com/about/contact/
+      confidence: high
+      discovery_method: manual
+    service_offerings:
+      - id: ops.observability.datadog
+        name: Datadog
+        providers: [datadog]
+      - id: ops.observability.dynatrace
+        name: Dynatrace
+        providers: [dynatrace]
+
+  - id: data.cloud-warehouse
+    name: Cloud Data Warehouse
+    description: >
+      Analytical warehouse. Snowflake runs on a customer-chosen
+      hyperscaler. The hosting CSP is a second provider on the offering.
+    accountable: Reference Estate Service Owner
+    technology_stack: Data
+    version: "0.1.0-investigation"
+    valid_from: 2026-09-13
+    valid_to: null
+    lifecycle_state: draft
+    provenance:
+      authoritative_source: Snowflake
+      source_system: public-web
+      last_verified: 2026-09-13
+      evidence_reference: https://www.snowflake.com/en/contact/
+      confidence: high
+      discovery_method: manual
+    service_offerings:
+      - id: data.cloud-warehouse.snowflake-aws
+        name: Snowflake on AWS
+        providers: [snowflake, aws]
+      - id: data.cloud-warehouse.snowflake-azure
+        name: Snowflake on Azure
+        providers: [snowflake, microsoft]
+      - id: data.cloud-warehouse.snowflake-gcp
+        name: Snowflake on Google Cloud
+        providers: [snowflake, google-cloud]
+
+  - id: data.lakehouse
+    name: Lakehouse Analytics
+    description: >
+      Databricks Data Intelligence Platform. Control plane is
+      Databricks; data plane is typically in the customer cloud account.
+    accountable: Reference Estate Service Owner
+    technology_stack: Data
+    version: "0.1.0-investigation"
+    valid_from: 2026-09-13
+    valid_to: null
+    lifecycle_state: draft
+    provenance:
+      authoritative_source: Databricks
+      source_system: public-web
+      last_verified: 2026-09-13
+      evidence_reference: https://www.databricks.com/trust/compliance
+      confidence: high
+      discovery_method: manual
+    service_offerings:
+      - id: data.lakehouse.databricks-aws
+        name: Databricks on AWS
+        providers: [databricks, aws]
+      - id: data.lakehouse.databricks-azure
+        name: Azure Databricks
+        description: Microsoft-operated channel of the Databricks platform.
+        providers: [databricks, microsoft]
+      - id: data.lakehouse.databricks-gcp
+        name: Databricks on Google Cloud
+        providers: [databricks, google-cloud]
+
+  - id: data.vendor-ai-assist
+    name: Vendor-operated Data Platform AI
+    description: >
+      Vendor-operated AI features on data platforms (Snowflake Cortex,
+      Databricks Mosaic AI hosted models). Encoded separately so a
+      warehouse/lakehouse Service is not labelled as an AI system.
+      AI Act risk class is not assessed.
+    accountable: Reference Estate Service Owner
+    technology_stack: Data
+    version: "0.1.0-investigation"
+    valid_from: 2026-09-13
+    valid_to: null
+    lifecycle_state: draft
+    provenance:
+      authoritative_source: Vendor product documentation
+      source_system: public-web
+      last_verified: 2026-09-13
+      evidence_reference: https://docs.snowflake.com/en/user-guide/snowflake-cortex/cross-region-inference
+      confidence: medium
+      discovery_method: manual
+    service_offerings:
+      - id: data.vendor-ai-assist.snowflake-cortex
+        name: Snowflake Cortex
+        providers: [snowflake]
+      - id: data.vendor-ai-assist.mosaic-hosted
+        name: Databricks Mosaic AI hosted models
+        providers: [databricks]
+
+  - id: devops.continuous-delivery
+    name: Continuous Delivery
+    description: Pipelines for building and releasing software.
+    accountable: Reference Estate Service Owner
+    technology_stack: DevOps
+    version: "0.1.0-investigation"
+    valid_from: 2026-09-13
+    valid_to: null
+    lifecycle_state: draft
+    provenance:
+      authoritative_source: Vendor product documentation
+      source_system: public-web
+      last_verified: 2026-09-13
+      evidence_reference: https://docs.github.com/en/actions
+      confidence: high
+      discovery_method: manual
+    service_offerings:
+      - id: devops.continuous-delivery.github-hosted
+        name: GitHub Actions hosted runners
+        providers: [github]
+        characteristics:
+          - name: operating_model
+            value_type: string
+            allowed_values: [vendor-operated, self-operated]
+            value: vendor-operated
+            configurable: false
+      - id: devops.continuous-delivery.github-self-hosted
+        name: GitHub Actions self-hosted runners
+        description: GitHub still provides the control plane; compute is customer-operated.
+        providers: [github]
+        characteristics:
+          - name: operating_model
+            value_type: string
+            allowed_values: [vendor-operated, self-operated]
+            value: self-operated
+            configurable: false
+      - id: devops.continuous-delivery.gitlab-com
+        name: GitLab.com CI/CD
+        providers: [gitlab]
+        characteristics:
+          - name: operating_model
+            value_type: string
+            allowed_values: [vendor-operated, self-operated]
+            value: vendor-operated
+            configurable: false
+
+  - id: auto.infrastructure-as-code
+    name: Infrastructure as Code
+    description: >
+      Versioned infrastructure automation. Terraform the CLI is a
+      tool, not this Service. HCP Terraform is a hosted offering.
+      Self-operated CLI may have no ICT Provider.
+    accountable: Reference Estate Service Owner
+    technology_stack: Automation
+    version: "0.1.0-investigation"
+    valid_from: 2026-09-13
+    valid_to: null
+    lifecycle_state: draft
+    provenance:
+      authoritative_source: HashiCorp / IBM
+      source_system: public-web
+      last_verified: 2026-09-13
+      evidence_reference: https://www.terraform.io/
+      confidence: high
+      discovery_method: manual
+    service_offerings:
+      - id: auto.infrastructure-as-code.self-operated
+        name: Self-operated IaC execution
+        description: Local or pipeline-run Terraform/OpenTofu. No ICT Provider required.
+        characteristics:
+          - name: operating_model
+            value_type: string
+            value: self-operated
+            configurable: false
+      - id: auto.infrastructure-as-code.hcp-terraform
+        name: HCP Terraform
+        description: Hosted Terraform collaboration. Commercial seller after 2025-09-01 is IBM.
+        providers: [ibm]
+        characteristics:
+          - name: operating_model
+            value_type: string
+            value: vendor-operated
+            configurable: false
+
+  - id: ops.itsm
+    name: IT Service Management Tooling
+    description: >
+      ITSM workflow tooling. This is not a CMDB. ServiceNow CMDB is
+      configuration-item inventory and is out of OSM scope.
+    accountable: Reference Estate Service Owner
+    technology_stack: Operations
+    version: "0.1.0-investigation"
+    valid_from: 2026-09-13
+    valid_to: null
+    lifecycle_state: draft
+    providers: [servicenow]
+    provenance:
+      authoritative_source: ServiceNow
+      source_system: public-web
+      last_verified: 2026-09-13
+      evidence_reference: https://www.servicenow.com/products/itsm.html
+      confidence: high
+      discovery_method: manual
+    service_offerings:
+      - id: ops.itsm.servicenow
+        name: ServiceNow ITSM
+        providers: [servicenow]
+
+  - id: crm.sales-cloud
+    name: Sales CRM Platform
+    description: >
+      BOUNDARY TEST. Salesforce Sales Cloud is commonly an enterprise
+      application, which OSM does not model. Encoded only to show the
+      collision with technological-service scope.
+    accountable: Reference Estate Service Owner
+    technology_stack: Enterprise Applications
+    version: "0.1.0-investigation"
+    valid_from: 2026-09-13
+    valid_to: null
+    lifecycle_state: draft
+    providers: [salesforce]
+    provenance:
+      authoritative_source: Salesforce
+      source_system: public-web
+      last_verified: 2026-09-13
+      evidence_reference: https://www.salesforce.com/company/legal/trust-and-compliance-documentation/
+      confidence: high
+      discovery_method: manual
+    service_offerings:
+      - id: crm.sales-cloud.salesforce
+        name: Salesforce Sales Cloud
+        providers: [salesforce]
+
+  - id: erp.s4hana-cloud
+    name: ERP Cloud Platform
+    description: >
+      BOUNDARY TEST. SAP S/4HANA Cloud is an ERP application. OSM
+      excludes applications and business services. Encoded only to
+      stress that boundary.
+    accountable: Reference Estate Service Owner
+    technology_stack: Enterprise Applications
+    version: "0.1.0-investigation"
+    valid_from: 2026-09-13
+    valid_to: null
+    lifecycle_state: draft
+    providers: [sap]
+    provenance:
+      authoritative_source: SAP
+      source_system: public-web
+      last_verified: 2026-09-13
+      evidence_reference: https://www.sap.com/canada/products/erp/s4hana.html
+      confidence: high
+      discovery_method: manual
+    service_offerings:
+      - id: erp.s4hana-cloud.public-edition
+        name: SAP S/4HANA Cloud Public Edition
+        providers: [sap]
+
+  - id: hcm.core
+    name: Human Capital Management Platform
+    description: >
+      BOUNDARY TEST. Workday HCM is commonly an enterprise application.
+    accountable: Reference Estate Service Owner
+    technology_stack: Enterprise Applications
+    version: "0.1.0-investigation"
+    valid_from: 2026-09-13
+    valid_to: null
+    lifecycle_state: draft
+    providers: [workday]
+    provenance:
+      authoritative_source: Workday
+      source_system: public-web
+      last_verified: 2026-09-13
+      evidence_reference: https://www.workday.com/en-us/why-workday/trust/compliance.html
+      confidence: high
+      discovery_method: manual
+    service_offerings:
+      - id: hcm.core.workday
+        name: Workday HCM
+        providers: [workday]

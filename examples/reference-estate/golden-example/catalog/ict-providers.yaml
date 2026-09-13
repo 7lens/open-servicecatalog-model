@@ -1,0 +1,139 @@
+# Golden-example ICT Providers
+#
+# Six well-known public sellers. Not a recommended supplier list.
+# certifications[] are published program names only. Customer contract,
+# DPA, DORA-clause, risk and exit fields stay null.
+
+ict_providers:
+
+  - id: aws
+    name: Amazon Web Services
+    type: cloud-infrastructure
+    headquarters: us
+    data_processing_locations: [us, eu, apac, me, sa, af, ca]
+    substitutability: low
+    contract_ref: null
+    contract_start: null
+    contract_end: null
+    notice_period_days: null
+    audit_rights: null
+    subcontracting_allowed: conditional
+    subcontractors: []
+    last_risk_assessment: null
+    risk_level: null
+    exit_strategy_documented: null
+    exit_strategy_tested: null
+    concentration_risk: true
+    certifications: [iso27001-2022, iso27701-2019, iso27017, iso27018, soc2-type2, soc1, soc3, pci-dss]
+    gdpr_dpa_signed: null
+    dora_notification_clause: null
+
+  - id: microsoft
+    name: Microsoft Corporation
+    type: cloud-infrastructure
+    headquarters: us
+    data_processing_locations: [us, eu, apac, me, sa, af, ca]
+    substitutability: low
+    contract_ref: null
+    contract_start: null
+    contract_end: null
+    notice_period_days: null
+    audit_rights: null
+    subcontracting_allowed: conditional
+    subcontractors: []
+    last_risk_assessment: null
+    risk_level: null
+    exit_strategy_documented: null
+    exit_strategy_tested: null
+    concentration_risk: true
+    certifications: [iso27001, iso27701, soc2-type2, soc1, pci-dss]
+    gdpr_dpa_signed: null
+    dora_notification_clause: null
+
+  - id: google-cloud
+    name: Google Cloud
+    type: cloud-infrastructure
+    headquarters: us
+    data_processing_locations: [us, eu, apac, me, sa, af, ca]
+    substitutability: medium
+    contract_ref: null
+    contract_start: null
+    contract_end: null
+    notice_period_days: null
+    audit_rights: null
+    subcontracting_allowed: conditional
+    subcontractors: []
+    last_risk_assessment: null
+    risk_level: null
+    exit_strategy_documented: null
+    exit_strategy_tested: null
+    concentration_risk: true
+    certifications: [iso27001-2022, iso27017, iso27018, iso27701, soc2-type2, soc3, pci-dss]
+    gdpr_dpa_signed: null
+    dora_notification_clause: null
+
+  - id: okta
+    name: Okta, Inc.
+    type: cloud-platform
+    headquarters: us
+    data_processing_locations: [us, eu, au, jp, ca, in]
+    substitutability: medium
+    contract_ref: null
+    contract_start: null
+    contract_end: null
+    notice_period_days: null
+    audit_rights: null
+    subcontracting_allowed: conditional
+    subcontractors: []
+    last_risk_assessment: null
+    risk_level: null
+    exit_strategy_documented: null
+    exit_strategy_tested: null
+    concentration_risk: null
+    certifications: [iso27001-2022, iso27017, iso27018, soc2, soc1, soc3]
+    gdpr_dpa_signed: null
+    dora_notification_clause: null
+
+  - id: atlassian
+    name: Atlassian Corporation
+    type: cloud-platform
+    headquarters: au
+    data_processing_locations: [us, eu, au, apac, ca, gb, ch]
+    substitutability: medium
+    contract_ref: null
+    contract_start: null
+    contract_end: null
+    notice_period_days: null
+    audit_rights: null
+    subcontracting_allowed: conditional
+    subcontractors: []
+    last_risk_assessment: null
+    risk_level: null
+    exit_strategy_documented: null
+    exit_strategy_tested: null
+    concentration_risk: null
+    certifications: [iso27001-2022, iso27018, soc2-type2]
+    gdpr_dpa_signed: null
+    dora_notification_clause: null
+
+  - id: snowflake
+    name: Snowflake Inc.
+    type: cloud-platform
+    headquarters: us
+    data_processing_locations: [us, eu, apac]
+    substitutability: medium
+    contract_ref: null
+    contract_start: null
+    contract_end: null
+    notice_period_days: null
+    audit_rights: null
+    subcontracting_allowed: conditional
+    subcontractors: []
+    last_risk_assessment: null
+    risk_level: null
+    exit_strategy_documented: null
+    exit_strategy_tested: null
+    concentration_risk: null
+    certifications: [iso27001, soc2-type2]
+    gdpr_dpa_signed: null
+    dora_notification_clause: null

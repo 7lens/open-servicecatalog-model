@@ -15,7 +15,7 @@ Welcome:
 - clarifications to the specification or README
 - schema improvements that remain backwards-compatible
 - generic technological-service concepts that many organizations share
-- better synthetic examples
+- better examples (synthetic basics, or anonymized reference-estate records)
 - optional standards mappings, clearly labelled as reference mappings
 - compatibility analysis that does not invent mappings
 - validation checks and documentation
@@ -39,12 +39,23 @@ Not in scope:
 - Application Service or Business Service entities
 - value streams, consumers, or detailed SLA objects
 - ITIL or CSDM practice/process/CMDB structures
+- TM Forum Candidate, Category, CFS, RFS, or Service Inventory
+- DORA RoI, LEI, CIF, contractual Arrangement, or incident feed
+- GDPR RoPA, legal basis, DPO, SCCs, or processing-activity entities
+- ISO SoA, control implementation, or PIMS processing structures
+- NIST Profiles, Categories, Tiers, or control catalogues
+- EU AI Act GPAI, deployer/provider legal roles, EU database, or technical-file structures
 - organization or geography models
 - vendor-specific product implementations
 - expanding the model into an enterprise-wide ontology
 - first-class Service → Service relationships
 - a second provider relationship beside `providers`
 - a second provider risk/severity field beside `risk_level`
+- provider-role fields or a generic vendor/tool inventory
+- framework-prefixed copies of canonical fields (`dora_rto`, …)
+
+See `SPECIFICATION.md` §10 for **External Concepts — Intentionally
+Outside OSM**.
 
 If a change would require a reader to understand a broader enterprise
 model in order to use this catalog, it does not belong here.
@@ -78,9 +89,20 @@ Preserve:
 
 ## Examples
 
-Examples must be synthetic. Do not contribute a real organization's
-service catalog, vendor register, contract references, account IDs,
-hostnames, or internal names.
+There are three public example layers:
+
+- **Basic examples** (`examples/catalog/`, `examples/posture/`) are
+  synthetic schema tutorials.
+- **Reference estate** (`examples/reference-estate/`) is a researched,
+  anonymized catalog using well-known public providers.
+- **Reference enterprise** (`examples/reference-enterprise/`) is a
+  predecessor enterprise catalog onboarded onto current OSM.
+
+Do not contribute a real organization's service catalog, vendor
+register, contract references, account IDs, hostnames, or internal
+names. Public provider facts are allowed; customer contracts, signed
+DPA flags, RTO/RPO and risk scores are not to be filled in from
+imagination.
 
 Framework mappings in examples are illustrative. They are not legal
 advice and not proof of compliance.

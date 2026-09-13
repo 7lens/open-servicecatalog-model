@@ -6,7 +6,7 @@
 # characteristic model.
 
 $schema: https://json-schema.org/draft/2020-12/schema
-$id: https://raw.githubusercontent.com/7lens/open-servicecatalog-model/main/schema/characteristic.yaml
+$id: https://raw.githubusercontent.com/7lens/open-servicecatalog-model/main/schema/shared/characteristic.yaml
 title: Characteristic
 type: object
 additionalProperties: false

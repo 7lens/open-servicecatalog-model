@@ -1,0 +1,116 @@
+# Golden-example Service Posture
+#
+# Intentionally thin except for one teaching record.
+# compute.kubernetes carries an enterprise availability_target that is
+# NOT copied from a vendor SLA.
+#
+# operational_criticality, rto and rpo stay unset: they are customer
+# assessments, not vendor website facts.
+#
+# `service_posture` / `offering_posture` are the current public OSM
+# vocabulary.
+
+service_posture:
+
+  - service_id: compute.virtual-machines
+    vendor_support_status: active
+    privacy_classification: not-assessed
+    ai_act_applicable: false
+    ai_act_risk_class: not-applicable
+    provenance:
+      authoritative_source: Service Owner
+      source_system: osm-catalog
+      last_verified: 2026-09-13
+      evidence_reference: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/concepts.html
+      confidence: high
+      discovery_method: declared
+    offering_posture: []
+
+  - service_id: compute.kubernetes
+    vendor_support_status: active
+    privacy_classification: not-assessed
+    ai_act_applicable: false
+    ai_act_risk_class: not-applicable
+    availability_target: "99.9%"
+    provenance:
+      authoritative_source: Service Owner
+      source_system: osm-catalog
+      last_verified: 2026-09-13
+      evidence_reference: enterprise-declared-target-not-vendor-sla
+      confidence: high
+      discovery_method: declared
+    offering_posture: []
+
+  - service_id: storage.object-storage
+    vendor_support_status: active
+    privacy_classification: not-assessed
+    ai_act_applicable: false
+    ai_act_risk_class: not-applicable
+    offering_posture: []
+
+  - service_id: identity.directory-idp
+    vendor_support_status: active
+    privacy_classification: not-assessed
+    ai_act_applicable: false
+    ai_act_risk_class: not-applicable
+    offering_posture: []
+
+  - service_id: identity.cloud-authorization
+    vendor_support_status: active
+    privacy_classification: not-assessed
+    ai_act_applicable: false
+    ai_act_risk_class: not-applicable
+    offering_posture: []
+
+  - service_id: collab.issue-tracking
+    vendor_support_status: active
+    privacy_classification: not-assessed
+    ai_act_applicable: false
+    ai_act_risk_class: not-applicable
+    offering_posture: []
+
+  - service_id: collab.email
+    vendor_support_status: active
+    privacy_classification: not-assessed
+    ai_act_applicable: false
+    ai_act_risk_class: not-applicable
+    offering_posture: []
+
+  - service_id: collab.team-chat
+    vendor_support_status: active
+    privacy_classification: not-assessed
+    ai_act_applicable: false
+    ai_act_risk_class: not-applicable
+    offering_posture: []
+
+  - service_id: data.cloud-warehouse
+    vendor_support_status: active
+    privacy_classification: not-assessed
+    ai_act_applicable: false
+    ai_act_risk_class: not-applicable
+    offering_posture: []
+
+  - service_id: data.vendor-ai-assist
+    vendor_support_status: active
+    privacy_classification: not-assessed
+    ai_act_applicable: true
+    provenance:
+      authoritative_source: Service Owner
+      source_system: osm-catalog
+      last_verified: 2026-09-13
+      evidence_reference: https://docs.snowflake.com/en/user-guide/snowflake-cortex/cross-region-inference
+      confidence: medium
+      discovery_method: declared
+    offering_posture:
+      - offering_id: data.vendor-ai-assist.snowflake-cortex
+        ai_act_intended_purpose: >
+          Vendor-operated Cortex AI features on Snowflake. Recorded
+          because the product is an AI system family. Not a customer
+          AI Act risk classification.
+        ai_act_training_data_doc: not-applicable
+        provenance:
+          source_system: osm-catalog
+          last_verified: 2026-09-13
+          evidence_reference: https://docs.snowflake.com/en/user-guide/snowflake-cortex/cross-region-inference
+          confidence: medium
+          discovery_method: declared

@@ -45,7 +45,7 @@ not required to operate every service personally.
   incident support, decommissioning, and agreed service levels.
 - Maintain the catalog identity and definition of the service
   (`lifecycle_state`, names, descriptions, version/validity).
-- Keep operational attributes current enough to be useful, including
+- Keep operational posture current enough to be useful, including
   criticality, automation and resilience evidence.
 - Own applicable security, privacy and operational-resilience
   obligations of the service, or name the controlling control owner.
