@@ -1,12 +1,10 @@
 # Conceptual model
 
-7lens OSM describes **technological services**: what a technology
-organization delivers, who operates those deliveries, the current
-operational state, and which third parties the deliveries depend on.
+7lens OSM describes an enterprise’s **technological services**: their definition, accountability, requestable variants, current posture, and third-party providers.
 
 It does not describe the rest of an enterprise.
 
-Exact fields are in [`SPECIFICATION.md`](SPECIFICATION.md).
+Exact fields are in `[SPECIFICATION.md](SPECIFICATION.md)`.
 
 ---
 
@@ -19,14 +17,13 @@ PROVENANCE             why the information can be trusted
 EXTERNAL CONTEXT       owned elsewhere — not modelled here
 ```
 
-The YAML keys `service_attributes` / `offering_attributes` are the
-Service Posture and Offering Posture records. Those file names are
-not a second catalog entity.
+The YAML keys `service_attributes` / `offering_attributes` are the Service Posture and Offering Posture records. Those file names are not a second catalog entity.
 
-Framework mappings are a translation layer. They are not a second
-copy of OSM facts.
+Framework mappings are a translation layer. They are not a second copy of OSM facts.
 
 ---
+
+
 
 ## Core structure
 
@@ -50,8 +47,7 @@ That is the only catalog nesting.
 
 Each service may also carry:
 
-- an **accountable** Service Owner (definition accountability;
-  distinct from posture `financial_owner`)
+- an **accountable** Service Owner
 - **version**, **validity period** and **lifecycle_state**
 - optional **characteristics**
 - optional **providers** (ICT Provider ids)
@@ -60,28 +56,26 @@ Each service may also carry:
 
 ---
 
+
+
 ## Technology Stack
 
-A Technology Stack answers: *which competency runs this group of
-services?*
+A Technology Stack answers: *which competency runs this group of services?*
 
-It is not a cost center, not an HR org-chart box, and not an
-infrastructure inventory. Finance may *map* to stacks; stacks do
+It is not a cost center, not an HR org-chart box, and not an infrastructure inventory. Finance may *map* to stacks; stacks do
 not become a chart of accounts.
 
-A service belongs to exactly one current stack. The stack assignment
-may change; the service ID does not.
+A service belongs to exactly one current stack. The stack assignment may change; the service ID does not.
 
 ---
 
+
+
 ## Service
 
-A Service is the **stable definition** of a technological capability.
-It is not merely a catalog listing, not an availability record, and
-not a running instance.
+A Service is the **stable definition** of a technological service. It is not merely a catalog listing, not an availability record, and not a running instance.
 
-Examples: managed Kubernetes, object storage, identity and access,
-CI/CD.
+Examples: managed Kubernetes, object storage, identity and access, CI/CD.
 
 A Service has:
 
@@ -95,27 +89,21 @@ A Service has:
 - one or more Service Offerings
 - optional characteristics, `providers` and `provenance`
 
-**Immutable identity ≠ immutable definition.** The `id` never
-changes. The definition may evolve. One catalog record exists per
-service `id`; that record is the current definition.
+**Immutable identity ≠ immutable definition.** The `id` never changes. The definition may evolve. One catalog record exists per service `id`; that record is the current definition.
 
 A deployed Service Instance is outside OSM.
 
 ---
 
+
+
 ## Service Offering
 
-A Service Offering is the requestable or deliverable **variant** of
-a Service. Variants may differ in environment, location, availability,
-packaging, operating model, provider, or other meaningful
-characteristics.
+A Service Offering is the requestable or deliverable **variant** of a Service. Variants may differ in environment, location, availability, packaging, operating model, provider, or other meaningful characteristics.
 
-Do not hard-code every dimension as a core field. Use Characteristics
-and optional `providers`.
+Do not hard-code every dimension as a core field. Use Characteristics and optional `providers`.
 
-The offering identifier has 3 segments. The first two must equal the
-parent service ID. Offerings have no independent version, validity
-or lifecycle fields.
+The offering identifier has 3 segments. The first two must equal the parent service ID. Offerings have no independent version, validity or lifecycle fields.
 
 ```
 service     compute.kubernetes
@@ -124,6 +112,8 @@ service     compute.kubernetes
 ```
 
 ---
+
+
 
 ## Identity
 
@@ -135,50 +125,48 @@ service     compute.kubernetes
 - Offering ID = 3 segments, for example `compute.kubernetes.aws`
 - Segments are lowercase, hyphen-delimited slugs
 
-The prefix records the stack under which the service was originally
-created. A service may later move to another stack without changing
-its ID.
+The prefix records the stack under which the service was originally created. A service may later move to another stack without changing its ID.
 
 ---
+
+
 
 ## Characteristics
 
-Services and offerings may declare nested **characteristics**: named,
-typed properties with optional value, defaults, allowed values,
-cardinality, constraints and a configurable flag.
+Services and offerings may declare nested **characteristics**: named, typed properties with optional value, defaults, allowed values, cardinality, constraints and a configurable flag.
 
 Characteristics are a small reusable structure, not a catalog entity.
 
-Typical offering dimensions — environment, location, `service_hours`,
-`support_hours`, pricing model, unit of consumption — belong here
-rather than on the core schema.
+Typical offering dimensions — environment, location, `service_hours`, `support_hours`, pricing model, unit of consumption — belong here rather than on the core schema.
 
-`service_hours` and `support_hours` describe **when** service or
-support is available. They are not performance targets.
+`service_hours` and `support_hours` describe **when** service or support is available. They are not performance targets.
 
 ---
+
+
 
 ## Service posture and offering posture
 
 Posture is **how the service currently stands**. It changes on a
 different cadence from the definition.
 
-| Layer | Holds |
-|-------|--------|
-| Catalog | Definition of what is delivered, including `lifecycle_state` |
-| Service posture | Shared operational / governance state |
-| Offering posture | Variant-level operations, cost, security, resilience |
 
-Empty offering posture lists are valid. Populate them as evidence
-becomes available.
+| Layer            | Holds                                                        |
+| ---------------- | ------------------------------------------------------------ |
+| Catalog          | Definition of what is delivered, including `lifecycle_state` |
+| Service posture  | Shared operational / governance state                        |
+| Offering posture | Variant-level operations, cost, security, resilience         |
+
+
+Empty offering posture lists are valid. Populate them as evidence becomes available.
 
 ### Service-level posture
 
 - `operational_criticality` — service criticality
 - `resilience_tier` — qualitative resilience class (not a substitute
-  for `rto` / `rpo`)
+for `rto` / `rpo`)
 - `availability_target`, `response_target`, `resolution_target` —
-  expected performance, not hours windows
+expected performance, not hours windows
 - `data_classification` — data the service handles
 - `security_classification` — sensitivity of the service itself
 - `privacy_classification`
@@ -186,48 +174,41 @@ becomes available.
 - optional AI Act applicability fields
 - optional provenance
 
-`data_classification` and `security_classification` may share enum
-tokens. They are not the same fact.
+`data_classification` and `security_classification` may share enum tokens. They are not the same fact.
 
 ### Offering-level posture
 
-- Finance: `cost_pool`, `chargeback_model`, `unit_cost`
-  (characterization, not accounting)
-- Operations: `automation_coverage`, `provisioning_automation`,
-  `self_service`, `manual_hours_week`
-- Security operations: `last_security_review`, `asset_coverage`
-- Resilience: `rto`, `rpo`, `resilience_tested`,
-  `last_resilience_test`, `resilience_evidence`
+- Finance: `cost_pool`, `chargeback_model`, `unit_cost`(characterization, not accounting)
+- Operations: `automation_coverage`, `provisioning_automation`, `self_service`, `manual_hours_week`
+- Security operations: `last_security_review`, `asset_coverage` 
+- Resilience: `rto`, `rpo`, `resilience_tested`, `last_resilience_test`, `resilience_evidence`
 - Optional ISO, NIST, GDPR and EU AI Act mappings
 
-`rto` is Recovery Time Objective. `rpo` is Recovery Point Objective.
-`automation_coverage` is overall delivery/operation automation;
-`provisioning_automation` is the provisioning process specifically.
+`rto` is Recovery Time Objective. `rpo` is Recovery Point Objective. `automation_coverage` is overall delivery/operation automation; `provisioning_automation` is the provisioning process specifically.
 
-OSM records service-level **expectations**. It does not manage SLAs,
-contracts, penalties or measurement history.
+OSM records service-level **expectations**. It does not manage SLAs, contracts, penalties or measurement history.
 
-Ownership roles are defined in [`GOVERNANCE.md`](GOVERNANCE.md).
+Ownership roles are defined in `[GOVERNANCE.md](GOVERNANCE.md)`.
 
 ---
 
+
+
 ## Provenance
 
-A reusable `provenance` object may attach to a Service, Offering or
-posture record. It makes an enterprise fact trustworthy.
+A reusable `provenance` object may attach to a Service, Offering or posture record. It makes an enterprise fact trustworthy.
 
-Each field answers a different question: who is authoritative, which
-system, which record, when verified, where evidence lives, how much
-to trust, how it was discovered. They are not interchangeable.
+Each field answers a different question: who is authoritative, which system, which record, when verified, where evidence lives, how much to trust, how it was discovered. They are not interchangeable.
 
 OSM does not model AI interpretation or AI recommendation.
 
 ---
 
+
+
 ## ICT providers
 
-An ICT Provider is the canonical record of a third-party technology
-organization.
+An ICT Provider is the canonical record of a third-party technology organization.
 
 ```
 Service / Offering  →  providers[]  →  ICT Provider
@@ -235,50 +216,41 @@ Service / Offering  →  providers[]  →  ICT Provider
 
 `providers` is the **single canonical** who-provides relationship.
 
-Use Service-level `providers` when the provider is intrinsic to the
-capability. Use Offering-level `providers` when provider choice
-distinguishes the variant. Association is optional. Multiple ids are
-allowed.
+Use Service-level `providers` when the provider is intrinsic to the service. Use Offering-level `providers` when provider choice distinguishes the variant. Association is optional. Multiple ids are allowed.
 
-Do not copy provider master data onto Service or Offering. A cloud
-provider is an ICT Provider.
+Do not copy provider master data onto Service or Offering. A cloud provider is an ICT Provider.
 
-`risk_level` is the ICT Provider risk/severity assessment. It is not
-service `operational_criticality`.
+`risk_level` is the ICT Provider risk/severity assessment. It is not service `operational_criticality`.
 
-Reverse Provider → Service links are derived from `providers`.
-`providers` is not a generic Service → Service relationship.
+Reverse Provider → Service links are derived from `providers`. `providers` is not a generic Service → Service relationship.
 
 ---
+
+
 
 ## Framework mappings
 
-Stacks, services and offerings may carry optional mappings to TBM,
-TOGAF, ISO/IEC 27001, ISO/IEC 27701, NIST CSF, GDPR, DORA and the
-EU AI Act.
+Stacks, services and offerings may carry optional mappings to TBM, TOGAF, ISO/IEC 27001, ISO/IEC 27701, NIST CSF, GDPR, DORA and the EU AI Act.
 
-Mappings are illustrative and non-normative for those frameworks.
-OSM is not an implementation, certification or legal interpretation
-of any of them.
+Mappings are illustrative and non-normative for those frameworks. OSM is not an implementation, certification or legal interpretation of any of them.
 
-If OSM already represents a concept, frameworks map to that field.
-See [`models/`](models/) and [`compliance/`](compliance/).
+If OSM already represents a concept, frameworks map to that field. See `[models/](models/)` and `[compliance/](compliance/)`.
 
 ---
+
+
 
 ## One concept, one parameter
 
-OSM does not represent the same semantic concept through multiple
-canonical parameters.
+OSM does not represent the same semantic concept through multiple canonical parameters.
 
-Before adding a field, search the schemas, examples, this file and
-`SPECIFICATION.md`. If the concept already exists, reuse it.
+Before adding a field, search the schemas, examples, this file and `SPECIFICATION.md`. If the concept already exists, reuse it.
 
-Genuinely different concepts may coexist even when they use similar
-names or the same enum values — for example data classification vs
-security classification, or hours windows vs performance targets.
+Genuinely different concepts may coexist even when they use similar names or the same enum values — for example data classification vs security classification, or hours windows vs performance targets.
 
 ---
+
+
 
 ## Out of scope
 
@@ -296,6 +268,4 @@ OSM does not define:
 - detailed SLA objects
 - first-class Service → Service relationships
 
-Consumers of a technological service are outside this model.
-Adopters may join OSM records to other systems; this repository
-does not define those other records.
+Consumers of a technological service are outside this model. Adopters may join OSM records to other systems; this repository does not define those other records.

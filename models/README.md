@@ -4,7 +4,7 @@ OSM is the **canonical technological-service core**.
 
 It does not replace specialized service, catalog or architecture
 models. It gives an enterprise a stable place to own the definition
-of what its technology organization delivers, then map richer
+of its technological services, then map richer
 frameworks onto that core.
 
 ```
