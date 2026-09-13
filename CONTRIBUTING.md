@@ -13,34 +13,23 @@ enterprise ontology.
 Welcome:
 
 - clarifications to the specification or README
-- schema improvements that remain backwards-compatible where possible
+- schema improvements that remain backwards-compatible
 - generic technological-service concepts that many organizations share
 - better synthetic examples
 - optional standards mappings, clearly labelled as reference mappings
-- compatibility or compliance analysis that does not invent mappings
+- compatibility analysis that does not invent mappings
 - validation checks and documentation
 
-Model changes require an accepted record in [`DECISIONS.md`](DECISIONS.md).
-Detailed `OSM-M-*` documents are in [`decisions/`](decisions/).
-Do not add fields because another framework has them until maintainers
-accept an `OSM-M-*` decision (OSM-M-004: compatibility does not mean
-copying). Compatibility scope is `OSM-C-001` in that register. See
-[`COMPATIBILITY.md`](COMPATIBILITY.md).
+The current model is the public product. Do not add a field because
+another framework uses a different name. If OSM already represents
+the concept, reuse that field and document a mapping.
 
-**OSM-M-007** (Complete Service Definition) is **ACCEPTED**. Apply its
-classification system (CORE FIELD, CHARACTERISTIC, SERVICE POSTURE,
-EXTERNAL CONTEXT, FRAMEWORK MAPPING, OUT OF SCOPE) when proposing
-fields. Do not add concepts it excludes.
+Prefer a **characteristic** over a new core field when the property
+is not needed by most adopters.
 
-**OSM-M-008** (One Concept, One Canonical Parameter) is **ACCEPTED**.
-Before proposing any new field, search schemas, examples, `MODEL.md`,
-`SPECIFICATION.md` and existing decisions. If OSM already represents
-the concept, reuse that field and document a mapping. Do not add a
-framework-prefixed copy because DORA, ISO, NIST, GDPR, the EU AI Act,
-ITIL, CSDM or TM Forum uses a different name.
-
-Prefer a **characteristic** (OSM-M-001) over a new core field when
-the property is not needed by most adopters.
+Model changes require maintainer agreement and an accepted
+architectural decision. Do not treat a pull request as authority to
+change the schema.
 
 Not in scope:
 
@@ -53,14 +42,9 @@ Not in scope:
 - organization or geography models
 - vendor-specific product implementations
 - expanding the model into an enterprise-wide ontology
-
-Do not add Service → Service relationships unless maintainers accept
-a later decision; they are outside the current OSM core (OSM-C-004,
-OSM-C-005). Canonical provider association is `providers` → ICT
-Provider (OSM-M-006, OSM-M-010), not a service-to-service link, not a
-separate `cloud_providers` list, and not a DORA-prefixed copy.
-ICT Provider risk/severity is `risk_level` (OSM-M-009), not
-`criticality`.
+- first-class Service → Service relationships
+- a second provider relationship beside `providers`
+- a second provider risk/severity field beside `risk_level`
 
 If a change would require a reader to understand a broader enterprise
 model in order to use this catalog, it does not belong here.
@@ -72,19 +56,17 @@ Keep 7lens OSM:
 1. **Small** — add a field only when many adopters would use it.
 2. **Opinionated** — two tiers (service → offering), immutable IDs.
 3. **Vendor-neutral** — no required coupling to a product or cloud.
-4. **Technology-service focused** — `Service` is the stable definition
+4. **Technology-service focused** — Service is the stable definition
    of a technological service.
 5. **Understandable** — a platform engineer should be able to read
    the spec in one sitting.
 6. **Machine-readable** — YAML that a validator can check.
 7. **Selective** — useful semantics only; do not accumulate standards.
-8. **One concept** — do not add a second canonical field for a
-   concept OSM already represents (OSM-M-008). Map frameworks to the
-   existing field.
+8. **One concept** — one canonical parameter. Map frameworks to it.
 
 ## Identifier rules
 
-Do not invent additional identity schemes. Preserve:
+Preserve:
 
 - Service ID = 2 dot-separated segments
 - Offering ID = 3 dot-separated segments
@@ -100,23 +82,23 @@ Examples must be synthetic. Do not contribute a real organization's
 service catalog, vendor register, contract references, account IDs,
 hostnames, or internal names.
 
-Framework mappings in examples are illustrative. Do not present them
-as legal advice or as proof of compliance.
+Framework mappings in examples are illustrative. They are not legal
+advice and not proof of compliance.
 
 ## How to submit
 
 1. Open an issue describing the proposed change, or a pull request
    with a focused diff.
-2. If the change is a model or compatibility decision, it must already
-   be `ACCEPTED` in [`DECISIONS.md`](DECISIONS.md). Proposed decisions
-   in [`decisions/`](decisions/) are not authority to change schema.
-3. Update `SPECIFICATION.md` when a field or rule changes.
-4. Update examples and `validation/validate.py` when rules change.
-5. Update `COMPATIBILITY.md` and the matching file under
-   `compatibility/` or `compliance/` when analysis status changes.
-6. Run `python3 validation/validate.py`.
+2. Update `SPECIFICATION.md` when a field or rule changes.
+3. Update examples and `validation/validate.py` when rules change.
+4. Update [`models/`](models/) or [`compliance/`](compliance/) when
+   those explanations change.
+5. Run `python3 validation/validate.py`.
 
 ## License
 
 By contributing, you agree that your contribution is licensed under
 the Apache License, Version 2.0.
+
+Maintainers keep the development decision register under
+`_internal/decisions/`. That archive is not public documentation.

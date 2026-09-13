@@ -300,9 +300,9 @@ def validate_catalog(catalog_dir: Path) -> list[str]:
         extra_provider = sorted(REMOVED_PROVIDER_FIELDS.intersection(provider))
         if extra_provider:
             reporter.error(
-                f"provider {provider_id!r} uses removed fields {extra_provider}; "
-                "use risk_level for severity (OSM-M-009) and derive reverse "
-                "links from providers (OSM-M-010)"
+                f"provider {provider_id!r} uses fields outside the ICT Provider "
+                f"specification {extra_provider}; use risk_level for severity "
+                "and derive reverse links from providers"
             )
         if "risk_level" in provider and provider["risk_level"] not in RISK_LEVEL | {None}:
             reporter.error(f"provider {provider_id!r} has invalid risk_level")
@@ -419,8 +419,8 @@ def validate_catalog(catalog_dir: Path) -> list[str]:
         extra_copies = sorted(REMOVED_CANONICAL_COPIES.intersection(record))
         if extra_copies:
             reporter.error(
-                f"{service_id} service_attributes uses removed duplicate fields {extra_copies}; "
-                "use the canonical OSM field (OSM-M-008)"
+                f"{service_id} service_attributes uses fields outside the "
+                f"specification {extra_copies}; use the canonical OSM field"
             )
         score = record.get("tech_debt_score", None)
         if score is not None and not (isinstance(score, int) and 0 <= score <= 100):
@@ -461,8 +461,8 @@ def validate_catalog(catalog_dir: Path) -> list[str]:
             extra_copies = sorted(REMOVED_CANONICAL_COPIES.intersection(row))
             if extra_copies:
                 reporter.error(
-                    f"{offering_id} offering_attributes uses removed duplicate fields {extra_copies}; "
-                    "use the canonical OSM field (OSM-M-008)"
+                    f"{offering_id} offering_attributes uses fields outside the "
+                    f"specification {extra_copies}; use the canonical OSM field"
                 )
 
             extra_ai = AI_ACT_OFFERING_FIELDS.intersection(row)

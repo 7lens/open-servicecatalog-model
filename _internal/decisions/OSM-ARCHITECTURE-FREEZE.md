@@ -3,9 +3,9 @@
 - **Status:** FROZEN
 - **Date:** 2026-09-12
 - **Type:** Documentation / Governance
-- **Register:** [`DECISIONS.md`](../DECISIONS.md)
-- **Normative field model:** [`SPECIFICATION.md`](../SPECIFICATION.md)
-- **Conceptual model:** [`MODEL.md`](../MODEL.md)
+- **Register:** [`DECISIONS.md`](DECISIONS.md)
+- **Normative field model:** [`SPECIFICATION.md`](../../SPECIFICATION.md)
+- **Conceptual model:** [`MODEL.md`](../../MODEL.md)
 
 This is the authoritative Architecture Freeze Record for **7lens OSM**
 (7lens Open Service Catalog Model). It records the architecture as
@@ -262,7 +262,7 @@ OSM-M-005 is superseded and is listed only for the record.
 | OSM-M-010 | Canonical providers relationship | ACCEPTED | `providers` is the sole canonical provider relationship. `services_consumed` is removed. `dora_third_party_deps` is removed. DORA uses canonical OSM concepts (`providers`, `rto`, `rpo`, `operational_criticality`, `resilience_tested`) rather than duplicate DORA-specific parameters. |
 
 Compatibility decisions OSM-C-001 through OSM-C-005 remain ACCEPTED
-as recorded in [`DECISIONS.md`](../DECISIONS.md). They define the
+as recorded in [`DECISIONS.md`](DECISIONS.md). They define the
 compatibility universe and selective ITIL / CSDM status; they do not
 add OSM entities.
 
@@ -292,8 +292,8 @@ Validation rejects these names if they reappear.
 ## Frozen out of scope
 
 The model stops at technological services. It does not describe the
-rest of an enterprise. From [`SPECIFICATION.md`](../SPECIFICATION.md)
-and [`MODEL.md`](../MODEL.md), OSM does not define:
+rest of an enterprise. From [`SPECIFICATION.md`](../../SPECIFICATION.md)
+and [`MODEL.md`](../../MODEL.md), OSM does not define:
 
 - business capabilities or business services
 - digital products
@@ -329,7 +329,7 @@ with, and mappable to, external frameworks. It is not an
 implementation of those frameworks. Frameworks must not become
 additional canonical OSM schemas (OSM-M-004, OSM-M-008).
 
-Status is taken from [`COMPATIBILITY.md`](../COMPATIBILITY.md). This
+Status is taken from [`COMPATIBILITY.md`](../notes/COMPATIBILITY.md). This
 freeze does not perform new analysis. No entry is marked fully
 COMPATIBLE.
 

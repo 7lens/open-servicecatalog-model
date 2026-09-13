@@ -12,7 +12,7 @@ ServiceNow CSDM are **PARTIALLY COMPATIBLE** (selective compatibility).
 No entry is marked fully **COMPATIBLE**. OSM does not implement ITIL,
 TMF or CSDM.
 
-Related decisions: [`DECISIONS.md`](DECISIONS.md) — **OSM-C-001**
+Related decisions: [`DECISIONS.md`](../decisions/DECISIONS.md) — **OSM-C-001**
 (as amended by **OSM-C-002**, **OSM-C-003**); TM Forum follow-up
 **OSM-M-001**–**OSM-M-004**; ITIL v5 **OSM-C-004**; CSDM **OSM-C-005**
 and provider references **OSM-M-006**; Complete Service Definition
@@ -223,8 +223,8 @@ the analysis.
 
 ## How later decisions will be applied
 
-Maintainers record accepted changes in [`DECISIONS.md`](DECISIONS.md).
-Detailed `OSM-M-*` documents are in [`decisions/`](decisions/).
+Maintainers record accepted changes in [`DECISIONS.md`](../decisions/DECISIONS.md).
+Detailed `OSM-M-*` documents are in [`../decisions/`](../decisions/).
 A future propagation pass must update every listed surface and must
 **not** invent model changes. See *Decision propagation* in the
 register. **OSM-M-007** is ACCEPTED; it does not add framework

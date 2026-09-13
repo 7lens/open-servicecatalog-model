@@ -1,113 +1,53 @@
 # DORA
 
-- **Status:** NOT ANALYZED
-- **Universe:** OSM-C-001 (compliance / governance)
-- **OSM schema fields today:** canonical OSM posture and provider
-  fields that a DORA conversation can use. DORA-specific remaining
-  fields are not copies of those canonical facts.
+OSM is **not** a DORA register of information, an ICT risk-management
+framework, or a claim of compliance with Regulation (EU) 2022/2554.
 
-DORA-oriented information in OSM is a **mapping onto canonical OSM
-concepts** where the concept already exists (OSM-M-008). Named DORA
-fields that remain are not copies of `rto`, `rpo`, service
-criticality or provider association. They are **not** a DORA register
-of information, not an ICT risk-management framework, and not a claim
-that OSM or any adopter complies with Regulation (EU) 2022/2554.
+The Digital Operational Resilience Act sets operational-resilience
+obligations for certain financial entities and their ICT providers.
+OSM is usable outside the financial sector; DORA does not apply to
+every adopter.
 
-## 1. Framework overview
-
-The Digital Operational Resilience Act (DORA) sets operational
-resilience obligations for certain financial entities and their ICT
-providers, including ICT risk management, incident management,
-resilience testing and third-party risk.
-
-## 2. Relevant scope for technological services
-
-Later analysis should ask which catalog and provider facts are
-useful for DORA-oriented operations (criticality, RTO/RPO, third
-parties) while remaining honest that OSM is not a regulatory filing
-format.
-
-Canonical OSM recovery objectives (`rto`, `rpo`) are not redefined
-to accommodate DORA. DORA maps to those fields.
+Where DORA talks about recovery, criticality, testing or third
+parties, it maps onto **canonical OSM fields**. OSM does not
+redefine those fields for DORA, and it does not duplicate them
+under DORA-prefixed names.
 
 ```text
-OSM canonical concept
-        │
-        ├── rto
-        └── rpo
-              │
-              ▼
-        DORA mapping
+rto, rpo                     →  recovery objectives
+operational_criticality      →  service criticality
+resilience_tested            →  resilience-test posture
+providers                    →  ICT third-party association
 ```
 
-The same pattern applies to operational criticality, resilience
-testing and provider association:
-
-```text
-operational_criticality  →  DORA mapping
-resilience_tested        →  DORA mapping
-providers                →  DORA ICT third-party association
-```
-
-## 3. OSM concepts/attributes relevant to the framework
-
-Present in the current schema (not yet analyzed as a mapping):
+## What maps
 
 | OSM field | Where | Role |
 |-----------|--------|------|
-| `mappings.dora.pillar` | Technology Stack | Stack-level DORA label (mapping object) |
-| `mappings.dora.criticality` | Technology Stack | Stack-level DORA label; **not** a copy of service criticality and **not** ICT Provider risk |
-| `operational_criticality` | Service posture | Canonical service criticality; DORA maps here |
-| `rto`, `rpo` | Offering posture | Canonical recovery objectives; DORA maps here |
-| `resilience_tested`, `last_resilience_test`, `resilience_evidence` | Offering posture | Canonical resilience-test posture; DORA maps here |
-| `providers` | Service and Service Offering | Canonical ICT Provider association; DORA maps here (OSM-M-010) |
-| `risk_level` | ICT Provider | Canonical provider risk/severity (OSM-M-009); not service criticality |
-| ICT Provider contract / risk / resilience fields | ICT Provider | Provider master data |
-| `dora_notification_clause` | ICT Provider | DORA-specific contract flag; not a copy of another OSM fact |
+| `rto` | Offering posture | Recovery Time Objective |
+| `rpo` | Offering posture | Recovery Point Objective |
+| `resilience_tested`, `last_resilience_test`, `resilience_evidence` | Offering posture | Resilience-test posture |
+| `operational_criticality` | Service posture | Canonical service criticality |
+| `providers` | Service / Offering | Canonical ICT Provider association |
+| `risk_level` | ICT Provider | Canonical provider risk/severity — not service criticality |
+| `mappings.dora.pillar` | Technology Stack | Stack-level DORA pillar label |
+| `mappings.dora.criticality` | Technology Stack | Stack-level DORA label — **not** a copy of service criticality, **not** ICT Provider `risk_level` |
+| `dora_notification_clause` | ICT Provider | Contract flag specific to DORA notification |
+| ICT Provider contract / risk / exit fields | ICT Provider | Provider master data |
 
-There are no OSM fields named `dora_rto`, `dora_rpo`,
-`dora_criticality`, `dora_resilience_tested` or
-`dora_third_party_deps`. There is no ICT Provider `criticality`
-field and no `services_consumed` reverse list.
+`mappings.dora.criticality` and `operational_criticality` are
+different grains: stack label versus service criticality.
 
-## 4. Mapping opportunities
+Reverse Provider → Service links are derived from `providers`.
 
-NOT YET ANALYZED.
+## What stays in DORA / supervisory reporting
 
-The compatibility layer should continue to point DORA readers at
-canonical `rto` / `rpo` / `operational_criticality` /
-`resilience_tested` / `providers` rather than introducing parallel
-fields.
+- RTS register-of-information layouts
+- entity identifiers and filing formats
+- a complete ICT risk-management framework
 
-## 5. Missing information
+A field name that includes `dora_` does not make a catalog DORA
+compliant. Canonical `rto` and `rpo` keep their OSM meaning.
 
-NOT YET ANALYZED.
-
-DORA RTS register-of-information fields, entity identifiers, and
-supervisory reporting layouts are not in OSM.
-
-Canonical Service/Offering `providers` (**OSM-M-006**, **OSM-M-010**)
-is who delivers or underpins the technological Service/Offering.
-DORA uses that relationship. Reverse Provider → Service links are
-derived from `providers`.
-
-## 6. Potential extensions
-
-None proposed. No attributes are added in this baseline. Do not add
-DORA-prefixed copies of canonical OSM fields (OSM-M-008). Do not add
-another provider relationship.
-
-## 7. Important caveats
-
-- Field names that include `dora_` do not make a catalog DORA
-  compliant.
-- OSM is usable outside the financial sector; DORA does not apply
-  to every adopter.
-- This file is not legal advice, not an RTS mapping, and not a
-  claim of compliance.
-- Canonical `rto` and `rpo` keep their OSM meaning. DORA does not
-  redefine them.
-
-## 8. Status
-
-**NOT ANALYZED**
+Exact field definitions are in
+[`SPECIFICATION.md`](../SPECIFICATION.md).

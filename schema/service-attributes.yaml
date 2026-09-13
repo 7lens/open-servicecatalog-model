@@ -1,16 +1,16 @@
 # JSON Schema — Service Posture (file: service-attributes.yaml)
 #
 # Current operational / governance state of a technological service
-# (OSM-M-007 Service Posture). Catalog files wrap instances in a
-# top-level `service_attributes` array. The file and key names are
-# kept for compatibility; they are not a second catalog entity.
+# (Service Posture). Catalog files wrap instances in a top-level
+# `service_attributes` array. The file and key names are kept for
+# file compatibility; they are not a second catalog entity.
 #
 # Canonical OSM posture fields are unprefixed. Framework-named fields
 # are optional reference mappings, not certification or compliance.
-# Do not duplicate a canonical field under a framework prefix
-# (OSM-M-008). DORA maps to rto, rpo, operational_criticality,
-# resilience_tested and catalog `providers`. Provider association is
-# `providers` on the catalog record, not a posture field.
+# Do not duplicate a canonical field under a framework prefix.
+# DORA maps to rto, rpo, operational_criticality, resilience_tested
+# and catalog `providers`. Provider association is `providers` on
+# the catalog record, not a posture field.
 
 $schema: https://json-schema.org/draft/2020-12/schema
 $id: https://raw.githubusercontent.com/7lens/open-servicecatalog-model/main/schema/service-attributes.yaml
@@ -50,7 +50,7 @@ properties:
       - extended
       - end-of-life
   operational_criticality:
-    description: Canonical operational criticality of the service (OSM-M-007). DORA maps to this field.
+    description: Canonical operational criticality of the service. DORA maps to this field.
     type: string
     enum:
       - critical
@@ -110,7 +110,7 @@ properties:
     type: string
     minLength: 1
   provenance:
-    description: Optional reusable provenance for this posture record (OSM-M-007).
+    description: Optional reusable provenance for this posture record.
     $ref: ./provenance.yaml
   ai_act_applicable:
     type: boolean
@@ -293,7 +293,7 @@ $defs:
           - type: string
           - type: "null"
       provenance:
-        description: Optional reusable provenance for this offering posture row (OSM-M-007).
+        description: Optional reusable provenance for this offering posture row.
         $ref: ./provenance.yaml
       ai_act_intended_purpose:
         type: string

@@ -7,7 +7,7 @@
 
 > **Repository record.** This file is the canonical architectural
 > document for OSM-M-007. Schema, examples and validation implement
-> it. See the register: [`DECISIONS.md`](../DECISIONS.md).
+> it. See the register: [`DECISIONS.md`](DECISIONS.md).
 >
 > OSM-M-008 (One Concept, One Canonical Parameter) applies to this
 > implementation. Framework-specific information is expressed through

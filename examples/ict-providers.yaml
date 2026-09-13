@@ -5,10 +5,8 @@
 # regulatory filing. Contract, risk and resilience fields are left
 # unset on purpose.
 #
-# risk_level is the canonical ICT Provider risk/severity field
-# (OSM-M-009). There is no provider criticality field.
-# Provider-to-Service links are derived from catalog `providers`
-# (OSM-M-010). There is no services_consumed reverse list.
+# risk_level is the canonical ICT Provider risk/severity field.
+# Provider-to-Service links are derived from catalog `providers`.
 
 ict_providers:
 

@@ -3,11 +3,11 @@
 This document defines the two ownership roles used by the
 `accountable` field in 7lens OSM. `accountable` is overall
 service-definition accountability. It is not posture
-`financial_owner` (financial ownership of the service).
+`financial_owner`.
 
-The roles are deliberately small. They describe accountability for
-**technological services**, not a complete operating model, RACI
-matrix, or organizational hierarchy.
+The roles describe accountability for **technological services**,
+not a complete operating model, RACI matrix or organizational
+hierarchy.
 
 ## Technology Stack Owner
 
@@ -75,11 +75,3 @@ products, or application portfolios.
 - a GRC methodology
 
 Those concerns belong in other systems.
-
-## Architecture freeze
-
-The current OSM architecture is frozen. The authoritative record is
-[`decisions/OSM-ARCHITECTURE-FREEZE.md`](decisions/OSM-ARCHITECTURE-FREEZE.md).
-Future architectural changes require a new explicit decision record
-before implementation. This file continues to define only the two
-ownership roles.
