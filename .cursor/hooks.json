@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "hooks": {
+    "preToolUse": [
+      {
+        "command": "python3 .cursor/hooks/enforce-podwarack-git.py",
+        "matcher": "Shell",
+        "failClosed": true
+      }
+    ],
+    "beforeShellExecution": [
+      {
+        "command": "python3 .cursor/hooks/enforce-podwarack-git.py",
+        "failClosed": true
+      }
+    ]
+  }
+}

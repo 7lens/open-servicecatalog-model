@@ -1,0 +1,48 @@
+---
+description: Only Podwarack may author commits; never add Cursor co-author trailers
+alwaysApply: true
+---
+
+# Commit identity (mandatory)
+
+This repository is public. Commit identity is a security boundary.
+
+## Required identity
+
+Every `git commit` in this repo MUST use:
+
+- Name: `Podwarack`
+- Email: `328382584+podwarack@users.noreply.github.com`
+
+Do this by exporting those values as `GIT_AUTHOR_*` and `GIT_COMMITTER_*`
+and by passing:
+
+`git -c user.name=Podwarack -c user.email=328382584+podwarack@users.noreply.github.com`
+
+Do not use the machine's default `user.name` / `user.email`.
+Do not use a personal legal name, a local hostname email, or `cursoragent`.
+
+## Forbidden trailers
+
+NEVER add, keep, or restore:
+
+- `Co-authored-by: Cursor`
+- `Co-authored-by: cursoragent`
+- `--trailer` / `--footer` values that mention Cursor
+- "Made with Cursor" in commit messages or PR bodies
+
+If Cursor injects a trailer, strip it before the commit is pushed.
+
+## After every commit
+
+Verify before push:
+
+```bash
+git log -1 --format='%an <%ae>%n%cn <%ce>%n%B'
+```
+
+Author and committer must both be Podwarack. The body must not contain
+`Co-authored-by` or `Cursor`.
+
+If either check fails, amend immediately with the Podwarack identity
+and a cleaned message, then verify again.

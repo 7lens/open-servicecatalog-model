@@ -73,7 +73,7 @@ Preserve:
 - offering prefix = parent service ID
 - IDs immutable after assignment
 - definition `version` does not change `id`
-- `lifecycle_state` belongs on Service, not on service attributes
+- `lifecycle_state` belongs on Service, not on service posture
 - characteristics have a `name`, not an OSM identifier
 
 ## Examples
@@ -94,6 +94,9 @@ advice and not proof of compliance.
 4. Update [`models/`](models/) or [`compliance/`](compliance/) when
    those explanations change.
 5. Run `python3 validation/validate.py`.
+
+Maintainer commits are authored as GitHub user **Podwarack**.
+Do not add `Co-authored-by: Cursor` or other AI attribution trailers.
 
 ## License
 
