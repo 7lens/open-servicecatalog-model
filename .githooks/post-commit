@@ -1,0 +1,60 @@
+#!/bin/sh
+# Rewrite HEAD if it is not Podwarack or if a Cursor trailer slipped through.
+set -e
+
+NAME='Podwarack'
+EMAIL='328382584+podwarack@users.noreply.github.com'
+
+git_dir=$(git rev-parse --git-dir)
+lock="$git_dir/podwarack-rewrite.lock"
+
+if [ -f "$lock" ]; then
+  exit 0
+fi
+if [ -d "$git_dir/rebase-merge" ] || [ -d "$git_dir/rebase-apply" ]; then
+  exit 0
+fi
+if [ -f "$git_dir/MERGE_HEAD" ] || [ -f "$git_dir/CHERRY_PICK_HEAD" ]; then
+  exit 0
+fi
+
+author_name=$(git log -1 --format='%an')
+author_email=$(git log -1 --format='%ae')
+committer_name=$(git log -1 --format='%cn')
+committer_email=$(git log -1 --format='%ce')
+message=$(git log -1 --format='%B')
+author_date=$(git log -1 --format='%aD')
+committer_date=$(git log -1 --format='%cD')
+
+needs_rewrite=0
+if [ "$author_name" != "$NAME" ] || [ "$author_email" != "$EMAIL" ]; then
+  needs_rewrite=1
+fi
+if [ "$committer_name" != "$NAME" ] || [ "$committer_email" != "$EMAIL" ]; then
+  needs_rewrite=1
+fi
+if printf '%s\n' "$message" | grep -Eq 'Co-authored-by:[[:space:]]*(Cursor|cursoragent)|Made with Cursor'; then
+  needs_rewrite=1
+fi
+
+if [ "$needs_rewrite" -eq 0 ]; then
+  exit 0
+fi
+
+cleaned=$(printf '%s\n' "$message" \
+  | grep -v -E '^[[:space:]]*Co-authored-by:[[:space:]]*(Cursor|cursoragent)' \
+  | grep -v -E '^[[:space:]]*Made-with:[[:space:]]*Cursor' \
+  | grep -v -E '^[[:space:]]*Made with Cursor' || true)
+
+touch "$lock"
+trap 'rm -f "$lock"' EXIT
+
+export GIT_AUTHOR_NAME="$NAME"
+export GIT_AUTHOR_EMAIL="$EMAIL"
+export GIT_AUTHOR_DATE="$author_date"
+export GIT_COMMITTER_NAME="$NAME"
+export GIT_COMMITTER_EMAIL="$EMAIL"
+export GIT_COMMITTER_DATE="$committer_date"
+
+printf '%s\n' "$cleaned" | git -c user.name="$NAME" -c user.email="$EMAIL" \
+  commit --amend --no-verify -F -

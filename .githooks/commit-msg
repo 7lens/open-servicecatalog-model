@@ -1,0 +1,13 @@
+#!/bin/sh
+# Strip Cursor / agent attribution trailers from commit messages.
+set -e
+msg_file="$1"
+tmp=$(mktemp)
+grep -v -E '^[[:space:]]*Co-authored-by:[[:space:]]*(Cursor|cursoragent)' "$msg_file" \
+  | grep -v -E '^[[:space:]]*Made-with:[[:space:]]*Cursor' \
+  | grep -v -E '^[[:space:]]*Made with Cursor' \
+  > "$tmp" || true
+# grep -v exits 1 when every line was removed; keep going.
+# Drop trailing blank lines left after trailer removal.
+awk '{ lines[NR] = $0 } END { end = NR; while (end > 0 && lines[end] ~ /^[[:space:]]*$/) end--; for (i = 1; i <= end; i++) print lines[i] }' "$tmp" > "$msg_file"
+rm -f "$tmp"
