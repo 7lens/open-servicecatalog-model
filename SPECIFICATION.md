@@ -1,29 +1,26 @@
-# 7lens OSM — Specification
+# Specification
 
 Version: 1.3.0
 
 This is the normative specification of **7lens OSM** (7lens Open
 Service Catalog Model): a small, opinionated way to describe *what* a
 technology organization delivers as technological services, who runs
-them, how healthy they are, and which third parties they depend on.
+them, how they currently stand, and which third parties they depend on.
 
 The specification is vendor-neutral and framework-neutral. Nothing
-here requires a particular product, cloud, or methodology.
+here requires a particular product, cloud or methodology.
 
 **Service** always means a **technological service**. An OSM Service
-is the **stable definition** of that service (OSM-M-003), not merely
-a catalog listing, an availability record, or a running instance.
+is the **stable definition** of that service, not merely a catalog
+listing, an availability record, or a running instance.
 
-7lens OSM incorporates useful semantics from existing models where
-they materially improve interoperability, governance or
-machine-readability, and deliberately avoids wholesale reproduction
-of those models (OSM-M-004). OSM is a canonical technological-service
-core for semantic mapping and integration, not an alternative
-implementation of ITIL, CSDM or other enterprise frameworks
-(OSM-C-004, OSM-C-005).
+OSM is a canonical technological-service core. It is not an
+alternative implementation of ITIL, TM Forum, CSDM or other
+enterprise frameworks. Useful semantics from those models appear
+here only where they improve interoperability; they are not copied
+wholesale.
 
-OSM-M-007 defines a **Complete Service Definition**. The implemented
-model separates:
+The implemented model separates:
 
 ```text
 SERVICE DEFINITION     what the service is (catalog)
@@ -32,11 +29,8 @@ PROVENANCE             why the information can be trusted
 EXTERNAL CONTEXT       owned by other systems — not modelled here
 ```
 
-Architectural reasoning is in
-[`decisions/OSM-M-007-complete-service-definition.md`](decisions/OSM-M-007-complete-service-definition.md).
-This specification is the implemented field model. The architecture
-is frozen; see
-[`decisions/OSM-ARCHITECTURE-FREEZE.md`](decisions/OSM-ARCHITECTURE-FREEZE.md).
+This specification is the implemented field model. Conceptual
+explanation is in [`MODEL.md`](MODEL.md).
 
 ---
 
@@ -64,8 +58,7 @@ not model:
 - stakeholder lenses
 - enterprise decision intelligence
 - detailed service-level / SLA objects
-- first-class Service → Service relationships (outside the current
-  OSM core; not a permanent rejection — OSM-C-004)
+- first-class Service → Service relationships
 
 Consumers of a technological service are outside the scope of this
 model.
@@ -76,9 +69,8 @@ model.
    definition** (`id`, version, validity, `lifecycle_state`,
    offerings, characteristics, optional `providers`, optional
    `provenance`). Identity (`id`) is immutable. The definition may
-   evolve (OSM-M-002). Current operational/governance **posture**
-   lives in `service_attributes` (OSM-M-007) and changes on a
-   different cadence.
+   evolve. Current operational/governance **posture** lives in
+   `service_attributes` and changes on a different cadence.
 2. **Two tiers, no deeper.** A service has service offerings. That is
    the only nesting. Offerings are the atomic requestable unit. OSM
    does not add a ServiceSpecification entity or extra catalog
@@ -87,22 +79,21 @@ model.
    ownership moves or the definition is versioned.
 4. **Every service has exactly one operational owner** (a technology
    stack).
-5. **Generic characteristics where a dedicated field is not justified**
-   (OSM-M-001, OSM-M-007). Delivery, service-experience, capacity,
-   commercial and technology variant dimensions belong on
-   characteristics unless they are classified as posture. Do not grow
-   the core schema for every possible property. `service_type` is not
-   a core field; Technology Stack remains the classification axis.
-6. **Selective compatibility** (OSM-M-004). Optional mappings to TBM,
-   TOGAF, ISO, NIST, GDPR, DORA and the EU AI Act let different
-   readers translate the catalog. 7lens OSM is not an implementation
-   of those frameworks. Compatibility does not mean copying. The
-   compatibility universe and analysis status live in
-   [`COMPATIBILITY.md`](COMPATIBILITY.md).
-7. **One concept, one canonical parameter** (OSM-M-008). OSM MUST NOT
-   represent the same semantic concept through multiple canonical
-   parameters. Before introducing any new field, parameter,
-   characteristic, or mapping field:
+5. **Generic characteristics where a dedicated field is not justified.**
+   Delivery, service-experience, capacity, commercial and technology
+   variant dimensions belong on characteristics unless they are
+   classified as posture. Do not grow the core schema for every
+   possible property. `service_type` is not a core field; Technology
+   Stack remains the classification axis.
+6. **Selective compatibility.** Optional mappings to TBM, TOGAF, ISO,
+   NIST, GDPR, DORA and the EU AI Act let different readers translate
+   the catalog. OSM is not an implementation of those frameworks.
+   Compatibility does not mean copying. See [`models/`](models/)
+   and [`compliance/`](compliance/).
+7. **One concept, one canonical parameter.** OSM does not represent
+   the same semantic concept through multiple canonical parameters.
+   Before introducing any new field, parameter, characteristic, or
+   mapping field:
 
    1. Search the entire model for an existing representation of the
       concept.
@@ -110,18 +101,14 @@ model.
    3. Check examples.
    4. Check `MODEL.md`.
    5. Check `SPECIFICATION.md`.
-   6. Check existing decisions.
-   7. Determine whether the apparent difference is actually semantic
+   6. Determine whether the apparent difference is actually semantic
       or merely terminology / framework-specific.
-   8. Only add a new field if there is a genuine semantic distinction.
+   7. Only add a new field if there is a genuine semantic distinction.
 
    If an existing OSM field already represents the concept, reuse it
    and express framework-specific semantics through mappings. The
    existence of a field in another standard is not sufficient
-   justification for adding it to OSM. Duplication is justified only
-   for genuinely different concepts or different grains — not
-   different names. The default when two fields appear equivalent is
-   **consolidation, not duplication**. Genuinely different concepts
+   justification for adding it to OSM. Genuinely different concepts
    may coexist even when they use similar names, the same enum
    values, or appear related.
 
@@ -132,9 +119,13 @@ model.
 | File | Concept | Nature | Typical owner |
 |------|---------|--------|---------------|
 | `examples/technology-stacks.yaml` | Operational competency domains | Stable | Platform leadership |
-| `examples/services.yaml` | The catalog (services → offerings) | Stable | Stack + Service Owners |
+| `examples/services.yaml` | The catalog (services, with nested offerings) | Stable | Stack + Service Owners |
 | `examples/service-attributes.yaml` | Service / offering **posture** | Dynamic | Multiple teams |
 | `examples/ict-providers.yaml` | Third-party provider register | Semi-dynamic | Vendor management / risk |
+
+The schema defines Service Offering as its own concept. In catalog
+data, offerings are nested under their parent Service. See
+[`examples/README.md`](examples/README.md).
 
 ```
 technology-stacks.yaml
@@ -170,10 +161,10 @@ may later be reassigned to a different `technology_stack` without
 changing its ID. Therefore the prefix does not always equal the
 current stack.
 
-**Immutable identity ≠ immutable definition** (OSM-M-002). Changing
-`version` or the definition body does not change `id`. Do not invent
-additional identity schemes (no `id`+`version` composite key; one
-catalog record per service `id`).
+**Immutable identity ≠ immutable definition.** Changing `version` or
+the definition body does not change `id`. Do not invent additional
+identity schemes (no `id`+`version` composite key; one catalog
+record per service `id`).
 
 ---
 
@@ -219,20 +210,17 @@ claim of compliance, certification, or legal interpretation.
 
 Stack `mappings.dora.criticality` is a **stack-level** DORA label.
 Service criticality is canonical `operational_criticality`. Those are
-different grains (OSM-M-008). Do not add a service-level
-`dora_criticality` copy.
+different grains.
 
 ---
 
 ## 5. Service
 
-A **Service** is the stable **definition** of a technological service
-(OSM-M-003). Conceptually this is the role TMF ServiceSpecification
-plays in a service catalog. OSM does **not** introduce a separate
+A **Service** is the stable **definition** of a technological service.
+Conceptually this is the role a service specification plays in a
+service catalog. OSM does **not** introduce a separate
 ServiceSpecification entity. A Service is not merely a catalog entry
 or an availability record, and it is not a running instance.
-
-Keep this boundary explicit (OSM-C-005):
 
 | Concept | Where |
 |---------|--------|
@@ -254,8 +242,8 @@ Keep this boundary explicit (OSM-C-005):
 | `valid_to` | no | Inclusive ISO 8601 date this definition ends, or `null` if still in force. |
 | `lifecycle_state` | yes | `draft` \| `pilot` \| `production` \| `sunset` \| `retired`. Authoritative definition lifecycle. |
 | `characteristics` | no | Generic characteristics (see §5.1). |
-| `providers` | no | ICT Provider ids when the provider is intrinsic to this Service (OSM-M-006). |
-| `provenance` | no | Reusable provenance for this definition (OSM-M-007). |
+| `providers` | no | ICT Provider ids when the provider is intrinsic to this Service. |
+| `provenance` | no | Reusable provenance for this definition. |
 | `service_offerings` | yes | List of offerings. |
 
 This catalog record is the **current** definition for that `id`.
@@ -273,8 +261,8 @@ validity, or lifecycle fields.
 | `name` | yes | What a consumer can request. |
 | `description` | no | Optional clarification of the variant. |
 | `characteristics` | no | Generic characteristics (see §5.1). |
-| `providers` | no | ICT Provider ids when provider choice distinguishes this offering (OSM-M-006). |
-| `provenance` | no | Reusable provenance for this offering (OSM-M-007). |
+| `providers` | no | ICT Provider ids when provider choice distinguishes this offering. |
+| `provenance` | no | Reusable provenance for this offering. |
 
 An **offering** is the atomic requestable/deliverable variant of a
 Service. It may differ in delivery characteristics such as
@@ -288,7 +276,7 @@ one offering per cloud or operating model. Offerings are part of the
 parent Service definition; they do not have a separate version or
 validity window.
 
-### 5.1 Characteristics (OSM-M-001)
+### 5.1 Characteristics
 
 A **characteristic** is a nested property on a Service or a Service
 Offering. It is not a catalog entity, has no OSM identifier, and is
@@ -318,15 +306,15 @@ Rules:
 3. If `max_cardinality` is set, it must be ≥ `min_cardinality`
    (treat omitted `min_cardinality` as 0).
 4. Do not add a characteristic to the core schema when this mechanism
-   is enough (OSM-M-004). Offering dimensions such as environment,
-   location, service hours, support hours, pricing model and unit of
-   consumption are characteristics, not dedicated schema fields
-   (OSM-M-007). `service_hours` is the time window the service is
-   intended to be available; `support_hours` is the time window
-   support is available. They are not `availability_target`,
-   `response_target` or `resolution_target`.
+   is enough. Offering dimensions such as environment, location,
+   service hours, support hours, pricing model and unit of
+   consumption are characteristics, not dedicated schema fields.
+   `service_hours` is the time window the service is intended to be
+   available; `support_hours` is the time window support is
+   available. They are not `availability_target`, `response_target`
+   or `resolution_target`.
 
-### 5.2 Provenance (OSM-M-007)
+### 5.2 Provenance
 
 A reusable **provenance** object may be attached to a Service, a
 Service Offering, a service posture record, or an offering posture
@@ -351,9 +339,9 @@ trust question. Do not collapse them.
 ## 6. Service posture
 
 Organized **by service** in `service_attributes`. The YAML key and
-filename are kept for compatibility. Semantically this is **Service
-Posture** (how the service currently stands) plus nested **Offering
-Posture**.
+filename are kept for file compatibility. Semantically this is
+**Service Posture** (how the service currently stands) plus nested
+**Offering Posture**.
 
 Service-level fields are not duplicated per offering — an offering
 inherits them from its parent. An empty `offering_attributes: []` is
@@ -362,10 +350,9 @@ a valid incremental state.
 Canonical OSM posture fields are unprefixed. Framework-named fields
 remain optional **mappings of concepts OSM does not already
 represent**. Do not add a framework-prefixed copy of a canonical
-field (OSM-M-008). DORA recovery and criticality information maps to
-canonical `rto`, `rpo`, `operational_criticality` and
-`resilience_tested`. DORA provider associations map to canonical
-`providers` (OSM-M-010).
+field. DORA recovery and criticality information maps to canonical
+`rto`, `rpo`, `operational_criticality` and `resilience_tested`.
+DORA provider associations map to canonical `providers`.
 
 OSM records lightweight **service-level expectations**
 (`availability_target`, `response_target`, `resolution_target`) on
@@ -396,7 +383,6 @@ penalties, credits, workflows or measurement history.
 | `ai_act_risk_class` | `unacceptable` \| `high-risk` \| `limited-risk` \| `minimal-risk` \| `not-applicable` |
 
 `operational_criticality` is the canonical criticality semantic.
-DORA maps to this field; there is no `dora_criticality` copy.
 `ai_act_*` fields are named for the framework they optionally map
 to. Using them does not constitute an AI Act assessment.
 
@@ -420,8 +406,8 @@ those values. `accountable` (Service definition) is not
 | `unit_cost` | number ≥ 0, or `null` |
 
 Cloud / vendor association is not a finance enum. Use canonical
-`providers` on the Service or Offering (OSM-M-006). A cloud provider
-is an ICT Provider.
+`providers` on the Service or Offering. A cloud provider is an ICT
+Provider.
 
 **Operations**
 
@@ -481,13 +467,11 @@ They coexist; the tier is not a substitute for RTO/RPO.
 | `gdpr_dpia_required` | `true` \| `false` |
 | `gdpr_erasure_capable` | `true` \| `false` \| `partial` \| `not-applicable` |
 
-**DORA mapping (not a copy of canonical resilience or providers)**
+**DORA**
 
 DORA recovery and testing semantics map to canonical `rto`, `rpo`
 and `resilience_tested` above. DORA provider associations map to
-canonical `providers` on Service or Offering (OSM-M-010). Do not
-duplicate those fields under DORA-prefixed names. There is no
-`dora_third_party_deps` field.
+canonical `providers` on Service or Offering.
 
 An offering posture row may also carry `provenance`.
 
@@ -509,8 +493,8 @@ Illustrative values in examples are **not legal advice** and are
 ## 7. ICT providers
 
 A register of third-party technology providers. This entity is the
-**canonical** provider definition (OSM-M-006). Service and Service
-Offering associate with a provider by listing its `id` in `providers`.
+**canonical** provider definition. Service and Service Offering
+associate with a provider by listing its `id` in `providers`.
 Do not copy headquarters, locations, certifications, contracts, risk,
 substitutability or other provider attributes onto Service or Offering.
 
@@ -520,17 +504,14 @@ Service / Offering
 ICT Provider
 ```
 
-`providers` is the **single canonical** who-provides association
-(OSM-M-006, OSM-M-010). It means the ICT provider delivering or
-underpinning that Service or Offering. It is not a generic Service →
-Service relationship. DORA uses this field. There is no
-`dora_third_party_deps` listing and no `services_consumed` reverse
-list; reverse Provider → Service links are derived from `providers`.
+`providers` is the **single canonical** who-provides association.
+It means the ICT provider delivering or underpinning that Service or
+Offering. It is not a generic Service → Service relationship.
+Reverse Provider → Service links are derived from `providers`.
 
-`risk_level` is the canonical ICT Provider risk/severity assessment
-(OSM-M-009). There is no provider `criticality` field. Service
-`operational_criticality` and stack `mappings.dora.criticality` are
-different grains.
+`risk_level` is the canonical ICT Provider risk/severity assessment.
+Service `operational_criticality` and stack
+`mappings.dora.criticality` are different grains.
 
 Fields support vendor-risk conversations; they do not by themselves
 satisfy any regulatory filing.
@@ -603,14 +584,9 @@ An implementation should enforce:
 13. Service and Offering records must not declare Service-to-Service
     relationship fields (`depends_on`, `consumes`, `provides_to`,
     `related_service`, `related_services`).
-14. Posture records must not declare removed duplicate fields
-    (`dora_rto`, `dora_rpo`, `dora_criticality`,
-    `dora_resilience_tested`, `cloud_providers`,
-    `dora_third_party_deps`, `services_consumed`). Use the canonical
-    OSM field instead (OSM-M-008, OSM-M-010).
-15. ICT Provider records must not declare `criticality` or
-    `services_consumed`. Provider risk/severity is `risk_level`
-    (OSM-M-009). Reverse Provider → Service links are derived from
-    `providers` (OSM-M-010).
+14. Records must not declare properties outside this specification.
+    Schemas set `additionalProperties: false`.
+15. ICT Provider risk/severity is `risk_level`. Reverse Provider →
+    Service links are derived from `providers`.
 
 See [`validation/`](validation/) for a lightweight checker.

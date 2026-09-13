@@ -1,7 +1,7 @@
 # JSON Schema — Service
 #
-# A Service is the stable definition of a technological capability
-# (OSM-M-003). Service ID has exactly 2 segments and is immutable.
+# A Service is the stable definition of a technological capability.
+# Service ID has exactly 2 segments and is immutable.
 # Catalog files wrap instances in a top-level `services` array.
 
 $schema: https://json-schema.org/draft/2020-12/schema
@@ -66,22 +66,22 @@ properties:
       - retired
   characteristics:
     type: array
-    description: Optional generic characteristics (OSM-M-001).
+    description: Optional generic characteristics.
     items:
       $ref: ./characteristic.yaml
   providers:
     type: array
     description: >
       Optional ICT Provider ids when the provider is intrinsic to this
-      Service (OSM-M-006, OSM-M-010). References schema/ict-provider.yaml;
-      do not embed provider master data. Canonical who-provides
-      association; DORA maps here. No reverse listing.
+      Service. References schema/ict-provider.yaml; do not embed
+      provider master data. Canonical who-provides association;
+      DORA maps here. Reverse Provider → Service links are derived.
     uniqueItems: true
     items:
       type: string
       pattern: ^[a-z0-9]+(?:-[a-z0-9]+)*$
   provenance:
-    description: Optional reusable provenance for this Service definition (OSM-M-007).
+    description: Optional reusable provenance for this Service definition.
     $ref: ./provenance.yaml
   service_offerings:
     type: array

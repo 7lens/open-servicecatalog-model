@@ -1,10 +1,12 @@
 # 7lens OSM — Decision register
 
-**Canonical name:** 7lens OSM  
-**Expanded:** 7lens Open Service Catalog Model
+> **Maintainer archive.** This register lives under
+> `_internal/decisions/`. It is not public OSM documentation.
+> The current model is defined by `schema/`, `SPECIFICATION.md` and
+> `MODEL.md` at the repository root.
 
 This file is the **decision register** (index). Detailed model
-decision documents live in [`decisions/`](decisions/).
+decision documents live in this directory.
 
 ```text
 DECISIONS.md     Decision register / index
@@ -12,7 +14,7 @@ decisions/       Detailed architectural decisions
 ```
 
 The current architecture is frozen. Authoritative freeze record:
-[`decisions/OSM-ARCHITECTURE-FREEZE.md`](decisions/OSM-ARCHITECTURE-FREEZE.md).
+[`OSM-ARCHITECTURE-FREEZE.md`](OSM-ARCHITECTURE-FREEZE.md).
 
 **Agents and contributors do not make architectural or model
 decisions here.** They may only apply decisions whose status is
@@ -87,16 +89,16 @@ extraction was requested for `OSM-C-*`).
 
 | ID | Decision | Status | Date | Document |
 |----|----------|--------|------|----------|
-| OSM-M-001 | Generic characteristics | ACCEPTED | 2026-09-12 | [`decisions/OSM-M-001-generic-characteristics.md`](decisions/OSM-M-001-generic-characteristics.md) |
-| OSM-M-002 | Temporal semantics | ACCEPTED | 2026-09-12 | [`decisions/OSM-M-002-temporal-semantics.md`](decisions/OSM-M-002-temporal-semantics.md) |
-| OSM-M-003 | Service is the stable definition | ACCEPTED | 2026-09-12 | [`decisions/OSM-M-003-service-definition.md`](decisions/OSM-M-003-service-definition.md) |
-| OSM-M-004 | Best-of, not standards accumulation | ACCEPTED | 2026-09-12 | [`decisions/OSM-M-004-best-of-not-standards-accumulation.md`](decisions/OSM-M-004-best-of-not-standards-accumulation.md) |
-| OSM-M-005 | DORA provider-link grain | SUPERSEDED | 2026-09-12 | [`decisions/OSM-M-005-dora-provider-link-grain.md`](decisions/OSM-M-005-dora-provider-link-grain.md) |
-| OSM-M-006 | Canonical ICT Provider references | ACCEPTED | 2026-09-12 | [`decisions/OSM-M-006-ict-provider-references.md`](decisions/OSM-M-006-ict-provider-references.md) |
-| OSM-M-007 | Complete Service Definition | ACCEPTED | 2026-09-12 | [`decisions/OSM-M-007-complete-service-definition.md`](decisions/OSM-M-007-complete-service-definition.md) |
-| OSM-M-008 | One concept, one canonical parameter | ACCEPTED | 2026-09-12 | [`decisions/OSM-M-008-one-concept-one-canonical-parameter.md`](decisions/OSM-M-008-one-concept-one-canonical-parameter.md) |
-| OSM-M-009 | ICT Provider risk_level | ACCEPTED | 2026-09-12 | [`decisions/OSM-M-009-ict-provider-risk-level.md`](decisions/OSM-M-009-ict-provider-risk-level.md) |
-| OSM-M-010 | Canonical providers relationship | ACCEPTED | 2026-09-12 | [`decisions/OSM-M-010-canonical-providers-relationship.md`](decisions/OSM-M-010-canonical-providers-relationship.md) |
+| OSM-M-001 | Generic characteristics | ACCEPTED | 2026-09-12 | [`OSM-M-001-generic-characteristics.md`](OSM-M-001-generic-characteristics.md) |
+| OSM-M-002 | Temporal semantics | ACCEPTED | 2026-09-12 | [`OSM-M-002-temporal-semantics.md`](OSM-M-002-temporal-semantics.md) |
+| OSM-M-003 | Service is the stable definition | ACCEPTED | 2026-09-12 | [`OSM-M-003-service-definition.md`](OSM-M-003-service-definition.md) |
+| OSM-M-004 | Best-of, not standards accumulation | ACCEPTED | 2026-09-12 | [`OSM-M-004-best-of-not-standards-accumulation.md`](OSM-M-004-best-of-not-standards-accumulation.md) |
+| OSM-M-005 | DORA provider-link grain | SUPERSEDED | 2026-09-12 | [`OSM-M-005-dora-provider-link-grain.md`](OSM-M-005-dora-provider-link-grain.md) |
+| OSM-M-006 | Canonical ICT Provider references | ACCEPTED | 2026-09-12 | [`OSM-M-006-ict-provider-references.md`](OSM-M-006-ict-provider-references.md) |
+| OSM-M-007 | Complete Service Definition | ACCEPTED | 2026-09-12 | [`OSM-M-007-complete-service-definition.md`](OSM-M-007-complete-service-definition.md) |
+| OSM-M-008 | One concept, one canonical parameter | ACCEPTED | 2026-09-12 | [`OSM-M-008-one-concept-one-canonical-parameter.md`](OSM-M-008-one-concept-one-canonical-parameter.md) |
+| OSM-M-009 | ICT Provider risk_level | ACCEPTED | 2026-09-12 | [`OSM-M-009-ict-provider-risk-level.md`](OSM-M-009-ict-provider-risk-level.md) |
+| OSM-M-010 | Canonical providers relationship | ACCEPTED | 2026-09-12 | [`OSM-M-010-canonical-providers-relationship.md`](OSM-M-010-canonical-providers-relationship.md) |
 
 **OSM-M-007** is ACCEPTED and implemented. Schema/examples/validation
 now include Complete Service Definition semantics (posture fields,
@@ -127,7 +129,7 @@ current OSM architecture.
 
 **The current OSM architecture is frozen.** The authoritative freeze
 record is
-[`decisions/OSM-ARCHITECTURE-FREEZE.md`](decisions/OSM-ARCHITECTURE-FREEZE.md).
+[`OSM-ARCHITECTURE-FREEZE.md`](OSM-ARCHITECTURE-FREEZE.md).
 Future architectural changes require a new explicit decision record
 before implementation.
 

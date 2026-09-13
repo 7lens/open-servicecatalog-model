@@ -4,14 +4,14 @@
 # field patterns. They are not measurements from a real estate.
 #
 # `service_attributes` / `offering_attributes` are the Service Posture
-# and Offering Posture records (OSM-M-007). File and key names are
-# kept for compatibility.
+# and Offering Posture records. File and key names are kept for
+# file compatibility.
 #
 # Canonical OSM posture fields are unprefixed. Framework-named fields
 # are OPTIONAL REFERENCE MAPPINGS, not legal advice and not evidence
 # of compliance or certification. Do not duplicate a canonical field
-# under a framework prefix (OSM-M-008). Same enum tokens do not mean
-# the same concept (data vs security classification; automation vs
+# under a framework prefix. Same enum tokens do not mean the same
+# concept (data vs security classification; automation vs
 # provisioning automation).
 
 service_attributes:

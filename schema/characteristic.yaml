@@ -2,8 +2,8 @@
 #
 # Nested, reusable property structure for Service and Service Offering.
 # This is not a first-class catalog entity and has no identifier of its
-# own (OSM-M-001). Inspired by TM Forum characteristics; not a copy of
-# the TMF characteristic model.
+# own. Inspired by TM Forum characteristics; not a copy of the TMF
+# characteristic model.
 
 $schema: https://json-schema.org/draft/2020-12/schema
 $id: https://raw.githubusercontent.com/7lens/open-servicecatalog-model/main/schema/characteristic.yaml

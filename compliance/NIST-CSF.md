@@ -1,60 +1,31 @@
 # NIST CSF
 
-- **Status:** NOT ANALYZED
-- **Universe:** OSM-C-001 (compliance / governance)
-- **OSM schema fields today:** optional stack `mappings.nist_csf`;
-  optional offering `nist_functions`, `nist_control_status`
+OSM is **not** a NIST CSF profile and not a claim that an adopter
+“complies with” the Cybersecurity Framework.
 
-These fields are reference mappings. They are **not** a NIST CSF
-profile and not a claim that OSM or any adopter "complies with"
-NIST CSF.
+NIST CSF 2.0 organizes cybersecurity outcomes into Functions
+(Govern, Identify, Protect, Detect, Respond, Recover). OSM stores
+those **Functions** as a translation layer on stacks and offerings.
+It does not store Categories, Subcategories, or current/target
+profiles.
 
-## 1. Framework overview
+## What maps
 
-The NIST Cybersecurity Framework (CSF 2.0) organizes cybersecurity
-outcomes into Functions (Govern, Identify, Protect, Detect, Respond,
-Recover) and a set of Categories / Subcategories.
+| OSM field | Where | Role |
+|-----------|--------|------|
+| `mappings.nist_csf` | Technology Stack | List of CSF functions |
+| `nist_functions` | Offering posture | List of CSF functions |
+| `nist_control_status` | Offering posture | Implementation status |
+| `last_security_review` | Offering posture | Security-operations signal |
 
-## 2. Relevant scope for technological services
+## What stays in NIST CSF
 
-Later analysis should ask whether tagging a stack or offering with
-CSF Functions is useful operational metadata, versus a full CSF
-profile which OSM cannot host.
+- Categories and Subcategories
+- organizational profiles (current-state / target-state)
+- a security assessment or certification
 
-## 3. OSM concepts/attributes relevant to the framework
+A function tag is not an implemented control. NIST CSF is a
+framework, not a certification OSM can satisfy.
 
-Present in the current schema (not yet analyzed as a mapping):
-
-| OSM field | Where |
-|-----------|--------|
-| `mappings.nist_csf` | Technology Stack (list of functions) |
-| `nist_functions` | Offering attributes |
-| `nist_control_status` | Offering attributes |
-| `last_security_review` | Offering attributes |
-
-OSM currently stores Functions, not Categories or Subcategories.
-
-## 4. Mapping opportunities
-
-NOT YET ANALYZED.
-
-## 5. Missing information
-
-NOT YET ANALYZED.
-
-No CSF profile, current-state/target-state, or subcategory coverage
-exists in OSM.
-
-## 6. Potential extensions
-
-None proposed. No attributes are added in this baseline.
-
-## 7. Important caveats
-
-- A function tag is not an implemented control.
-- NIST CSF is a framework, not a certification OSM can satisfy.
-- This file is not a security assessment.
-
-## 8. Status
-
-**NOT ANALYZED**
+Exact field definitions are in
+[`SPECIFICATION.md`](../SPECIFICATION.md).

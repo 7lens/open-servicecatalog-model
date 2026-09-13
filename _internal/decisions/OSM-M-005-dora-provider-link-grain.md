@@ -3,7 +3,7 @@
 - **Status:** SUPERSEDED
 - **Date:** 2026-09-12
 - **Type:** Model
-- **Register:** [`DECISIONS.md`](../DECISIONS.md)
+- **Register:** [`DECISIONS.md`](DECISIONS.md)
 - **Superseded by:** [`OSM-M-010`](OSM-M-010-canonical-providers-relationship.md)
 
 ## Decision

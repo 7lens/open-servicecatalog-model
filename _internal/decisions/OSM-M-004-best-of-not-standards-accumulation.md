@@ -3,7 +3,7 @@
 - **Status:** ACCEPTED
 - **Date:** 2026-09-12
 - **Type:** Model
-- **Register:** [`DECISIONS.md`](../DECISIONS.md)
+- **Register:** [`DECISIONS.md`](DECISIONS.md)
 
 This record is extracted from the repository decision log. No
 architectural content has been added beyond what was already

@@ -1,9 +1,9 @@
 # JSON Schema — Provenance
 #
 # Reusable metadata for "why should I believe this information?"
-# (OSM-M-007). Attach to a Service, Service Offering, service posture
-# record, or offering posture row. This is not an AI interpretation
-# or recommendation model.
+# Attach to a Service, Service Offering, service posture record, or
+# offering posture row. This is not an AI interpretation or
+# recommendation model.
 
 $schema: https://json-schema.org/draft/2020-12/schema
 $id: https://raw.githubusercontent.com/7lens/open-servicecatalog-model/main/schema/provenance.yaml

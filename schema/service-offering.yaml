@@ -24,21 +24,20 @@ properties:
     type: string
   characteristics:
     type: array
-    description: Optional generic characteristics (OSM-M-001).
+    description: Optional generic characteristics.
     items:
       $ref: ./characteristic.yaml
   providers:
     type: array
     description: >
       Optional ICT Provider ids when provider choice is a characteristic
-      of this offering (OSM-M-006, OSM-M-010). References
-      schema/ict-provider.yaml; do not embed provider master data.
-      Canonical who-provides association; DORA maps here. No reverse
-      listing.
+      of this offering. References schema/ict-provider.yaml; do not
+      embed provider master data. Canonical who-provides association;
+      DORA maps here. Reverse Provider → Service links are derived.
     uniqueItems: true
     items:
       type: string
       pattern: ^[a-z0-9]+(?:-[a-z0-9]+)*$
   provenance:
-    description: Optional reusable provenance for this Offering (OSM-M-007).
+    description: Optional reusable provenance for this Offering.
     $ref: ./provenance.yaml
