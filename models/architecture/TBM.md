@@ -19,7 +19,7 @@ turning OSM into TBM.
 | `mappings.tbm_sub_tower` | Technology Stack | Sub-Tower (L2) |
 | `cost_pool` | Offering posture | Cost-pool characterization |
 | `chargeback_model` | Offering posture | Shared / dedicated / consumption pattern |
-| Service | — | OSM Service is a technological capability, not a TBM cost service |
+| Service | — | OSM Service is a technological service, not a TBM cost service |
 | Service Offering | — | Requestable variant; cost signals sit on offering posture |
 
 Example tower names such as Infrastructure, Security or Data
@@ -34,7 +34,7 @@ Management are illustrative. They are not a TBM catalog.
   characterization fields
 
 TBM “service” is cost-oriented. OSM Service is a technological
-capability with operational ownership. Those are different jobs.
+service with operational ownership. Those are different jobs.
 
 Exact field definitions are in
 [`SPECIFICATION.md`](../../SPECIFICATION.md).

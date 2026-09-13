@@ -1,18 +1,18 @@
 # 7lens OSM
 
-**7lens Open Service Catalog Model**
+**7lens Open Service-Catalog Model**
 
 A small, vendor-neutral, machine-readable **canonical model** for
 technological services.
 
-OSM lets an enterprise **own** the description of what its technology
-organization delivers — instead of letting a vendor, platform or
-framework become the canonical representation of that landscape.
+OSM lets an enterprise **own** the description of its technological
+services — instead of letting a vendor, platform or framework become
+the canonical representation of that landscape.
 
 It is published by [7lens](https://7lens.io) as a standalone open
 model. It does not require a particular product, cloud or method.
 
-7lens OSM is a **data model**. It is not an AI model.
+7lens OSM is a semantic **data model**. It is not an AI model.
 
 ---
 
@@ -22,13 +22,12 @@ Technology organizations already speak several languages: ITIL,
 TM Forum, ServiceNow CSDM, TOGAF, ArchiMate, TBM, and a set of
 security, privacy and operational-resilience frameworks.
 
-Those languages are useful. None of them should have to *be* the
-enterprise’s source of truth for technological services.
+Those languages are useful. None of them should *own* the enterprise’s source of truth for technological services.
 
-OSM provides a deliberately small **canonical core**:
+OSM provides a deliberately small **canonical core, that could scale into a full enterprise semantics and ontology**:
 
 - what technological services you deliver
-- who owns and operates them
+- who is accountable for them
 - which variants can be requested
 - which third parties they depend on
 - how they currently stand
@@ -37,32 +36,30 @@ OSM provides a deliberately small **canonical core**:
 More detailed models sit **alongside** OSM. They do not compete
 with it.
 
-| Specialized model | Typical role beside OSM |
-|-------------------|-------------------------|
-| ITIL | Service management and operational excellence |
-| TM Forum | Richer catalog, commercial and service concepts |
-| ServiceNow CSDM | ServiceNow-oriented service and CMDB modeling |
-| TOGAF / ArchiMate | Enterprise architecture |
-| TBM | Technology financial management |
+
+| Specialized model                                      | Typical role beside OSM                         |
+| ------------------------------------------------------ | ----------------------------------------------- |
+| ITIL                                                   | Service management and operational excellence   |
+| TM Forum                                               | Richer catalog, commercial and service concepts |
+| ServiceNow CSDM                                        | ServiceNow-oriented service and CMDB modeling   |
+| TOGAF / ArchiMate                                      | Enterprise architecture                         |
+| TBM                                                    | Technology financial management                 |
 | ISO 27001 / ISO 27701, NIST CSF, GDPR, DORA, EU AI Act | Security, privacy, resilience and AI governance |
 
-OSM holds each concept **once**. Frameworks map onto those concepts.
-They do not get a second copy of the same fact under another name.
 
-See [`models/`](models/) for service, catalog and architecture
-frameworks. See [`compliance/`](compliance/) for regulatory, security,
-privacy and control mappings.
+**OSM holds each concept once. Frameworks map onto those concepts. They do not get a second copy of the same fact under another name.**
+
+See `[models/](models/)` for service, catalog and architecture frameworks. See `[compliance/](compliance/)` for regulatory, security, privacy and control mappings.
 
 ---
 
+
+
 ## Why this matters for an AI-driven enterprise
 
-Enterprise technology is increasingly heterogeneous, automated,
-API-driven and operated by machines — including AI agents.
+Enterprise technology is increasingly heterogeneous, automated, API-driven and operated by machines — including AI agents.
 
-Agents need **consistent, machine-readable semantics**. If every
-organization, vendor and framework describes technology differently,
-every automation has to translate between incompatible pictures.
+Agents need **consistent, machine-readable semantics**. If every organization, vendor and framework describes technology differently, every automation has to translate between incompatible pictures.
 
 OSM is a small canonical semantic layer so an organization can:
 
@@ -71,27 +68,23 @@ OSM is a small canonical semantic layer so an organization can:
 3. Expose the same semantics to automation and AI.
 4. Layer specialized frameworks on top without replacing the core.
 
-OSM is the structured technology context that people and AI systems
-can consume. It is not an AI product and not a description of any
-proprietary 7lens agent architecture.
+OSM is the structured technology context that people and AI systems can consume. It is not an AI product and not a description of any proprietary 7lens agent architecture.
 
 > Your Corporate Surface Has Outgrown Human Governance.
 
-When the estate is larger than human-only governance can hold, the
-catalog has to be explicit enough for both people and machines.
+When the estate is larger than human-only governance can hold, the catalog has to be explicit enough for both people and machines.
 
 ---
+
+
 
 ## How OSM relates to 7lens
 
 OSM is **not** the complete 7lens ontology.
 
-It is the canonical **technological-service** model. 7lens provides
-enterprise-grade capability to implement and operate OSM, and to
-connect it with organization and business-application models.
+It is the canonical **technological-service** model. 7lens provides enterprise-grade capability to implement and operate OSM, and to connect it with organization and business-application models.
 
-OSM was opened so companies can prepare IT governance for an
-AI-operated future — whether or not they use 7lens.
+OSM was opened so companies can prepare IT governance for an AI-operated future — whether or not they use 7lens.
 
 ```
 Enterprise technology context
@@ -114,10 +107,11 @@ across:
 - AI Agents
 - Operations
 
-Those lenses are **not** part of OSM. OSM stays a small technology
-core that 7lens — and other systems — can build on.
+Those lenses are **not** part of OSM. OSM stays a small technology core that 7lens — and other systems — can build on.
 
 ---
+
+
 
 ## The model
 
@@ -129,17 +123,19 @@ Technology Stack
 Service Offering
 ```
 
-| Concept | Meaning |
-|---------|---------|
-| **Technology Stack** | Operational competency that runs a group of services |
-| **Service** | Stable **definition** of a technological capability |
-| **Service Offering** | Atomic requestable / deliverable variant |
-| **Characteristics** | Optional typed properties on a service or offering |
-| **ICT Provider** | Canonical third-party technology provider |
-| **Service Posture** | How the service currently stands |
-| **Offering Posture** | Variant-level operational state |
-| **Provenance** | Why a fact can be trusted, and where it came from |
-| **Framework mappings** | Optional translations into other languages |
+
+| Concept                | Meaning                                              |
+| ---------------------- | ---------------------------------------------------- |
+| **Technology Stack**   | Operational competency that runs a group of services |
+| **Service**            | Stable **definition** of a technological service     |
+| **Service Offering**   | Atomic requestable / deliverable variant             |
+| **Characteristics**    | Optional typed properties on a service or offering   |
+| **ICT Provider**       | Canonical third-party technology provider            |
+| **Service Posture**    | How the service currently stands                     |
+| **Offering Posture**   | Variant-level operational state                      |
+| **Provenance**         | Why a fact can be trusted, and where it came from    |
+| **Framework mappings** | Optional translations into other languages           |
+
 
 Four layers, kept distinct:
 
@@ -150,26 +146,31 @@ PROVENANCE             why the information can be trusted
 FRAMEWORK MAPPINGS     how OSM relates to other models
 ```
 
-External context — applications, CMDB, organization, geography,
-contracts, full SLA management — stays **outside** OSM.
+External context — applications, CMDB, organization, geography, contracts, full SLA management — stays **outside** OSM.
 
-The conceptual explanation is in [`MODEL.md`](MODEL.md).
-The exact field model is in [`SPECIFICATION.md`](SPECIFICATION.md).
+The conceptual explanation is in `[MODEL.md](MODEL.md)`.
+The exact field model is in `[SPECIFICATION.md](SPECIFICATION.md)`.
 
 ---
 
+
+
 ## Start here
 
-| If you want to… | Read |
-|-----------------|------|
-| Understand the idea | this README |
-| Understand the model | [`MODEL.md`](MODEL.md) |
-| Implement or validate | [`SPECIFICATION.md`](SPECIFICATION.md), [`schema/`](schema/), [`validation/`](validation/) |
-| Inspect a catalog | [`examples/`](examples/) |
-| See how OSM sits with other frameworks | [`models/`](models/) |
-| See regulatory and control mappings | [`compliance/`](compliance/) |
-| See ownership roles | [`GOVERNANCE.md`](GOVERNANCE.md) |
-| Contribute | [`CONTRIBUTING.md`](CONTRIBUTING.md) |
+
+| If you want to…                        | Read                                                                                       |
+| -------------------------------------- | ------------------------------------------------------------------------------------------ |
+| Understand the idea                    | this README                                                                                |
+| Understand the model                   | `[MODEL.md](MODEL.md)`                                                                     |
+| Implement or validate                  | `[SPECIFICATION.md](SPECIFICATION.md)`, `[schema/](schema/)`, `[validation/](validation/)` |
+| Inspect a catalog                      | `[examples/](examples/)`                                                                   |
+| See how OSM sits with other frameworks | `[models/](models/)`                                                                       |
+| See regulatory and control mappings    | `[compliance/](compliance/)`                                                               |
+| See ownership roles                    | `[GOVERNANCE.md](GOVERNANCE.md)`                                                           |
+| Contribute                             | `[CONTRIBUTING.md](CONTRIBUTING.md)`                                                       |
+
+
+
 
 ### Try the examples
 
@@ -178,13 +179,14 @@ python3 -m pip install -r validation/requirements.txt
 python3 validation/validate.py
 ```
 
-The examples are synthetic. They are not a recommended estate and
-not a real vendor register.
+The examples are synthetic. They are not a recommended estate and not a real vendor register.
 
 ---
+
+
 
 ## License
 
 Copyright 2026 7lens Technologies S.L.
 
-Licensed under the Apache License, Version 2.0. See [`LICENSE`](LICENSE).
+Licensed under the Apache License, Version 2.0. See `[LICENSE](LICENSE)`.
