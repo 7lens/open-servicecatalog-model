@@ -5,7 +5,7 @@
 # Catalog files wrap instances in a top-level `services` array.
 
 $schema: https://json-schema.org/draft/2020-12/schema
-$id: https://raw.githubusercontent.com/7lens/open-servicecatalog-model/main/schema/service.yaml
+$id: https://raw.githubusercontent.com/7lens/open-servicecatalog-model/main/schema/catalog/service.yaml
 title: Service
 type: object
 additionalProperties: false
@@ -68,12 +68,12 @@ properties:
     type: array
     description: Optional generic characteristics.
     items:
-      $ref: ./characteristic.yaml
+      $ref: ../shared/characteristic.yaml
   providers:
     type: array
     description: >
       Optional ICT Provider ids when the provider is intrinsic to this
-      Service. References schema/ict-provider.yaml; do not embed
+      Service. References schema/catalog/ict-provider.yaml; do not embed
       provider master data. Canonical who-provides association;
       DORA maps here. Reverse Provider → Service links are derived.
     uniqueItems: true
@@ -82,7 +82,7 @@ properties:
       pattern: ^[a-z0-9]+(?:-[a-z0-9]+)*$
   provenance:
     description: Optional reusable provenance for this Service definition.
-    $ref: ./provenance.yaml
+    $ref: ../shared/provenance.yaml
   service_offerings:
     type: array
     minItems: 1

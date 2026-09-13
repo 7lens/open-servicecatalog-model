@@ -3,22 +3,29 @@
 **Canonical name:** 7lens OSM  
 **Expanded:** 7lens Open Service Catalog Model
 
-This document is the index for the **initial compatibility universe** of
-7lens OSM. It records *what we intend to evaluate*, and the status of
-each analysis.
+This document is the **maintainer index** for the initial compatibility
+universe of 7lens OSM.
 
-Most entries remain **NOT ANALYZED**. TM Forum TMF633, ITIL v5 and
-ServiceNow CSDM are **PARTIALLY COMPATIBLE** (selective compatibility).
-No entry is marked fully **COMPATIBLE**. OSM does not implement ITIL,
-TMF or CSDM.
+Public mapping documents and **current status labels** live in
+[`models/`](../../models/) and [`compliance/`](../../compliance/).
+Those files were aligned on 2026-09-13 to the compatibility
+investigation (`_internal/compatibility-review/`) and accepted
+decisions OSM-C-006–C-009, OSM-D-001–D-003, OSM-M-011.
 
-Related decisions: [`DECISIONS.md`](../decisions/DECISIONS.md) — **OSM-C-001**
-(as amended by **OSM-C-002**, **OSM-C-003**); TM Forum follow-up
-**OSM-M-001**–**OSM-M-004**; ITIL v5 **OSM-C-004**; CSDM **OSM-C-005**
-and provider references **OSM-M-006**; Complete Service Definition
+Sibling files under `_internal/notes/compatibility/` and
+`_internal/notes/compliance/` are **historical working notes**. They
+are not the current mapping. Do not treat their version strings or
+NOT ANALYZED labels as current.
+
+Related decisions: [`DECISIONS.md`](../decisions/DECISIONS.md) —
+**OSM-C-001** (as amended by **OSM-C-002**, **OSM-C-003**);
+**OSM-C-004**, **OSM-C-005**; **OSM-C-006**–**OSM-C-009**;
+**OSM-D-001**–**OSM-D-003**; TM Forum follow-up **OSM-M-001**–**OSM-M-004**;
+provider references **OSM-M-006**; Complete Service Definition
 **OSM-M-007**; One concept, one canonical parameter **OSM-M-008**;
 ICT Provider `risk_level` **OSM-M-009**; canonical `providers`
-relationship **OSM-M-010** (supersedes **OSM-M-005**).
+relationship **OSM-M-010** (supersedes **OSM-M-005**); ICT Provider
+provenance principle **OSM-M-011** (schema not implemented).
 
 ---
 
@@ -174,31 +181,34 @@ The presence of a field is **not** a completed compatibility analysis.
 
 The following models and frameworks form the **initial compatibility
 baseline** for 7lens OSM (**OSM-C-001**, amended by **OSM-C-002** and
-**OSM-C-003**). OSM is designed to be compatible with this universe.
-Except for the TM Forum, ITIL v5 and CSDM decisions below, that design
-intent is not yet validated.
+**OSM-C-003**). Status below matches the public mapping documents.
+OSM is **not certified** against any of them. Prefer **MAPPED** /
+**PARTIAL** over vague “supported”.
+
+Public files: [`models/`](../../models/), [`compliance/`](../../compliance/).
+Note paths below are historical (`compatibility/` → now `models/`).
 
 ### A. Models / taxonomies / architectural frameworks
 
-| Model | File | Status |
-|-------|------|--------|
-| TM Forum TMF633 Service Catalog | [compatibility/TMFORUM-TMF633.md](compatibility/TMFORUM-TMF633.md) | PARTIALLY COMPATIBLE |
-| ITIL v5 | [compatibility/ITIL.md](compatibility/ITIL.md) | PARTIALLY COMPATIBLE |
-| ServiceNow CSDM | [compatibility/SERVICENOW-CSDM.md](compatibility/SERVICENOW-CSDM.md) | PARTIALLY COMPATIBLE |
-| ArchiMate | [compatibility/ARCHIMATE.md](compatibility/ARCHIMATE.md) | NOT ANALYZED |
-| TOGAF | [compatibility/TOGAF.md](compatibility/TOGAF.md) | NOT ANALYZED |
-| TBM | [compatibility/TBM.md](compatibility/TBM.md) | NOT ANALYZED |
+| Model | Current version | File | Status |
+|-------|-----------------|------|--------|
+| TM Forum TMF633 Service Catalog | v4.0.0 | [models/service-management/TMFORUM-TMF633.md](../../models/service-management/TMFORUM-TMF633.md) | **PARTIAL** |
+| ITIL | Version 5 (ITIL 4 still relevant) | [models/service-management/ITIL.md](../../models/service-management/ITIL.md) | **PARTIAL** |
+| ServiceNow CSDM | CSDM 5 | [models/service-management/CSDM.md](../../models/service-management/CSDM.md) | **PARTIAL** |
+| ArchiMate | ArchiMate 4 | [models/architecture/ARCHIMATE.md](../../models/architecture/ARCHIMATE.md) | **MAPPED** (conceptual) |
+| TOGAF | 10th Edition + Corrigendum 1 | [models/architecture/TOGAF.md](../../models/architecture/TOGAF.md) | **MAPPED** (stack-level) |
+| TBM | Taxonomy 5.0.1 | [models/architecture/TBM.md](../../models/architecture/TBM.md) | **MAPPED** (stack-level) |
 
 ### B. Compliance / governance frameworks
 
-| Framework | File | Status |
-|-----------|------|--------|
-| ISO/IEC 27001 | [compliance/ISO-27001.md](compliance/ISO-27001.md) | NOT ANALYZED |
-| ISO/IEC 27701 | [compliance/ISO-27701.md](compliance/ISO-27701.md) | NOT ANALYZED |
-| NIST CSF | [compliance/NIST-CSF.md](compliance/NIST-CSF.md) | NOT ANALYZED |
-| GDPR | [compliance/GDPR.md](compliance/GDPR.md) | NOT ANALYZED |
-| DORA | [compliance/DORA.md](compliance/DORA.md) | NOT ANALYZED |
-| EU AI Act | [compliance/EU-AI-ACT.md](compliance/EU-AI-ACT.md) | NOT ANALYZED |
+| Framework | Current version | File | Status |
+|-----------|-----------------|------|--------|
+| ISO/IEC 27001 | 27001:2022 + Amd 1:2024 | [compliance/ISO-27001.md](../../compliance/ISO-27001.md) | **MAPPED** (control locators) |
+| ISO/IEC 27701 | 27701:2025 standalone PIMS | [compliance/ISO-27701.md](../../compliance/ISO-27701.md) | **PARTIAL** |
+| NIST CSF | CSF 2.0 | [compliance/NIST-CSF.md](../../compliance/NIST-CSF.md) | **MAPPED** (Functions + OSM signal) |
+| GDPR | (EU) 2016/679 | [compliance/GDPR.md](../../compliance/GDPR.md) | **PARTIAL** |
+| DORA | 2022/2554 + RTS 2024/1773 + ITS 2024/2956 | [compliance/DORA.md](../../compliance/DORA.md) | **PARTIAL** |
+| EU AI Act | 2024/1689 | [compliance/EU-AI-ACT.md](../../compliance/EU-AI-ACT.md) | **PARTIAL** |
 
 ---
 
@@ -208,16 +218,18 @@ Use only these values in compatibility and compliance files:
 
 | Status | Meaning |
 |--------|---------|
-| NOT ANALYZED | Universe member identified; no mapping yet |
+| NOT ANALYZED | Universe member identified; no mapping yet (historical; unused after 2026-09-13) |
 | ANALYSIS IN PROGRESS | Comparison started; not reviewable |
-| MAPPED | Correspondence documented; compatibility not yet judged |
-| PARTIALLY COMPATIBLE | Some required correspondences work; remaining concepts may be gaps or **deliberate OSM-core boundaries** (see ITIL v5 OSM-C-004, CSDM OSM-C-005) |
-| COMPATIBLE | Reviewed mapping covers the service-catalog-relevant subset |
+| **MAPPED** | Correspondence documented. OSM can represent or join the listed concepts. Not certification. |
+| **PARTIAL** / PARTIALLY COMPATIBLE | Some catalog-relevant correspondences work; remaining concepts are gaps or **deliberate** OSM-core boundaries |
+| **EXTERNAL** | Concept belongs in another system. OSM does not absorb it. |
+| **NOT IN SCOPE** | Outside OSM’s technological-service boundary |
+| **FUTURE / OPTIONAL** | Characteristic convention or schema candidate; not current core |
+| COMPATIBLE | Reserved. Do **not** use as a certification claim. |
 | REQUIRES EXTENSION | OSM cannot represent a needed concept without a model change |
 | NOT APPLICABLE | Outside OSM's technological-service boundary |
 
-Do not mark a row **COMPATIBLE** until maintainers complete and accept
-the analysis.
+Do not mark a row **COMPATIBLE**. Do not use vague **supported**.
 
 ---
 

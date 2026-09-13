@@ -11,13 +11,17 @@ Exact fields are in `[SPECIFICATION.md](SPECIFICATION.md)`.
 ## Layers
 
 ```text
-SERVICE DEFINITION     what the service is
+SERVICE DEFINITION     what the service is (including characteristics)
 POSTURE                how it currently stands
+  SERVICE POSTURE      current state of a Service
+  OFFERING POSTURE     current state of a Service Offering
 PROVENANCE             why the information can be trusted
 EXTERNAL CONTEXT       owned elsewhere — not modelled here
 ```
 
-The YAML keys `service_attributes` / `offering_attributes` are the Service Posture and Offering Posture records. Those file names are not a second catalog entity.
+Characteristics belong to the Service or Offering **definition**.
+`service_posture` and `offering_posture` are the current state of
+those definitions. They are not a second catalog entity.
 
 Framework mappings are a translation layer. They are not a second copy of OSM facts.
 
@@ -141,6 +145,14 @@ Typical offering dimensions — environment, location, `service_hours`, `support
 
 `service_hours` and `support_hours` describe **when** service or support is available. They are not performance targets.
 
+Reserved names (conventions, not new schema fields):
+
+- `purpose` — generic purpose. Not framework-prefixed (`gdpr_purpose`, …).
+- `processing_location` vs `storage_location` — different facts.
+- `deployment_region`, `service_region`, `data_residency`, `operating_region`, `region`, `geography`.
+
+**Processing location ≠ storage location.** Provider `data_processing_locations` is capability, not actual offering residency. Do not collapse those with headquarters or availability region. Do not duplicate provider/stack identity through characteristics.
+
 ---
 
 
@@ -169,7 +181,7 @@ for `rto` / `rpo`)
 expected performance, not hours windows
 - `data_classification` — data the service handles
 - `security_classification` — sensitivity of the service itself
-- `privacy_classification`
+- `privacy_classification` — canonical high-level privacy class; ISO/GDPR fields are mappings
 - technical debt, vendor support, `financial_owner`
 - optional AI Act applicability fields
 - optional provenance
@@ -200,6 +212,8 @@ A reusable `provenance` object may attach to a Service, Offering or posture reco
 
 Each field answers a different question: who is authoritative, which system, which record, when verified, where evidence lives, how much to trust, how it was discovered. They are not interchangeable.
 
+There is one provenance mechanism. ICT Provider does not currently carry `provenance` (schema-change candidate OSM-M-011). Do not add per-field provenance.
+
 OSM does not model AI interpretation or AI recommendation.
 
 ---
@@ -208,7 +222,7 @@ OSM does not model AI interpretation or AI recommendation.
 
 ## ICT providers
 
-An ICT Provider is the canonical record of a third-party technology organization.
+An ICT Provider is the party that **materially delivers, operates, or underpins** the technological Service or Offering. It is not a generic vendor/tool/product inventory. A licensor belongs here only when it materially provides or underpins the capability.
 
 ```
 Service / Offering  →  providers[]  →  ICT Provider
@@ -224,6 +238,8 @@ Do not copy provider master data onto Service or Offering. A cloud provider is a
 
 Reverse Provider → Service links are derived from `providers`. `providers` is not a generic Service → Service relationship.
 
+**OSM provider linkage is not a DORA RoI or contractual-arrangement model.** Contract fields on ICT Provider are characterization, not an Arrangement entity. `headquarters` is not processing location, storage location, or actual offering residency. `data_processing_locations` is provider **capability**, not actual Service/Offering residency.
+
 ---
 
 
@@ -232,9 +248,9 @@ Reverse Provider → Service links are derived from `providers`. `providers` is 
 
 Stacks, services and offerings may carry optional mappings to TBM, TOGAF, ISO/IEC 27001, ISO/IEC 27701, NIST CSF, GDPR, DORA and the EU AI Act.
 
-Mappings are illustrative and non-normative for those frameworks. OSM is not an implementation, certification or legal interpretation of any of them.
+Mappings are illustrative and non-normative for those frameworks. OSM can map to or support integration with them. It is not an implementation, certification or legal interpretation of any of them.
 
-If OSM already represents a concept, frameworks map to that field. See `[models/](models/)` and `[compliance/](compliance/)`.
+Current mapping versions and status: `[models/](models/)` and `[compliance/](compliance/)`.
 
 ---
 
@@ -267,5 +283,14 @@ OSM does not define:
 - stakeholder lenses or enterprise decision intelligence
 - detailed SLA objects
 - first-class Service → Service relationships
+- DORA RoI, LEI, CIF, contractual Arrangement, or incident feed
+- GDPR RoPA, legal basis, DPO, SCCs, or processing-activity entities
+- ISO SoA, control implementation, or PIMS processing structures
+- NIST Profiles, Categories, Tiers, or control catalogues
+- EU AI Act GPAI, deployer/provider legal roles, EU database, or technical-file structures
+- ITIL Digital Product, consumers, or the Version 5 Product and Service Lifecycle as OSM objects
+- TM Forum Candidate, Category, CFS, RFS, or Service Inventory
 
 Consumers of a technological service are outside this model. Adopters may join OSM records to other systems; this repository does not define those other records.
+
+See `SPECIFICATION.md` §10 for the same boundary as **External Concepts — Intentionally Outside OSM**.

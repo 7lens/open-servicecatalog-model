@@ -1,20 +1,22 @@
-# Example Service Posture (file: service-attributes.yaml)
+# Example Service Posture
 #
-# Synthetic posture samples. Values are fictional and chosen to show
-# field patterns. They are not measurements from a real estate.
+# SYNTAX TUTORIAL. Synthetic posture samples. Values are fictional and
+# chosen to show field patterns. They are NOT assessed enterprise
+# posture and must not be copied as operational truth.
 #
-# `service_attributes` / `offering_attributes` are the Service Posture
-# and Offering Posture records. File and key names are kept for
-# file compatibility.
+# `service_posture` / `offering_posture` are the Service Posture
+# and Offering Posture records.
 #
 # Canonical OSM posture fields are unprefixed. Framework-named fields
 # are OPTIONAL REFERENCE MAPPINGS, not legal advice and not evidence
-# of compliance or certification. Do not duplicate a canonical field
-# under a framework prefix. Same enum tokens do not mean the same
-# concept (data vs security classification; automation vs
-# provisioning automation).
+# of compliance or certification. `nist_control_status` is an OSM
+# assessment signal, not a NIST CSF object or control-catalogue entry.
+# `ai_act_risk_class` is an OSM label, not Article 6 / Annex III.
+# Do not duplicate a canonical field under a framework prefix. Same
+# enum tokens do not mean the same concept (data vs security
+# classification; automation vs provisioning automation).
 
-service_attributes:
+service_posture:
 
   # Fully populated production service with two offerings.
   - service_id: compute.kubernetes
@@ -37,7 +39,7 @@ service_attributes:
       last_verified: 2025-09-12
       confidence: high
       discovery_method: declared
-    offering_attributes:
+    offering_posture:
       - offering_id: compute.kubernetes.aws
         cost_pool: compute-shared
         chargeback_model: shared
@@ -107,7 +109,7 @@ service_attributes:
     financial_owner: Data Platform
     ai_act_applicable: false
     ai_act_risk_class: not-applicable
-    offering_attributes:
+    offering_posture:
       - offering_id: db.managed-postgres.high-availability
         cost_pool: data-stores
         chargeback_model: consumption
@@ -143,7 +145,7 @@ service_attributes:
     vendor_support_status: active
     ai_act_applicable: false
     ai_act_risk_class: not-applicable
-    offering_attributes: []
+    offering_posture: []
 
   # Illustrative AI-related fields on one offering. Not a legal classification.
   - service_id: data.analytics-platform
@@ -153,7 +155,7 @@ service_attributes:
     vendor_support_status: active
     ai_act_applicable: true
     ai_act_risk_class: limited-risk
-    offering_attributes:
+    offering_posture:
       - offering_id: data.analytics-platform.query-assistant
         cost_pool: data-platform
         chargeback_model: shared
@@ -188,7 +190,7 @@ service_attributes:
     vendor_support_status: active
     ai_act_applicable: false
     ai_act_risk_class: not-applicable
-    offering_attributes:
+    offering_posture:
       - offering_id: devops.continuous-delivery.pipeline
         cost_pool: developer-platform
         chargeback_model: shared

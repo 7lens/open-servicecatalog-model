@@ -2,6 +2,9 @@
 
 **7lens Open Service-Catalog Model**
 
+> **ONE ENTERPRISE. ONE ONTOLOGY. SEVEN LENSES.**
+> **SAME DATA. DIFFERENT QUESTIONS. BETTER DECISIONS.**
+
 A small, vendor-neutral, machine-readable **canonical model** for
 technological services.
 
@@ -148,8 +151,32 @@ FRAMEWORK MAPPINGS     how OSM relates to other models
 
 External context — applications, CMDB, organization, geography, contracts, full SLA management — stays **outside** OSM.
 
+**OSM is:**
+
+- a vendor-neutral technological service model
+- machine-readable
+- intentionally small
+- designed for interoperability
+- suitable as a canonical technology-service layer
+
+**OSM is not:**
+
+- a CMDB
+- a complete enterprise ontology
+- a DORA register of information
+- a GDPR Record of Processing Activities
+- a ServiceNow CSDM implementation
+- an ITIL implementation
+- a full TM Forum model
+- an NIST implementation model
+- an ISO control system
+- an EU AI Act technical-file system
+
 The conceptual explanation is in `[MODEL.md](MODEL.md)`.
 The exact field model is in `[SPECIFICATION.md](SPECIFICATION.md)`.
+Compatibility mappings (current versions, **MAPPED** / **PARTIAL**,
+not certification) are in `[models/](models/)` and
+`[compliance/](compliance/)`.
 
 ---
 
@@ -163,7 +190,7 @@ The exact field model is in `[SPECIFICATION.md](SPECIFICATION.md)`.
 | Understand the idea                    | this README                                                                                |
 | Understand the model                   | `[MODEL.md](MODEL.md)`                                                                     |
 | Implement or validate                  | `[SPECIFICATION.md](SPECIFICATION.md)`, `[schema/](schema/)`, `[validation/](validation/)` |
-| Inspect a catalog                      | `[examples/](examples/)`                                                                   |
+| Inspect a catalog                      | `[examples/](examples/)` — start with `[examples/reference-enterprise/](examples/reference-enterprise/)` |
 | See how OSM sits with other frameworks | `[models/](models/)`                                                                       |
 | See regulatory and control mappings    | `[compliance/](compliance/)`                                                               |
 | See ownership roles                    | `[GOVERNANCE.md](GOVERNANCE.md)`                                                           |
@@ -177,9 +204,16 @@ The exact field model is in `[SPECIFICATION.md](SPECIFICATION.md)`.
 ```bash
 python3 -m pip install -r validation/requirements.txt
 python3 validation/validate.py
+python3 validation/validate.py --catalog examples/reference-enterprise
+python3 validation/validate.py --catalog examples/reference-enterprise/golden-example
+python3 validation/validate.py --catalog examples/reference-estate
+python3 validation/validate.py --catalog examples/reference-estate/golden-example
 ```
 
-The examples are synthetic. They are not a recommended estate and not a real vendor register.
+Basic examples under `examples/catalog/` are synthetic schema tutorials.
+`examples/reference-enterprise/` is a real predecessor catalog onboarded
+to OSM. `examples/reference-estate/` is a researched public-provider
+estate. None is a certification or a vendor recommendation.
 
 ---
 

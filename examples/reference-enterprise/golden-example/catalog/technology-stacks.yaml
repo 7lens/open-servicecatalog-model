@@ -1,0 +1,25 @@
+# Golden-example Technology Stacks
+#
+# Five competency domains from the predecessor catalog.
+
+technology_stacks:
+
+  - id: compute
+    name: Compute
+    description: Virtual machines, containers and serverless execution.
+
+  - id: storage
+    name: Storage
+    description: Object storage and backup.
+
+  - id: db
+    name: Database
+    description: Managed relational database services.
+
+  - id: sec
+    name: Security
+    description: Workforce identity and secrets management.
+
+  - id: auto
+    name: Automation
+    description: Configuration automation and AIOps.

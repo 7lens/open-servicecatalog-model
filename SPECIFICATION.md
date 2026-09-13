@@ -13,8 +13,9 @@ OSM is a canonical technological-service core. It does not replace ITIL, TM Foru
 The implemented model separates:
 
 ```text
-SERVICE DEFINITION     what the service is (catalog)
-SERVICE POSTURE        how it currently stands (service_attributes)
+SERVICE DEFINITION     what the service is (catalog, including characteristics)
+SERVICE POSTURE        how the service currently stands (`service_posture`)
+OFFERING POSTURE       how each offering currently stands (`offering_posture`)
 PROVENANCE             why the information can be trusted
 EXTERNAL CONTEXT       owned by other systems — not modelled here
 ```
@@ -51,9 +52,22 @@ not model:
 - enterprise decision intelligence
 - detailed service-level / SLA objects
 - first-class Service → Service relationships
+- DORA register of information or contractual Arrangement
+- GDPR Record of Processing Activities
+- ISO ISMS / PIMS control-implementation objects
+- NIST CSF Profiles, Categories, or Tiers
+- EU AI Act technical-file or GPAI structures
 
 Consumers of a technological service are outside the scope of this
-model.
+model. See §10 for the full **External Concepts** list.
+
+OSM is a vendor-neutral technological service model: machine-readable,
+intentionally small, designed for interoperability, suitable as a
+canonical technology-service layer. It is **not** a CMDB, a complete
+enterprise ontology, a DORA RoI, a GDPR RoPA, a ServiceNow CSDM
+implementation, an ITIL implementation, a full TM Forum model, an
+NIST implementation model, an ISO control system, or an EU AI Act
+technical-file system.
 
 ### Design principles
 
@@ -62,7 +76,7 @@ model.
    offerings, characteristics, optional `providers`, optional
    `provenance`). Identity (`id`) is immutable. The definition may
    evolve. Current operational/governance **posture** lives in
-   `service_attributes` and changes on a different cadence.
+   `service_posture` and changes on a different cadence.
 2. **Two tiers, no deeper.** A service has service offerings. That is
   the only nesting. Offerings are the atomic requestable unit. OSM
    does not add a ServiceSpecification entity or extra catalog
@@ -95,12 +109,12 @@ model.
   6. Determine whether the apparent difference is actually semantic
     or merely terminology / framework-specific.
   7. Only add a new field if there is a genuine semantic distinction.
-    an existing OSM field already represents the concept, reuse it
-    d express framework-specific semantics through mappings. The
-    istence of a field in another standard is not sufficient
-    stification for adding it to OSM. Genuinely different concepts
-    y coexist even when they use similar names, the same enum
-    lues, or appear related.
+    If an existing OSM field already represents the concept, reuse it
+    and express framework-specific semantics through mappings. The
+    existence of a field in another standard is not sufficient
+    justification for adding it to OSM. Genuinely different concepts
+    may coexist even when they use similar names, the same enum
+    values, or appear related.
 
 ---
 
@@ -109,30 +123,30 @@ model.
 ## 2. Files and how they relate
 
 
-| File                               | Concept                                       | Nature       | Typical owner            |
-| ---------------------------------- | --------------------------------------------- | ------------ | ------------------------ |
-| `examples/technology-stacks.yaml`  | Operational competency domains                | Stable       | Platform leadership      |
-| `examples/services.yaml`           | The catalog (services, with nested offerings) | Stable       | Stack + Service Owners   |
-| `examples/service-attributes.yaml` | Service / offering **posture**                | Dynamic      | Multiple teams           |
-| `examples/ict-providers.yaml`      | Third-party provider register                 | Semi-dynamic | Vendor management / risk |
-
+| File | Concept | Nature | Typical owner |
+|------|---------|--------|---------------|
+| `examples/catalog/technology-stacks.yaml` | Operational competency domains | Stable | Platform leadership |
+| `examples/catalog/services.yaml` | The catalog (services, with nested offerings) | Stable | Stack + Service Owners |
+| `examples/catalog/ict-providers.yaml` | Third-party provider register | Semi-dynamic | Vendor management / risk |
+| `examples/posture/service-posture.yaml` | Service / offering **posture** | Dynamic | Multiple teams |
 
 The schema defines Service Offering as its own concept. In catalog
 data, offerings are nested under their parent Service. See
 `[examples/README.md](examples/README.md)`.
 
 ```
-technology-stacks.yaml
+catalog/technology-stacks.yaml
         │  1 stack : many services
         v
-services.yaml                 ← the catalog
-        │                       providers[] → ict-providers.yaml
+catalog/services.yaml          ← the catalog
+        │                       providers[] → catalog/ict-providers.yaml
         │ service_id
         v
-service-attributes.yaml
+posture/service-posture.yaml
 ```
 
-JSON Schema for each entity is in `schema/`.
+JSON Schema is in `schema/catalog/`, `schema/posture/` and
+`schema/shared/`.
 
 ---
 
@@ -192,11 +206,11 @@ in this repository are a starter set.
 
 | Mapping         | Purpose                                                                                         |
 | --------------- | ----------------------------------------------------------------------------------------------- |
-| `tbm_tower`     | TBM IT Tower (L1) — finance cost allocation                                                     |
-| `tbm_sub_tower` | TBM Sub-Tower (L2)                                                                              |
-| `togaf_domain`  | TOGAF architecture domain                                                                       |
+| `tbm_tower`     | TBM Taxonomy 5.0.1 **Technology Resource Tower** label — finance mapping, not a TBM catalog     |
+| `tbm_sub_tower` | TBM Sub-Tower label                                                                             |
+| `togaf_domain`  | TOGAF 10th Edition architecture domain label (Business, Data, Application, or Technology)       |
 | `iso27001`      | Free-text ISO/IEC 27001:2022 Annex A control references                                         |
-| `iso27701`      | Free-text ISO/IEC 27701 references, or `not-applicable`                                         |
+| `iso27701`      | Free-text ISO/IEC 27701:2025 references, or `not-applicable`                                    |
 | `nist_csf`      | List of NIST CSF 2.0 functions: `govern`, `identify`, `protect`, `detect`, `respond`, `recover` |
 | `gdpr`          | Free-text GDPR article references, or `not-applicable`                                          |
 | `dora`          | `pillar` and `criticality` (see enums below)                                                    |
@@ -210,11 +224,24 @@ DORA `criticality` ∈ {`critical`, `important`, `standard`}
 EU AI Act `max_risk_class` ∈ {`unacceptable`, `high-risk`, `limited-risk`, `minimal-risk`, `not-applicable`}
 
 These mappings are **optional reference mappings**. They are not a
-claim of compliance, certification, or legal interpretation.
+claim of compliance, certification, or legal interpretation. OSM can
+**map to** / **support integration with** the named frameworks; it
+does not implement them.
 
-Stack `mappings.dora.criticality` is a **stack-level** DORA label.
-Service criticality is canonical `operational_criticality`. Those are
-different grains.
+Stack `mappings.dora.criticality` is a **stack-level** DORA-oriented
+label. Service criticality is canonical `operational_criticality`.
+Those are different grains. Stack `standard` is an OSM enum token,
+not a DORA CIF class.
+
+`togaf_domain` sits on Technology Stack only. Do not add TOGAF
+domain fields to Service.
+
+`tbm_tower` / `tbm_sub_tower` sit on Technology Stack only. Do not
+add Service-level TBM Solutions-layer fields unless a future
+mapping extension requires them.
+
+EU AI Act `max_risk_class` is an **OSM compatibility label**. It
+does not reproduce Article 6 / Annex III legal classification.
 
 ---
 
@@ -262,7 +289,7 @@ This catalog record is the **current** definition for that `id`.
 Prior definitions are not stored as extra rows; validity tells a
 machine the period this definition covers. `valid_to: null` means
 still in force. `lifecycle_state` lives on the Service, not on
-`service_attributes`. Offerings have no independent version,
+`service_posture`. Offerings have no independent version,
 validity, or lifecycle fields.
 
 ### Offering fields
@@ -330,6 +357,35 @@ Rules:
    available. They are not `availability_target`, `response_target`
    or `resolution_target`.
 
+Reserved characteristic **names** (conventions, not schema fields).
+Use these rather than inventing duplicates. Distinct names mean
+distinct facts (**OSM-D-001**, **OSM-D-002**):
+
+| `name` | Meaning |
+|--------|---------|
+| `purpose` | Generic purpose of the service or offering. Not `gdpr_purpose`, `iso27701_purpose`, `dora_purpose`, or `ai_act_purpose`. |
+| `region` | Coarse region label when a single region applies. |
+| `geography` | Broader geography when not a single region code. |
+| `deployment_region` | Where the offering is deployed. |
+| `service_region` | Where the service is offered / available. Not the same as processing or storage. |
+| `data_residency` | Residency constraint or actual residency policy for the offering. |
+| `processing_location` | Where data is **processed**. Not storage. |
+| `storage_location` | Where data is **stored**. Not processing. |
+| `operating_region` | Operating / availability region when that is the intended fact. |
+
+**data processing location ≠ data storage location.**
+
+**provider capability / possible location ≠ actual service or
+offering residency.** ICT Provider `data_processing_locations` is a
+capability map. Actual residency belongs on Service/Offering
+characteristics.
+
+Do not use a characteristic to duplicate identity already expressed
+by `providers` or stack assignment (for example
+`deployment_environment: aws` when AWS is already the ICT Provider).
+
+Do not add these as new core schema properties.
+
 
 
 ### 5.2 Provenance
@@ -338,6 +394,12 @@ A reusable **provenance** object may be attached to a Service, a
 Service Offering, a service posture record, or an offering posture
 row. It records why an enterprise fact can be trusted. It is not an
 AI interpretation or recommendation.
+
+There is **one** provenance mechanism (**OSM-M-011**). Do not add
+per-field provenance. ICT Provider does **not** currently allow
+`provenance` in the schema (`additionalProperties: false`). Adding
+it is a documented schema-change **candidate**, not an implemented
+field. Do not invent a provider-specific provenance type.
 
 
 | Field                  | Required | Description                                                                                                      |
@@ -360,13 +422,12 @@ trust question. Do not collapse them.
 
 ## 6. Service posture
 
-Organized **by service** in `service_attributes`. The YAML key and
-filename are kept for file compatibility. Semantically this is
+Organized **by service** in `service_posture`. This is
 **Service Posture** (how the service currently stands) plus nested
 **Offering Posture**.
 
 Service-level fields are not duplicated per offering — an offering
-inherits them from its parent. An empty `offering_attributes: []` is
+inherits them from its parent. An empty `offering_posture: []` is
 a valid incremental state.
 
 Canonical OSM posture fields are unprefixed. Framework-named fields
@@ -407,8 +468,19 @@ penalties, credits, workflows or measurement history.
 
 
 `operational_criticality` is the canonical criticality semantic.
+
+`privacy_classification` is the canonical OSM high-level privacy
+classification (**OSM-D-003**). Framework-specific privacy fields
+(`iso27701_pii_role`, `gdpr_processing_activity`, …) are
+compatibility mappings, not competing canonical classes. Do not
+create `gdpr_privacy_classification` or similar.
+
 `ai_act_*` fields are named for the framework they optionally map
 to. Using them does not constitute an AI Act assessment.
+`ai_act_risk_class` is an **OSM compatibility label**. Its enum does
+**not** reproduce Article 6 / Annex III legal classification.
+`ai_act_human_oversight` is an EU AI Act compatibility field; do
+not rename it to generic `human_oversight`.
 
 `data_classification` and `security_classification` share enum tokens
 on purpose. They are **not** the same fact: one classifies the data
@@ -480,10 +552,10 @@ They coexist; the tier is not a substitute for RTO/RPO.
 
 | Field                     | Values                                                                                                     |
 | ------------------------- | ---------------------------------------------------------------------------------------------------------- |
-| `iso27001_controls`       | list of Annex A control IDs                                                                                |
-| `iso27701_pii_role`       | `controller` | `processor` | `joint-controller` | `none`                                                   |
+| `iso27001_controls`       | list of Annex A control IDs — locators, not SoA or implemented-control evidence                                |
+| `iso27701_pii_role`       | Compatibility mapping to ISO/IEC 27701:2025 controller/processor language: `controller` \| `processor` \| `joint-controller` \| `none`. Per **offering**, not per processing activity. Not a PIMS. Canonical privacy class remains `privacy_classification`. |
 | `iso27701_pii_categories` | list of `identity`, `financial`, `health`, `behavioral`, `location`, `biometric`, `communications`, `none` |
-| `iso27701_retention_days` | number, or `null`                                                                                          |
+| `iso27701_retention_days` | number, or `null` — characterization, not a legal retention schedule                                           |
 
 
 **NIST CSF 2.0 (reference mappings)**
@@ -491,8 +563,8 @@ They coexist; the tier is not a substitute for RTO/RPO.
 
 | Field                 | Values                                                                          |
 | --------------------- | ------------------------------------------------------------------------------- |
-| `nist_functions`      | list of `govern`, `identify`, `protect`, `detect`, `respond`, `recover`         |
-| `nist_control_status` | `implemented` | `partially-implemented` | `planned` | `not-applicable` | `null` |
+| `nist_functions`      | list of CSF 2.0 Functions: `govern`, `identify`, `protect`, `detect`, `respond`, `recover` |
+| `nist_control_status` | OSM assessment **signal**: `implemented` \| `partially-implemented` \| `planned` \| `not-applicable` \| `null`. **Not** a native NIST CSF object, Profile, Category, or control-catalogue entry. |
 
 
 **GDPR (reference mappings)**
@@ -509,7 +581,9 @@ They coexist; the tier is not a substitute for RTO/RPO.
 
 DORA recovery and testing semantics map to canonical `rto`, `rpo`
 and `resilience_tested` above. DORA provider associations map to
-canonical `providers` on Service or Offering.
+canonical `providers` on Service or Offering. That linkage is **not**
+a DORA RoI or contractual-arrangement model. Do not treat
+`providers` as `dora_third_party_deps`.
 
 An offering posture row may also carry `provenance`.
 
@@ -534,11 +608,32 @@ Illustrative values in examples are **not legal advice** and are
 
 ## 7. ICT providers
 
-A register of third-party technology providers. This entity is the
-**canonical** provider definition. Service and Service Offering
-associate with a provider by listing its `id` in `providers`.
+A register of ICT providers that **materially deliver, operate, or
+underpin** a technological Service or Service Offering
+(**OSM-C-006**). This entity is the **canonical** provider
+definition. It is **not** a generic vendor, tool, or product
+inventory.
+
+Use ICT Provider for the party that provides the technology
+capability. A **licensor** is an ICT Provider only when it
+materially provides or underpins the Service/Offering. Generic
+software tools, products, suppliers, or commercial parties are not
+automatically ICT Providers. Do not introduce provider-role fields
+(`operator_provider`, `licensor_provider`, `vendor_role`,
+`provider_role`).
+
+Service and Service Offering associate with a provider by listing
+its `id` in `providers`. If an offering is provider-specific, the
+id belongs on the Offering. If the provider is intrinsic to the
+whole Service, the id belongs on the Service.
+
 Do not copy headquarters, locations, certifications, contracts, risk,
 substitutability or other provider attributes onto Service or Offering.
+
+**OSM provider linkage is not a DORA RoI or contractual-arrangement
+model** (**OSM-C-007**). Contract-related fields below characterize
+the provider record. They are not an Arrangement entity. DORA
+supervisory reporting may consume this relationship **outside** OSM.
 
 ```
 Service / Offering
@@ -564,8 +659,8 @@ satisfy any regulatory filing.
 | `id`                        | yes      | Short identifier referenced by `providers`                                                                                |
 | `name`                      | yes      | Provider name                                                                                                             |
 | `type`                      | yes      | `cloud-infrastructure` | `cloud-platform` | `managed-service` | `software-vendor` | `network-provider` | `data-center`    |
-| `headquarters`              | no       | ISO 3166-1 alpha-2 country code                                                                                           |
-| `data_processing_locations` | no       | Countries or regions as a list                                                                                            |
+| `headquarters`              | no       | ISO 3166-1 alpha-2 country code. **Not** processing location, storage location, or service availability region.           |
+| `data_processing_locations` | no       | Countries or regions the provider **can** process in (capability / possible locations). **Not** actual Service/Offering residency, and **not** storage location. |
 | `substitutability`          | yes      | `low` | `medium` | `high`                                                                                                 |
 | `contract_ref`              | no       | Local contract reference, or `null`                                                                                       |
 | `contract_start`            | no       | ISO 8601 date, or `null`                                                                                                  |
@@ -585,6 +680,15 @@ satisfy any regulatory filing.
 
 
 Do not publish a real vendor register as an example.
+
+Contract-related fields (`contract_ref`, `contract_start`,
+`contract_end`, `notice_period_days`, `audit_rights`,
+`subcontracting_allowed`, `subcontractors`,
+`exit_strategy_documented`, and related flags) characterize the
+provider relationship. They are **not** a DORA Arrangement model.
+
+ICT Provider has no `provenance` field in this version. See
+**OSM-M-011** (schema-change candidate).
 
 ---
 
@@ -611,8 +715,8 @@ An implementation should enforce:
 2. Every `service.id` is unique and has exactly 2 segments.
 3. Every `offering.id` is unique, has 3 segments, and its first 2
   segments equal its parent `service.id`.
-4. Every `service_attributes[].service_id` exists in the services catalog.
-5. Every `offering_attributes[].offering_id` exists under its parent
+4. Every `service_posture[].service_id` exists in the services catalog.
+5. Every `offering_posture[].offering_id` exists under its parent
   service in the services catalog.
 6. EU AI Act offering fields are present only where
   `ai_act_applicable: true`.
@@ -623,18 +727,90 @@ An implementation should enforce:
    that list is present.
 9. Each Service has `version`, `valid_from` and `lifecycle_state`.
   If `valid_to` is set, it must not be before `valid_from`.
-10. `service_attributes` must not contain `lifecycle_state`.
+10. `service_posture` must not contain `lifecycle_state`.
 11. Every id in Service or Offering `providers` exists in the ICT
   provider file. The field may be omitted. Duplicate ids in one
     list are rejected.
 12. If `provenance` is present, `confidence` and `discovery_method`
   must use the published enums; `last_verified` must be an ISO date.
 13. Service and Offering records must not declare Service-to-Service
-  relationship fields (`depends_on`, `consumes`, `provides_to`,
-    `related_service`, `related_services`).
+  relationship fields (`depends_on`, `depends_on_services`,
+    `dependencies`, `service_dependencies`, `requires_service`,
+    `consumes_service`, `consumes`, `provides_to`, `related_service`,
+    `related_services`).
 14. Records must not declare properties outside this specification.
   Schemas set `additionalProperties: false`.
 15. ICT Provider risk/severity is `risk_level`. Reverse Provider →
   Service links are derived from `providers`.
 
 See `[validation/](validation/)` for a lightweight checker.
+
+---
+
+## 10. External Concepts — Intentionally Outside OSM
+
+OSM is not intended to absorb these concepts. Map or join to them
+in an external integration layer. Do not add them as OSM entities.
+
+### CSDM
+
+- Service Instance
+- related running-instance concepts (including CSDM 5 siblings)
+
+### TM Forum
+
+- Candidate
+- Category
+- Customer Facing Service (CFS)
+- Resource Facing Service (RFS)
+- Service Inventory / Service Instance
+
+### ITIL
+
+- Digital Product
+- Consumers
+- Value Streams
+- Product and Service Lifecycle activities (not OSM `lifecycle_state`)
+
+### NIST CSF
+
+- Profiles
+- Categories
+- Tiers
+- control implementation structures
+
+### ISO
+
+- Statement of Applicability (SoA)
+- control implementation objects
+- PIMS processing structures
+
+### GDPR
+
+- Record of Processing Activities (RoPA)
+- legal basis
+- DPO
+- SCCs
+- processing activities
+
+### DORA
+
+- Register of Information (RoI)
+- Legal Entity Identifier (LEI)
+- CIF register
+- contractual Arrangement
+- incident feed
+
+### EU AI Act
+
+- GPAI model structures
+- legal provider/deployer role structures
+- EU database
+- technical file / conformity assessment structures
+
+### Architecture / inventory
+
+- Application
+- Application Service
+- Service Instance
+- running CMDB inventory
