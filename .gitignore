@@ -14,3 +14,6 @@ venv/
 # Local Cursor tooling — never publish
 .cursor/
 _cursor/
+
+# Maintainer archive — local from this point on
+_internal/
