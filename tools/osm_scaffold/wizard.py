@@ -528,9 +528,9 @@ class OnboardingWizard:
                 return default
             return ""
 
-    def _checkpoint(self, step: str, cursor: int = 0) -> None:
+    def _checkpoint(self, step: str, item_index: int = 0) -> None:
         self.state["step"] = step
-        self.state["cursor"] = cursor
+        self.state["item_index"] = item_index
         save_state(self.catalog_dir, self.state)
 
     def run(self, *, resume: bool = False) -> Path:
@@ -623,9 +623,9 @@ class OnboardingWizard:
         self._checkpoint("refine_stacks")
 
     def step_refine_stacks(self) -> None:
-        self._checkpoint("refine_stacks", int(self.state.get("cursor") or 0))
+        self._checkpoint("refine_stacks", int(self.state.get("item_index") or 0))
         self.echo("Step 3A — Technology Stacks. [k]eep  [r]ename  [d]elete")
-        index = int(self.state.get("cursor") or 0)
+        index = int(self.state.get("item_index") or 0)
         while index < len(self.state["stacks"]):
             self._checkpoint("refine_stacks", index)
             stack = self.state["stacks"][index]
@@ -665,13 +665,13 @@ class OnboardingWizard:
             )
         if not self.state["stacks"]:
             raise ScaffoldError("at least one Technology Stack is required")
-        self.state["cursor"] = 0
+        self.state["item_index"] = 0
         self._checkpoint("refine_services")
 
     def step_refine_services(self) -> None:
-        self._checkpoint("refine_services", int(self.state.get("cursor") or 0))
+        self._checkpoint("refine_services", int(self.state.get("item_index") or 0))
         self.echo("Step 3B — Services. [k]eep  [m]ove  [d]elete")
-        index = int(self.state.get("cursor") or 0)
+        index = int(self.state.get("item_index") or 0)
         while index < len(self.state["services"]):
             self._checkpoint("refine_services", index)
             service = self.state["services"][index]
@@ -697,7 +697,7 @@ class OnboardingWizard:
             self._add_service()
         if not self.state["services"]:
             raise ScaffoldError("at least one Service is required")
-        self.state["cursor"] = 0
+        self.state["item_index"] = 0
         self._checkpoint("refine_offerings")
 
     def _add_service(self) -> None:
@@ -728,9 +728,9 @@ class OnboardingWizard:
         )
 
     def step_refine_offerings(self) -> None:
-        self._checkpoint("refine_offerings", int(self.state.get("cursor") or 0))
+        self._checkpoint("refine_offerings", int(self.state.get("item_index") or 0))
         self.echo("Step 3C — Offerings (requestable variants). [k]eep  [d]elete")
-        service_index = int(self.state.get("cursor") or 0)
+        service_index = int(self.state.get("item_index") or 0)
         while service_index < len(self.state["services"]):
             self._checkpoint("refine_offerings", service_index)
             service = self.state["services"][service_index]
@@ -756,7 +756,7 @@ class OnboardingWizard:
                 offerings.append(self._new_offering(service))
             service["offerings"] = offerings
             service_index += 1
-        self.state["cursor"] = 0
+        self.state["item_index"] = 0
         self._checkpoint("params_stacks")
 
     def _new_offering(self, service: dict[str, Any]) -> dict[str, Any]:

@@ -248,7 +248,7 @@ class OnboardingWizardTests(unittest.TestCase):
             draft = propose_draft(REPO_ROOT, ["devops-automation"])
             state = {
                 "step": "compile",
-                "cursor": 0,
+                "item_index": 0,
                 "frameworks": [],
                 "domains": ["devops-automation"],
                 "stacks": draft["stacks"],

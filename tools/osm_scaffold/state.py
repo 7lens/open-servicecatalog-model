@@ -29,7 +29,7 @@ def state_path(catalog_dir: Path) -> Path:
 def empty_state() -> dict[str, Any]:
     return {
         "step": "frameworks",
-        "cursor": 0,
+        "item_index": 0,
         "frameworks": [],
         "domains": [],
         "stacks": [],
