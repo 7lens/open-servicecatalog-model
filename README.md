@@ -19,6 +19,28 @@ model. It does not require a particular product, cloud or method.
 
 ---
 
+## Begin here — the onboarding wizard
+
+The **Principal Manager, Platform Lead, Head of Architecture, or
+Enterprise Architect** must begin their catalog journey by running
+the `osm-scaffold` onboarding wizard. That person owns the taxonomy:
+what a Service is, how Technology Stacks are cut, which legal sellers
+sit on Offerings. Cloud operations and FinOps consume the catalog
+later. They do not start it.
+
+The wizard writes OSM manifests under `[servicecatalog/](servicecatalog/)`.
+You can pause (`:save`), inspect the draft (`:view`), and continue
+(`--resume`).
+
+```bash
+python3 -m pip install -r tools/requirements.txt
+python3 -m tools.osm_scaffold.cli
+python3 -m tools.osm_scaffold.cli --resume
+python3 -m tools.osm_lint.cli --catalog servicecatalog
+```
+
+---
+
 ## Why OSM exists
 
 Technology organizations already speak several languages: ITIL,
@@ -182,12 +204,130 @@ not certification) are in `[models/](models/)` and
 
 
 
-## Start here
+## How to get started
+
+OSM is the model. The catalog you commit is the source of truth.
+
+Start by **creating that catalog**, not by reading the whole
+specification. The tools in `[tools/](tools/)` sit on OSM 1.3.0 YAML.
+They do not replace the model, and they do not invent posture or
+compliance.
+
+Install once from the repository root:
+
+```bash
+python3 -m pip install -r tools/requirements.txt
+python3 -m pip install -r validation/requirements.txt
+```
+
+### 1. Create the canonical catalog — `osm-scaffold`
+
+**Persona:** Principal Manager, Platform Lead, or Head of Architecture
+(Technology Stack Owners under that accountability).
+
+This is the onboarding path — the most important piece, and principal
+work. Deciding what counts as a Service, how stacks are cut, and
+which legal sellers belong on Offerings is enterprise modelling, not
+a cloud-ops or FinOps task. Those roles consume the catalog later
+(offerings, cost signals). They do not own the taxonomy.
+
+`osm-scaffold` is the onboarding wizard: frameworks that apply, capability
+domains, a golden-example draft, hierarchy refinement, then must-have
+fields. It writes valid OSM YAML under `[servicecatalog/](servicecatalog/)`
+and refuses the usual first mistakes (product-named Services such as
+“EKS”, request-catalog Offerings such as password-reset, vendor towers
+such as a stack called AWS).
+
+```bash
+python3 -m tools.osm_scaffold.cli
+python3 -m tools.osm_scaffold.cli --resume
+python3 validation/validate.py --catalog servicecatalog
+python3 -m tools.osm_lint.cli --catalog servicecatalog
+```
+
+At any prompt: `:view` (draft tree) or `:save` (checkpoint and exit).
+A one-service non-interactive path remains available with `--config`
+for automation; the wizard is how humans onboard.
+
+Unknown facts stay unset. That is correct. A small honest catalog
+beats a complete-looking fiction.
+
+Worked catalogs, if you want to read before you write:
+`[examples/reference-enterprise/golden-example/](examples/reference-enterprise/golden-example/)`
+(onboarded predecessor) and
+`[examples/reference-estate/golden-example/](examples/reference-estate/golden-example/)`
+(public-provider estate). Full CLI:
+`[tools/README.md](tools/README.md)`.
+
+### 2. Keep the catalog semantically true — `osm-lint`
+
+**Persona:** Enterprise Architect / Principal Platform Architect.
+
+`validation/validate.py` checks shape and references. `osm-lint`
+catches catalogs that *validate* while still being wrong: S3 as a
+Service, MFA as an Offering, Entra mixed with AWS IAM, a vendor SLA
+copied into `availability_target`, a DPA flagged without evidence.
+
+```bash
+python3 -m tools.osm_lint.cli --catalog servicecatalog
+python3 -m tools.osm_lint.cli --catalog examples/reference-estate/golden-example
+```
+
+Exit `0` is clean, `1` is semantic errors, `2` is warnings only.
+
+### 3. Ask governance questions — `osm-query`
+
+**Persona:** IT Governance / Compliance & Security Officer
+(and the architect who must answer them).
+
+Once you have a catalog, do not grep YAML for “where is AWS
+concentration?” or “which critical services have no RTO?”. These
+reports are locators, not certification. OSM is not a DORA register,
+an ISO SoA, or a NIST profile.
+
+```bash
+python3 -m tools.osm_query.cli gaps --catalog servicecatalog
+python3 -m tools.osm_query.cli providers --catalog servicecatalog
+python3 -m tools.osm_query.cli compliance --framework dora --catalog servicecatalog
+```
+
+### 4. Give machines bounded context — `osm-context`
+
+**Persona:** AI Agent Builder / Platform Automation Engineer.
+
+Agents need the same catalog, not a CMDB dump. `export-context`
+writes one deterministic JSON file. Unassessed operational fields
+are `"UNKNOWN"`. Framework mapping fields are stripped so they
+cannot be over-read as compliance.
+
+```bash
+python3 -m tools.osm_query.cli export-context \
+  --catalog servicecatalog \
+  --output osm-agent-context.json
+```
+
+### Who uses what
+
+| Persona | Job to be done | Tool |
+| ------- | -------------- | ---- |
+| Principal Manager / Platform Lead / Head of Architecture | Establish the canonical OSM catalog via the onboarding wizard | **`osm-scaffold`** |
+| Enterprise / Platform Architect | Stop a valid YAML file from becoming a false catalog | **`osm-lint`** |
+| Governance / CISO | Concentration, owner gaps, resilience locators — without claiming compliance | **`osm-query`** |
+| Agent / automation engineer | Bounded, machine-readable operational context | **`osm-context`** |
+
+Command reference: `[tools/README.md](tools/README.md)`.
+
+---
+
+
+
+## Read next
 
 
 | If you want to…                        | Read                                                                                       |
 | -------------------------------------- | ------------------------------------------------------------------------------------------ |
 | Understand the idea                    | this README                                                                                |
+| Get started with a catalog             | [Begin here](#begin-here--the-onboarding-wizard), `[servicecatalog/](servicecatalog/)`, `[tools/](tools/)` |
 | Understand the model                   | `[MODEL.md](MODEL.md)`                                                                     |
 | Implement or validate                  | `[SPECIFICATION.md](SPECIFICATION.md)`, `[schema/](schema/)`, `[validation/](validation/)` |
 | Inspect a catalog                      | `[examples/](examples/)` — start with `[examples/reference-enterprise/](examples/reference-enterprise/)` |
