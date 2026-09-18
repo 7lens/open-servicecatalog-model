@@ -17,3 +17,6 @@ _cursor/
 
 # Maintainer archive — local from this point on
 _internal/
+
+# osm-scaffold checkpoint (resume with --resume)
+servicecatalog/.osm-scaffold-state.json
