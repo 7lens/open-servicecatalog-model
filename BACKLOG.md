@@ -348,13 +348,14 @@ The wizard must let that owner pause, review, and resume.
 ### Core value proposition and JTBD
 
 **JTBD:** When I establish the enterprise technological-service
-catalog, I want an onboarding wizard that proposes a golden draft,
-lets me shape the hierarchy, collects only must-have fields (plus
-selected framework locators), and emits valid OSM 1.3.0 YAML under
-`servicecatalog/`.
+catalog, I want the same onboarding whether I read the docs or ask
+a coding assistant: explain OSM as the lock-in-free canonical model,
+ask my technology stacks then compliance locators, and stop at a
+draft of Stacks and Services I am comfortable starting with.
 
-**Value:** Canonical identity without reading the whole spec. `:view`
-/ `:save` / `--resume`. No invented posture.
+**Value:** Own the semantics under `servicecatalog/`. Constant board
+(“this is what we currently have”). Flawless `:pause` / `--resume`.
+No invented posture.
 
 ### Inputs and outputs
 
@@ -363,10 +364,11 @@ selected framework locators), and emits valid OSM 1.3.0 YAML under
 | **Inputs** | Interactive TTY wizard (default → `servicecatalog/`). Checkpoint `.osm-scaffold-state.json`. Optional `--config` one-service YAML for automation. |
 | **Outputs** | OSM 1.3.0 YAML in `servicecatalog/catalog/` and empty `servicecatalog/posture/service-posture.yaml`. |
 
-Pipeline: frameworks → domains → golden draft → refine stacks /
-services / offerings → must-have parameters → compile. `:view` and
-`:save` at every prompt. `--resume` continues. Checkpoint is deleted
-on success.
+Pipeline: stacks → compliance locators → golden/custom draft →
+refine until comfortable → write YAML (checkpoint **kept**).
+`:view` and `:pause` at every prompt. `--resume` summarises what
+exists, where it is stored, and proposes new stacks, new services,
+or more from the golden examples. `--status` prints the board.
 
 ### Enforced architectural constraints (§10 anti-patterns)
 
@@ -398,10 +400,13 @@ on success.
 - Then it refuses
 - Given `--output` pointing at an existing catalog
 - Then it merges new records and rejects duplicate ids
-- Given `:save` during the wizard
-- Then a checkpoint is written and `--resume` continues at that step
-- Given a finished wizard
-- Then YAML exists under `servicecatalog/` and the checkpoint is gone
+- Given `:pause` during onboarding
+- Then a checkpoint is written and `--resume` continues from that draft
+- Given a finished phase-1 draft
+- Then YAML exists under `servicecatalog/` **and** the checkpoint remains
+  so they can add stacks, add services, or pull golden examples later
+- Given catalog YAML but no checkpoint
+- Then `--resume` hydrates from disk, shows the board, and proposes continue
 
 ### Smallest usable slice (MVI)
 

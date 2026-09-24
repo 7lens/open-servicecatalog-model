@@ -9,7 +9,8 @@ from tempfile import TemporaryDirectory
 from tools.osm_lint.engine import lint_path
 from tools.osm_scaffold.frameworks import discover_frameworks
 from tools.osm_scaffold.golden import propose_draft
-from tools.osm_scaffold.state import load_state, render_tree, save_state, state_path
+from tools.osm_scaffold.session import load_session, render_status
+from tools.osm_scaffold.state import load_state, save_state, state_path
 from tools.osm_scaffold.wizard import (
     OnboardingWizard,
     SaveAndExit,
@@ -206,24 +207,15 @@ class QueueAsk:
 
 
 def _keep_defaults_for_draft(draft: dict) -> list[str]:
-    answers = ["none", "3", ""]
+    answers = ["3", "n", "none", ""]
     for _stack in draft["stacks"]:
         answers.append("")
     answers.append("n")
     for _service in draft["services"]:
         answers.append("")
     answers.append("n")
-    for service in draft["services"]:
-        for _offering in service["offerings"]:
-            answers.append("")
-        answers.append("n")
-    for _stack in draft["stacks"]:
-        answers.append("")
-    for _service in draft["services"]:
-        answers.extend(["", "", ""])
-    for service in draft["services"]:
-        for _offering in service["offerings"]:
-            answers.extend(["", "n"])
+    answers.append("y")
+    answers.append("5")
     return answers
 
 
@@ -238,16 +230,17 @@ class OnboardingWizardTests(unittest.TestCase):
             self.assertTrue(state_path(catalog_dir).is_file())
             saved = load_state(catalog_dir)
             assert saved is not None
-            self.assertEqual(saved["step"], "frameworks")
-            tree = render_tree(saved)
-            self.assertIn("step:", tree)
+            self.assertEqual(saved["step"], "stacks")
+            tree = render_status(saved, catalog_dir)
+            self.assertIn("This is what we currently have", tree)
+            self.assertIn("lock-in-free", tree)
 
-    def test_resume_compile_writes_yaml_and_clears_checkpoint(self) -> None:
+    def test_resume_write_keeps_checkpoint(self) -> None:
         with TemporaryDirectory() as tmp:
             catalog_dir = Path(tmp) / "servicecatalog"
             draft = propose_draft(REPO_ROOT, ["devops-automation"])
             state = {
-                "step": "compile",
+                "step": "write",
                 "item_index": 0,
                 "frameworks": [],
                 "domains": ["devops-automation"],
@@ -261,9 +254,10 @@ class OnboardingWizardTests(unittest.TestCase):
                 service["version"] = "1.0.0"
                 service["valid_from"] = "2026-01-01"
             save_state(catalog_dir, state)
-            wizard = OnboardingWizard(REPO_ROOT, catalog_dir, ask=QueueAsk([]), echo=lambda _msg: None)
-            wizard.run(resume=True)
-            self.assertFalse(state_path(catalog_dir).is_file())
+            wizard = OnboardingWizard(REPO_ROOT, catalog_dir, ask=QueueAsk(["5"]), echo=lambda _msg: None)
+            with self.assertRaises(SaveAndExit):
+                wizard.run(resume=True)
+            self.assertTrue(state_path(catalog_dir).is_file())
             self.assertTrue((catalog_dir / "catalog" / "services.yaml").is_file())
             validate = subprocess.run(
                 [
@@ -288,10 +282,49 @@ class OnboardingWizardTests(unittest.TestCase):
             catalog_dir = Path(tmp) / "servicecatalog"
             ask = QueueAsk(answers)
             wizard = OnboardingWizard(REPO_ROOT, catalog_dir, ask=ask, echo=lambda _msg: None)
-            wizard.run(resume=False)
+            with self.assertRaises(SaveAndExit):
+                wizard.run(resume=False)
             self.assertEqual(ask.answers, [])
             self.assertTrue((catalog_dir / "catalog" / "technology-stacks.yaml").is_file())
-            self.assertFalse(state_path(catalog_dir).is_file())
+            self.assertTrue(state_path(catalog_dir).is_file())
+            saved = load_state(catalog_dir)
+            assert saved is not None
+            self.assertEqual(saved["step"], "continue")
+
+    def test_pause_alias_writes_checkpoint(self) -> None:
+        with TemporaryDirectory() as tmp:
+            catalog_dir = Path(tmp) / "servicecatalog"
+            ask = QueueAsk([":pause"])
+            wizard = OnboardingWizard(REPO_ROOT, catalog_dir, ask=ask, echo=lambda _msg: None)
+            with self.assertRaises(SaveAndExit):
+                wizard.run(resume=False)
+            self.assertTrue(state_path(catalog_dir).is_file())
+
+    def test_resume_hydrates_from_catalog_yaml(self) -> None:
+        with TemporaryDirectory() as tmp:
+            catalog_dir = Path(tmp) / "servicecatalog"
+            draft = propose_draft(REPO_ROOT, ["devops-automation"])
+            for service in draft["services"]:
+                service["accountable"] = "Platform Lead"
+                service["lifecycle_state"] = "draft"
+            write_catalog_from_state(catalog_dir, draft)
+            session = load_session(catalog_dir)
+            assert session is not None
+            self.assertEqual(session["step"], "continue")
+            self.assertTrue(session["stacks"])
+            self.assertTrue(session["services"])
+            board = render_status(session, catalog_dir)
+            self.assertIn("auto", board)
+            captured: list[str] = []
+            wizard = OnboardingWizard(
+                REPO_ROOT, catalog_dir, ask=QueueAsk(["5"]), echo=captured.append
+            )
+            with self.assertRaises(SaveAndExit):
+                wizard.run(resume=True)
+            joined = "\n".join(captured)
+            self.assertIn("lock-in-free", joined)
+            self.assertIn("How to continue", joined)
+            self.assertIn("Stored in:", joined)
 
     def test_write_catalog_from_state_helper(self) -> None:
         with TemporaryDirectory() as tmp:
