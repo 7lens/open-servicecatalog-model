@@ -86,27 +86,38 @@ python3 -m tools.osm_query.cli export-context \
 
 ## osm-scaffold
 
-Onboarding wizard for the **Principal Manager, Platform Lead, or Head
-of Architecture**. Writes the canonical catalog under
-`servicecatalog/` (standard OSM `catalog/` + `posture/` layout).
+Onboarding for whoever sees that not owning enterprise semantics is a
+problem in an AI future (ideal: Principal Manager, Platform Lead, Head
+of Architecture). Same protocol as [`ONBOARDING.md`](../ONBOARDING.md):
+own the semantics, grow a lock-in-free ontology, ask stacks then
+compliance, first draft the adopter is comfortable starting with.
+Writes under `servicecatalog/` (standard OSM `catalog/` + `posture/`
+layout).
 
 ```bash
 python3 -m tools.osm_scaffold.cli
+python3 -m tools.osm_scaffold.cli --status
 python3 -m tools.osm_scaffold.cli --resume
 python3 -m tools.osm_lint.cli --catalog servicecatalog
 ```
 
-Pipeline: frameworks → capability domains → golden-example draft →
-refine stacks/services/offerings → must-have fields → YAML.
+Phase 1: technology stacks → compliance locators → golden-or-custom
+draft → refine until comfortable → write YAML. Checkpoint is **kept**
+so continue works.
 
 At any prompt:
 
-- `:view` — print the draft tree
-- `:save` — write `servicecatalog/.osm-scaffold-state.json` and exit
+- `:view` / `:status` — the board (stacks, services, compliance, path)
+- `:pause` / `:save` — write `servicecatalog/.osm-scaffold-state.json` and exit
 
-`--resume` loads that checkpoint. `--fresh` discards it and starts
-again. The wizard refuses vendor-tower stacks, product-named
-Services, and ITSM offering slugs. It does not invent posture.
+`--resume` loads that checkpoint **or** hydrates from catalog YAML
+already on disk, summarises what is configured, and proposes: new
+stack, new service, more from the golden examples, write YAML, or
+pause again. `--fresh` discards the checkpoint. `--status` prints the
+board without changing anything.
+
+The session refuses vendor-tower stacks, product-named Services, and
+ITSM offering slugs. It does not invent posture.
 
 A one-service non-interactive path remains for automation:
 

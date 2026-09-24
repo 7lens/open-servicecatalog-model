@@ -5,39 +5,59 @@
 > **ONE ENTERPRISE. ONE ONTOLOGY. SEVEN LENSES.**
 > **SAME DATA. DIFFERENT QUESTIONS. BETTER DECISIONS.**
 
-A small, vendor-neutral, machine-readable **canonical model** for
-technological services.
-
-OSM lets an enterprise **own** the description of its technological
-services — instead of letting a vendor, platform or framework become
-the canonical representation of that landscape.
-
-It is published by [7lens](https://7lens.io) as a standalone open
-model. It does not require a particular product, cloud or method.
-
-7lens OSM is a semantic **data model**. It is not an AI model.
+OSM is a small, vendor-neutral, machine-readable **canonical data
+model** for technological services. It is not an AI model. It does
+not require a particular product, cloud, or method.
 
 ---
 
-## Begin here — the onboarding wizard
+## What it is, why it matters, how to start
 
-The **Principal Manager, Platform Lead, Head of Architecture, or
-Enterprise Architect** must begin their catalog journey by running
-the `osm-scaffold` onboarding wizard. That person owns the taxonomy:
-what a Service is, how Technology Stacks are cut, which legal sellers
-sit on Offerings. Cloud operations and FinOps consume the catalog
-later. They do not start it.
+**What.** OSM is the place where your organization records *what a
+technological service is* — once, in its own vocabulary. Stacks,
+Services, and Offerings are the canonical core.
 
-The wizard writes OSM manifests under `[servicecatalog/](servicecatalog/)`.
-You can pause (`:save`), inspect the draft (`:view`), and continue
-(`--resume`).
+**Why.** You own the **semantics**. That is the hard asset. Owned
+semantics are what let you grow a **lock-in-free ontology**: your
+enterprise picture of technological services, mapped to clouds, ITSM,
+GRC, and frameworks, instead of any of those becoming the source of
+truth.
+
+In an AI-driven organization that is not optional. If you do not own
+the semantics — and make them available to the whole enterprise —
+every team, tool, and agent keeps translating between incompatible
+pictures.
+
+**Who.** The ideal first user is a Principal Manager, Platform Lead,
+Head of Architecture, or Enterprise Architect. It can be **anyone**
+who sees the problem: not owning the semantics, and not making them
+available organization-wide, is a strategic failure in an AI future.
+
+**How.** Same path if you read this file or ask a coding assistant
+“how do I use this?”. Follow `[ONBOARDING.md](ONBOARDING.md)`. The
+CLI `osm-scaffold` is one way to run that conversation; a coding
+assistant must not skip it.
+
+Phase 1 is a **draft** of Technology Stacks and Services you are
+comfortable starting with. Your model lives in
+`[servicecatalog/](servicecatalog/)`. After every change you should
+see a simple board: this is what we currently have. Pause at any
+time; continue later from the same draft.
+
+1. What capabilities do you operate? (Technology Stacks — competencies,
+   not vendor towers.)
+2. Which regimes apply as locators, not claims? (compliance mappings.)
+3. Stop when the draft is honest enough to start.
 
 ```bash
 python3 -m pip install -r tools/requirements.txt
 python3 -m tools.osm_scaffold.cli
+python3 -m tools.osm_scaffold.cli --status
 python3 -m tools.osm_scaffold.cli --resume
 python3 -m tools.osm_lint.cli --catalog servicecatalog
 ```
+
+Published by [7lens](https://7lens.io) as a standalone open model.
 
 ---
 
@@ -222,32 +242,39 @@ python3 -m pip install -r validation/requirements.txt
 
 ### 1. Create the canonical catalog — `osm-scaffold`
 
-**Persona:** Principal Manager, Platform Lead, or Head of Architecture
-(Technology Stack Owners under that accountability).
+**Ideal user:** Principal Manager, Platform Lead, Head of Architecture,
+or Enterprise Architect. **Anyone** who sees that not owning enterprise
+semantics — and not making them available organization-wide — is a
+problem in an AI future can start.
 
-This is the onboarding path — the most important piece, and principal
-work. Deciding what counts as a Service, how stacks are cut, and
-which legal sellers belong on Offerings is enterprise modelling, not
-a cloud-ops or FinOps task. Those roles consume the catalog later
-(offerings, cost signals). They do not own the taxonomy.
+This is the onboarding path. The protocol is
+`[ONBOARDING.md](ONBOARDING.md)`: what OSM is (you own the semantics;
+that is how you grow a lock-in-free ontology), then **your technology
+stacks**, then **compliance locators**, then a draft you are comfortable
+starting with. Same conversation if a coding assistant is doing the
+implementation.
 
-`osm-scaffold` is the onboarding wizard: frameworks that apply, capability
-domains, a golden-example draft, hierarchy refinement, then must-have
-fields. It writes valid OSM YAML under `[servicecatalog/](servicecatalog/)`
-and refuses the usual first mistakes (product-named Services such as
-“EKS”, request-catalog Offerings such as password-reset, vendor towers
-such as a stack called AWS).
+Your model lives in `[servicecatalog/](servicecatalog/)`. Pause
+(`:pause`) and continue (`--resume`) from that folder. On continue you
+get a summary of what is already configured, where it is stored, and
+how to add stacks, add services, or pull more from the golden examples.
+
+`osm-scaffold` refuses the usual first mistakes (product-named Services
+such as “EKS”, request-catalog Offerings such as password-reset, vendor
+towers such as a stack called AWS).
 
 ```bash
 python3 -m tools.osm_scaffold.cli
+python3 -m tools.osm_scaffold.cli --status
 python3 -m tools.osm_scaffold.cli --resume
 python3 validation/validate.py --catalog servicecatalog
 python3 -m tools.osm_lint.cli --catalog servicecatalog
 ```
 
-At any prompt: `:view` (draft tree) or `:save` (checkpoint and exit).
+At any prompt: `:view` (the board) or `:pause` (checkpoint and exit).
 A one-service non-interactive path remains available with `--config`
-for automation; the wizard is how humans onboard.
+for automation; the onboarding conversation is how humans (and coding
+assistants) start.
 
 Unknown facts stay unset. That is correct. A small honest catalog
 beats a complete-looking fiction.
@@ -310,7 +337,7 @@ python3 -m tools.osm_query.cli export-context \
 
 | Persona | Job to be done | Tool |
 | ------- | -------------- | ---- |
-| Principal Manager / Platform Lead / Head of Architecture | Establish the canonical OSM catalog via the onboarding wizard | **`osm-scaffold`** |
+| Anyone who sees the semantics problem (ideal: Principal Manager / Platform Lead / Architecture) | Establish the canonical OSM catalog — own the semantics | **`osm-scaffold`** |
 | Enterprise / Platform Architect | Stop a valid YAML file from becoming a false catalog | **`osm-lint`** |
 | Governance / CISO | Concentration, owner gaps, resilience locators — without claiming compliance | **`osm-query`** |
 | Agent / automation engineer | Bounded, machine-readable operational context | **`osm-context`** |
@@ -327,7 +354,7 @@ Command reference: `[tools/README.md](tools/README.md)`.
 | If you want to…                        | Read                                                                                       |
 | -------------------------------------- | ------------------------------------------------------------------------------------------ |
 | Understand the idea                    | this README                                                                                |
-| Get started with a catalog             | [Begin here](#begin-here--the-onboarding-wizard), `[servicecatalog/](servicecatalog/)`, `[tools/](tools/)` |
+| Get started with a catalog             | `[ONBOARDING.md](ONBOARDING.md)`, `[servicecatalog/](servicecatalog/)`, `[tools/](tools/)` |
 | Understand the model                   | `[MODEL.md](MODEL.md)`                                                                     |
 | Implement or validate                  | `[SPECIFICATION.md](SPECIFICATION.md)`, `[schema/](schema/)`, `[validation/](validation/)` |
 | Inspect a catalog                      | `[examples/](examples/)` — start with `[examples/reference-enterprise/](examples/reference-enterprise/)` |
