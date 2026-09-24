@@ -9,16 +9,14 @@ from typing import Any
 
 STATE_FILENAME = ".osm-scaffold-state.json"
 STEPS = (
-    "frameworks",
-    "domains",
+    "stacks",
+    "compliance",
     "draft",
     "refine_stacks",
     "refine_services",
-    "refine_offerings",
-    "params_stacks",
-    "params_services",
-    "params_offerings",
-    "compile",
+    "comfort",
+    "write",
+    "continue",
 )
 
 
@@ -28,7 +26,7 @@ def state_path(catalog_dir: Path) -> Path:
 
 def empty_state() -> dict[str, Any]:
     return {
-        "step": "frameworks",
+        "step": "stacks",
         "item_index": 0,
         "frameworks": [],
         "domains": [],

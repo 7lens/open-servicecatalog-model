@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""CLI: python3 -m tools.osm_scaffold.cli [--resume] [--config FILE] [--output DIR]"""
+"""CLI: python3 -m tools.osm_scaffold.cli [--resume] [--status] [--config FILE] [--output DIR]"""
 
 from __future__ import annotations
 
@@ -9,7 +9,8 @@ from pathlib import Path
 
 import yaml
 
-from tools.osm_scaffold.state import load_state, state_path
+from tools.osm_scaffold.session import load_session, render_status, resume_briefing
+from tools.osm_scaffold.state import state_path
 from tools.osm_scaffold.wizard import (
     OnboardingWizard,
     SaveAndExit,
@@ -28,25 +29,30 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="osm-scaffold",
         description=(
-            "Onboarding wizard for OSM 1.3.0. The Principal Manager, "
-            "Platform Lead, or Head of Architecture uses this to establish "
-            "the canonical catalog under servicecatalog/. "
-            "At prompts: :view  :save. Resume with --resume."
+            "OSM onboarding. Same protocol as ONBOARDING.md: explain the "
+            "canonical model, ask stacks then compliance, produce a draft "
+            "the adopter is comfortable starting with. "
+            "At prompts: :view  :pause. Resume with --resume."
         ),
     )
     parser.add_argument(
         "--resume",
         action="store_true",
-        help="Load servicecatalog/.osm-scaffold-state.json and continue",
+        help="Continue from servicecatalog YAML and/or .osm-scaffold-state.json",
+    )
+    parser.add_argument(
+        "--status",
+        action="store_true",
+        help="Print the current draft board and exit",
     )
     parser.add_argument(
         "--fresh",
         action="store_true",
-        help="Ignore an existing checkpoint and start the wizard from step 1",
+        help="Ignore an existing checkpoint and start the conversation from step 1",
     )
     parser.add_argument(
         "--config",
-        help="Non-interactive one-service YAML (does not run the onboarding wizard)",
+        help="Non-interactive one-service YAML (does not run onboarding)",
     )
     parser.add_argument(
         "--output",
@@ -73,24 +79,35 @@ def main(argv: list[str] | None = None) -> int:
         if args.resume and args.fresh:
             sys.stderr.write("osm-scaffold: use either --resume or --fresh, not both\n")
             return 1
-        checkpoint = load_state(catalog_dir)
-        if checkpoint is not None and not args.resume and not args.fresh:
-            sys.stderr.write(
-                f"osm-scaffold: checkpoint exists at {state_path(catalog_dir)}\n"
-                "  resume:  python3 -m tools.osm_scaffold.cli --resume\n"
-                "  restart: python3 -m tools.osm_scaffold.cli --fresh\n"
+        session = load_session(catalog_dir)
+        if args.status:
+            if session is None:
+                sys.stdout.write(f"No OSM draft yet at {catalog_dir.resolve()}\n")
+                sys.stdout.write("Start: python3 -m tools.osm_scaffold.cli\n")
+                return 0
+            sys.stdout.write(render_status(session, catalog_dir) + "\n")
+            return 0
+        if session is not None and not args.resume and not args.fresh:
+            sys.stdout.write(resume_briefing(session, catalog_dir) + "\n")
+            sys.stdout.write(
+                f"\nCheckpoint: {state_path(catalog_dir)}\n"
+                "Continue: python3 -m tools.osm_scaffold.cli --resume\n"
+                "Restart conversation: python3 -m tools.osm_scaffold.cli --fresh\n"
             )
-            return 1
+            return 0
         if not args.config and not sys.stdin.isatty() and argv is None:
-            sys.stderr.write("osm-scaffold: interactive wizard needs a TTY, or pass --config\n")
+            sys.stderr.write("osm-scaffold: interactive session needs a TTY, or pass --config\n")
             return 1
 
         wizard = OnboardingWizard(REPO_ROOT, catalog_dir)
         wizard.run(resume=bool(args.resume))
         return 0
     except SaveAndExit as exc:
-        sys.stdout.write(f"checkpoint saved: {exc}\n")
-        sys.stdout.write("resume with: python3 -m tools.osm_scaffold.cli --resume\n")
+        session = load_session(catalog_dir)
+        if session is not None:
+            sys.stdout.write(render_status(session, catalog_dir) + "\n")
+        sys.stdout.write(f"Paused. Checkpoint: {exc}\n")
+        sys.stdout.write("Continue: python3 -m tools.osm_scaffold.cli --resume\n")
         return 0
     except ScaffoldError as exc:
         sys.stderr.write(f"osm-scaffold: {exc}\n")

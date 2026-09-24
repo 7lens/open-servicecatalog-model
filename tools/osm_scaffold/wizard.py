@@ -1,4 +1,4 @@
-"""OSM onboarding wizard: frameworks, golden draft, refinement, must-have fields."""
+"""OSM onboarding: stacks, compliance locators, draft, pause / continue."""
 
 from __future__ import annotations
 
@@ -19,13 +19,16 @@ from tools.osm_common.semantics import (
 )
 from tools.osm_scaffold.frameworks import Framework, discover_frameworks
 from tools.osm_scaffold.golden import DOMAINS, propose_draft
-from tools.osm_scaffold.state import (
-    clear_state,
-    empty_state,
-    load_state,
-    render_tree,
-    save_state,
+from tools.osm_scaffold.session import (
+    continue_proposals,
+    load_session,
+    normalize_step,
+    orientation,
+    persist_session,
+    reminder,
+    render_status,
 )
+from tools.osm_scaffold.state import empty_state
 
 SEGMENT = r"^[a-z0-9]+(?:-[a-z0-9]+)*$"
 PROVIDER_TYPES = (
@@ -482,7 +485,7 @@ def write_catalog_from_state(catalog_dir: Path, state: dict[str, Any]) -> None:
 
 
 class OnboardingWizard:
-    """Sequential onboarding pipeline with :view / :save / --resume."""
+    """Onboarding conversation with :view / :pause / --resume."""
 
     def __init__(
         self,
@@ -504,22 +507,22 @@ class OnboardingWizard:
         while True:
             raw = self._raw_ask(f"{message}{suffix}: ").strip()
             command = raw.lower()
-            if command == ":view":
-                self.echo(render_tree(self.state))
+            if command in {":view", ":status"}:
+                self.echo(render_status(self.state, self.catalog_dir))
                 continue
-            if command == ":save":
-                save_state(self.catalog_dir, self.state)
+            if command in {":save", ":pause"}:
+                persist_session(self.catalog_dir, self.state)
                 raise SaveAndExit(str(self.catalog_dir / ".osm-scaffold-state.json"))
             if command == ":resume":
                 self.echo(
-                    "Already in a wizard session. After :save, continue with:\n"
+                    "Already in a session. After :pause, continue with:\n"
                     "  python3 -m tools.osm_scaffold.cli --resume"
                 )
                 continue
             if command in {":help", "help"}:
                 self.echo(
-                    "Commands: :view  draft tree  ·  :save  checkpoint and exit  ·  "
-                    ":resume  (CLI: python3 -m tools.osm_scaffold.cli --resume)"
+                    "Commands: :view / :status  board  ·  :pause / :save  checkpoint and exit  ·  "
+                    "continue later: python3 -m tools.osm_scaffold.cli --resume"
                 )
                 continue
             if raw:
@@ -531,35 +534,79 @@ class OnboardingWizard:
     def _checkpoint(self, step: str, item_index: int = 0) -> None:
         self.state["step"] = step
         self.state["item_index"] = item_index
-        save_state(self.catalog_dir, self.state)
+        persist_session(self.catalog_dir, self.state)
+
+    def _board(self, extra: str = "") -> None:
+        self.echo(render_status(self.state, self.catalog_dir))
+        if extra:
+            self.echo(extra)
+        self.echo(reminder(self.catalog_dir))
+
+    def _ensure_draft_offering(self, service: dict[str, Any]) -> None:
+        if service.get("offerings"):
+            return
+        slug = "draft"
+        name = service.get("name") or slug
+        service["offerings"] = [
+            {
+                "id": f"{service['id']}.{slug}",
+                "name": f"{name} (draft)",
+                "providers": [],
+                "characteristics": [],
+            }
+        ]
+
+    def _merge_draft(self, incoming: dict[str, Any]) -> None:
+        have_stacks = {row["id"] for row in self.state.get("stacks") or []}
+        for stack in incoming.get("stacks") or []:
+            if stack["id"] not in have_stacks:
+                self.state.setdefault("stacks", []).append(stack)
+                have_stacks.add(stack["id"])
+        have_services = {row["id"] for row in self.state.get("services") or []}
+        for service in incoming.get("services") or []:
+            if service["id"] not in have_services:
+                self.state.setdefault("services", []).append(service)
+                have_services.add(service["id"])
+        have_providers = {row["id"] for row in self.state.get("providers") or []}
+        for provider in incoming.get("providers") or []:
+            if provider["id"] not in have_providers:
+                self.state.setdefault("providers", []).append(provider)
+                have_providers.add(provider["id"])
+        domains = list(self.state.get("domains") or [])
+        for domain_id in incoming.get("domains") or []:
+            if domain_id not in domains:
+                domains.append(domain_id)
+        self.state["domains"] = domains
 
     def run(self, *, resume: bool = False) -> Path:
-        self.echo(
-            "OSM onboarding wizard — Principal Manager / Platform Lead / Head of Architecture.\n"
-            "This establishes the canonical technological-service catalog.\n"
-            "At any prompt: :view  (draft tree)  ·  :save  (checkpoint and exit)\n"
-            "Resume after :save: python3 -m tools.osm_scaffold.cli --resume\n"
-        )
-        existing = load_state(self.catalog_dir)
+        existing = load_session(self.catalog_dir)
         if resume:
             if existing is None:
-                raise ScaffoldError(f"no checkpoint at {self.catalog_dir / '.osm-scaffold-state.json'}")
+                raise ScaffoldError(
+                    f"nothing to continue at {self.catalog_dir}: no checkpoint and no catalog YAML"
+                )
             self.state = existing
-            self.echo(f"Resuming at step {self.state.get('step')}.")
+            self.state["step"] = normalize_step(self.state.get("step"))
+            self.echo(orientation(self.catalog_dir))
+            self.echo("")
+            self.echo(render_status(self.state, self.catalog_dir))
+            if self.state["step"] == "continue":
+                self.echo("")
+                self.echo(continue_proposals())
         else:
+            self.echo(orientation(self.catalog_dir))
             self.state = empty_state()
-        step = self.state.get("step") or "frameworks"
+            self.echo(render_status(self.state, self.catalog_dir))
+        step = normalize_step(self.state.get("step"))
         order = [
-            ("frameworks", self.step_frameworks),
-            ("domains", self.step_domains),
+            ("stacks", self.step_stacks),
+            ("compliance", self.step_compliance),
             ("draft", self.step_draft),
             ("refine_stacks", self.step_refine_stacks),
             ("refine_services", self.step_refine_services),
-            ("refine_offerings", self.step_refine_offerings),
-            ("params_stacks", self.step_params_stacks),
-            ("params_services", self.step_params_services),
-            ("params_offerings", self.step_params_offerings),
-            ("compile", self.step_compile),
+            ("comfort", self.step_comfort),
+            ("write", self.step_write),
+            ("continue", self.step_continue),
         ]
         started = False
         for name, handler in order:
@@ -569,12 +616,47 @@ class OnboardingWizard:
                 handler()
         return self.catalog_dir
 
-    def step_frameworks(self) -> None:
-        self._checkpoint("frameworks")
-        if self.state.get("frameworks") and self.state.get("step") != "frameworks":
-            return
-        self.echo("Step 1 — which external frameworks apply? Optional mappings only.")
-        self.echo("Selecting a framework does not claim compliance.")
+    def step_stacks(self) -> None:
+        self._checkpoint("stacks")
+        self.echo(
+            "Step 1 — your technology stacks. Capabilities you operate, "
+            "not vendor towers (not AWS, not M365)."
+        )
+        for index, domain in enumerate(DOMAINS, start=1):
+            self.echo(f"  {index}. {domain.name}  — {domain.summary}")
+        while True:
+            raw = self.ask("Numbers comma-separated, or skip to name your own", "skip")
+            try:
+                refuse_vendor_label(raw)
+            except ScaffoldError as exc:
+                self.echo(str(exc))
+                continue
+            if raw.lower() in {"skip", "none", "n", ""}:
+                ids: list[str] = []
+            else:
+                try:
+                    ids = [DOMAINS[i].id for i in _parse_indices(raw, len(DOMAINS))]
+                except ScaffoldError as exc:
+                    self.echo(str(exc))
+                    continue
+            self.state["domains"] = ids
+            break
+        while True:
+            more = self.ask("Add a Technology Stack that is not in the list? [y/N]", "n").lower()
+            if more not in {"y", "yes"}:
+                break
+            self._add_stack()
+        if not self.state.get("domains") and not self.state.get("stacks"):
+            raise ScaffoldError("select at least one domain or add a Technology Stack")
+        self._board()
+        self._checkpoint("compliance")
+
+    def step_compliance(self) -> None:
+        self._checkpoint("compliance")
+        self.echo(
+            "Step 2 — which external frameworks apply? Locators only. "
+            "Selecting a framework does not claim compliance."
+        )
         for index, item in enumerate(self.frameworks, start=1):
             extra = f"  fields: {', '.join(item.stack_fields)}" if item.stack_fields else "  (no extra OSM fields)"
             self.echo(f"  {index}. {item.label}{extra}")
@@ -583,44 +665,22 @@ class OnboardingWizard:
             self.state["frameworks"] = []
         else:
             self.state["frameworks"] = [self.frameworks[i].id for i in _parse_indices(raw, len(self.frameworks))]
-        self._checkpoint("domains")
-
-    def step_domains(self) -> None:
-        self._checkpoint("domains")
-        self.echo("Step 2 — operational domains (capabilities, not vendors).")
-        for index, domain in enumerate(DOMAINS, start=1):
-            self.echo(f"  {index}. {domain.name}  — {domain.summary}")
-        while True:
-            raw = self.ask("Numbers comma-separated")
-            try:
-                refuse_vendor_label(raw)
-            except ScaffoldError as exc:
-                self.echo(str(exc))
-                continue
-            try:
-                ids = [DOMAINS[i].id for i in _parse_indices(raw, len(DOMAINS))]
-            except ScaffoldError as exc:
-                self.echo(str(exc))
-                continue
-            if not ids:
-                self.echo("Select at least one domain.")
-                continue
-            self.state["domains"] = ids
-            break
+        self._board()
         self._checkpoint("draft")
 
     def step_draft(self) -> None:
         self._checkpoint("draft")
-        draft = propose_draft(self.repo_root, list(self.state.get("domains") or []))
-        self.state["stacks"] = draft["stacks"]
-        self.state["services"] = draft["services"]
-        self.state["providers"] = draft["providers"]
-        self.echo("Golden draft proposed from the reference catalogs:")
-        self.echo(render_tree(self.state))
-        if not self.state["stacks"]:
-            self.echo("No golden stacks matched. Add stacks in the next step.")
-        self.ask("Press enter to refine the hierarchy", "")
+        domains = list(self.state.get("domains") or [])
+        if domains:
+            incoming = propose_draft(self.repo_root, domains)
+            self._merge_draft(incoming)
+        self.echo("Proposed draft from your stacks and the golden examples:")
+        self._board()
+        if not self.state.get("stacks"):
+            self.echo("No stacks yet. Add them in the next step.")
+        self.ask("Press enter to refine this draft", "")
         self._checkpoint("refine_stacks")
+
 
     def step_refine_stacks(self) -> None:
         self._checkpoint("refine_stacks", int(self.state.get("item_index") or 0))
@@ -655,17 +715,11 @@ class OnboardingWizard:
             more = self.ask("Add a Technology Stack? [y/N]", "n").lower()
             if more not in {"y", "yes"}:
                 break
-            stack_id = slugify(self.ask("Stack id (slug)"))
-            refuse_stack_id(stack_id)
-            name = self.ask("Stack name", stack_id.replace("-", " ").title())
-            refuse_vendor_label(name)
-            description = self.ask("Stack description", f"{name} technological services.")
-            self.state["stacks"].append(
-                {"id": stack_id, "name": name, "description": description, "mappings": {}}
-            )
+            self._add_stack()
         if not self.state["stacks"]:
             raise ScaffoldError("at least one Technology Stack is required")
         self.state["item_index"] = 0
+        self._board()
         self._checkpoint("refine_services")
 
     def step_refine_services(self) -> None:
@@ -698,7 +752,18 @@ class OnboardingWizard:
         if not self.state["services"]:
             raise ScaffoldError("at least one Service is required")
         self.state["item_index"] = 0
-        self._checkpoint("refine_offerings")
+        self._board()
+        self._checkpoint("comfort")
+
+    def _add_stack(self) -> None:
+        stack_id = slugify(self.ask("Stack id (slug)"))
+        refuse_stack_id(stack_id)
+        name = self.ask("Stack name", stack_id.replace("-", " ").title())
+        refuse_vendor_label(name)
+        description = self.ask("Stack description", f"{name} technological services.")
+        self.state.setdefault("stacks", []).append(
+            {"id": stack_id, "name": name, "description": description, "mappings": {}}
+        )
 
     def _add_service(self) -> None:
         stack_id = self.ask("Owning stack id", self.state["stacks"][0]["id"])
@@ -726,6 +791,84 @@ class OnboardingWizard:
                 "offerings": [],
             }
         )
+        self._ensure_draft_offering(self.state["services"][-1])
+
+    def _propose_from_golden(self) -> None:
+        self.echo("Golden capability domains:")
+        for index, domain in enumerate(DOMAINS, start=1):
+            self.echo(f"  {index}. {domain.name}  — {domain.summary}")
+        raw = self.ask("Numbers comma-separated")
+        ids = [DOMAINS[i].id for i in _parse_indices(raw, len(DOMAINS))]
+        if not ids:
+            self.echo("No domains selected.")
+            return
+        self._merge_draft(propose_draft(self.repo_root, ids))
+
+    def step_comfort(self) -> None:
+        self._checkpoint("comfort")
+        while True:
+            self._board(
+                "Phase 1 is a draft of Stacks and Services you are comfortable starting with."
+            )
+            answer = self.ask(
+                "Comfortable starting with this draft? [Y]  or n to add more",
+                "y",
+            ).lower()
+            if answer in {"", "y", "yes"}:
+                break
+            change = self.ask("Add [s]tack, se[r]vice, or [g]olden proposal?", "s").lower()
+            if change in {"s", "stack"}:
+                self._add_stack()
+            elif change in {"r", "service"}:
+                self._add_service()
+            elif change in {"g", "golden"}:
+                self._propose_from_golden()
+            else:
+                self.echo("Choose s, r, or g.")
+        self._checkpoint("write")
+
+    def step_write(self) -> None:
+        self._checkpoint("write")
+        for service in self.state.get("services") or []:
+            self._ensure_draft_offering(service)
+        write_catalog_from_state(self.catalog_dir, self.state)
+        self._checkpoint("continue")
+        self.echo(f"Draft written under {self.catalog_dir.resolve()}")
+        self.echo("  catalog/technology-stacks.yaml")
+        self.echo("  catalog/services.yaml")
+        self.echo("  catalog/ict-providers.yaml")
+        self.echo("  posture/service-posture.yaml  (empty — unknown is better than invented)")
+        self.echo("Checkpoint kept. You can pause now and continue later.")
+        self._board()
+        self._checkpoint("continue")
+
+    def step_continue(self) -> None:
+        self._checkpoint("continue")
+        while True:
+            self._board()
+            self.echo(continue_proposals())
+            choice = self.ask("Choose 1–5", "5").strip().lower()
+            if choice in {"1", "stack", "s"}:
+                self._add_stack()
+                persist_session(self.catalog_dir, self.state)
+                continue
+            if choice in {"2", "service", "r"}:
+                self._add_service()
+                persist_session(self.catalog_dir, self.state)
+                continue
+            if choice in {"3", "golden", "g"}:
+                self._propose_from_golden()
+                persist_session(self.catalog_dir, self.state)
+                continue
+            if choice in {"4", "write", "w"}:
+                for service in self.state.get("services") or []:
+                    self._ensure_draft_offering(service)
+                write_catalog_from_state(self.catalog_dir, self.state)
+                persist_session(self.catalog_dir, self.state)
+                self.echo(f"Draft written under {self.catalog_dir.resolve()}")
+                continue
+            persist_session(self.catalog_dir, self.state)
+            raise SaveAndExit(str(self.catalog_dir / ".osm-scaffold-state.json"))
 
     def step_refine_offerings(self) -> None:
         self._checkpoint("refine_offerings", int(self.state.get("item_index") or 0))
@@ -905,17 +1048,7 @@ class OnboardingWizard:
         self._checkpoint("compile")
 
     def step_compile(self) -> None:
-        self._checkpoint("compile")
-        write_catalog_from_state(self.catalog_dir, self.state)
-        clear_state(self.catalog_dir)
-        self.echo(f"Catalog written under {self.catalog_dir.resolve()}")
-        self.echo("  catalog/technology-stacks.yaml")
-        self.echo("  catalog/services.yaml")
-        self.echo("  catalog/ict-providers.yaml")
-        self.echo("  posture/service-posture.yaml  (empty — unknown is better than invented)")
-        self.echo(
-            f"Next: python3 -m tools.osm_lint.cli --catalog {self.catalog_dir}"
-        )
+        self.step_write()
 
 
 def _parse_indices(raw: str, count: int) -> list[int]:
