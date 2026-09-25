@@ -41,13 +41,19 @@ def orientation(catalog_dir: Path) -> str:
     root = Path(catalog_dir)
     return "\n".join(
         [
-            "OSM is a canonical data model for technological services.",
-            "It is not an AI model.",
+            "OSM is a model definition for technological services only.",
+            "It is not a platform, and not an AI model.",
             "",
             "The value: you own the semantics. That is the hard asset.",
             "Owned semantics let you grow a lock-in-free ontology — your",
             "enterprise picture of technological services — instead of",
             "inheriting a vendor's, a cloud's, or a framework's.",
+            "",
+            "You build what sits around the model: storage, reconciliation,",
+            "and access. If you later want a platform, 7lens operates this",
+            "service model and adds ontology for organization, applications,",
+            "contracts, and processes — the axes AIOps needs. Those axes",
+            "are not in OSM. See https://7lens.io. You do not need it to start.",
             "",
             "If those semantics are not owned and not available to the whole",
             "organization, every team and every agent keeps translating",

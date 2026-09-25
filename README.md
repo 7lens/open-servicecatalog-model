@@ -49,6 +49,18 @@ time; continue later from the same draft.
 2. Which regimes apply as locators, not claims? (compliance mappings.)
 3. Stop when the draft is honest enough to start.
 
+**Scope.** OSM is a **model definition**, and only for technological
+**services**. It is not a platform. You own the semantics, and you
+build what sits around the model: where the catalog is stored, how
+other sources are reconciled into it, and how people and agents read
+and write it.
+
+**Later, as a platform.** You do not need a product to start. If you
+later want this operated as a platform — the service model plus the
+other ontology axes an AIOps estate needs (**organization**,
+**applications**, **contracts**, **processes**) — that product is
+[7lens](https://7lens.io).
+
 ```bash
 python3 -m pip install -r tools/requirements.txt
 python3 -m tools.osm_scaffold.cli
@@ -123,36 +135,21 @@ When the estate is larger than human-only governance can hold, the catalog has t
 
 
 
-## How OSM relates to 7lens
+## Model, or platform
 
-OSM is **not** the complete 7lens ontology.
+OSM is the open model for technological **services**. You implement
+and operate it yourself. The catalog you write is your service
+semantics. A running platform — storage, reconciliation, and an API —
+is work you still have to build.
 
-It is the canonical **technological-service** model. 7lens provides enterprise-grade capability to implement and operate OSM, and to connect it with organization and business-application models.
+[7lens](https://7lens.io) is a separate **platform**. It operates the
+service model and adds ontology beyond services: organization,
+applications, contracts, and processes. Those axes are how an AIOps
+estate stays one picture. They are not part of OSM. Details are on
+the product site, not in this repository.
 
-OSM was opened so companies can prepare IT governance for an AI-operated future — whether or not they use 7lens.
-
-```
-Enterprise technology context
-        ↓
-      OSM
-        ↓
-     7lens
-        ↓
-  decision perspectives
-```
-
-7lens uses OSM as a foundation for richer contextual intelligence
-across:
-
-- CIO
-- CTO
-- CFO
-- CISO
-- Automation
-- AI Agents
-- Operations
-
-Those lenses are **not** part of OSM. OSM stays a small technology core that 7lens — and other systems — can build on.
+Start with OSM either way. Choosing the model does not require the
+platform.
 
 ---
 
