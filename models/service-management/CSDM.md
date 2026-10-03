@@ -1,7 +1,19 @@
 # ServiceNow CSDM
 
-**Mapped version:** **CSDM 5** (Technology Management Service;
-Application Service renamed **Service Instance**).
+**Mapped version:** **CSDM 5** (Technical Service renamed
+**Technology Management Service**; Application Service renamed
+**Service Instance**).
+
+> **Mapping basis (2026-06-11):** The CSDM 5 renames are confirmed by
+> ServiceNow community guidance — Application Service becomes
+> [Service Instance, with new Data/Network/Connection/Operational
+> Process/Facility Service Instance classes](https://www.servicenow.com/community/common-service-data-model/application-service-and-service-instance-what-is-new-in-yokohama/ta-p/3193268),
+> and Technical Service / Technical Service Offering are relabelled
+> [Technology Management Service / Technology Management Service
+> Offering](https://www.servicenow.com/community/common-service-data-model-forum/simple-diagram-explaining-csdm-layers/m-p/3329840).
+> OSM maps CSDM's catalogue/definition classes only, not CMDB CIs or
+> running instances. Source wording was rephrased for licensing
+> compliance.
 
 **Status:** **PARTIAL**
 
@@ -22,13 +34,17 @@ customer tools and systems
 
 ## Mapping table
 
-| External concept (CSDM 5) | OSM target | Grain | Kind | Outside OSM |
-|---------------------------|------------|-------|------|-------------|
-| Technology Management Service (was Technical Service) | Service | Service | Conceptual / partial. OSM Service is the canonical **definition**, narrower and technology-focused, not a runtime CI. | Business Service |
-| Technology Management Service Offering | Service Offering | Offering | Conceptual / partial. OSM uses Characteristics and optional `providers` rather than CSDM dimension tables. | CSDM prescribed offering dimensions |
-| Technology Provider | ICT Provider + `providers` | Service and/or Offering | Partial. OSM ICT Provider is catalog master data, not a CMDB company CI. | CMDB company / vendor CIs |
-| Service Owner | `accountable` | Service | Partial | CSDM role taxonomies |
-| **Service Instance** (was Application Service) and siblings (Data/AI, Network, Connection, Operational Process, Facility) | — | — | **EXTERNAL**. OSM has no instance entity. | Running/deployed objects |
+Every CSDM 5 foundational class below carries a status from the index
+vocabulary (MAPPED / PARTIAL / EXTERNAL / NOT IN SCOPE / FUTURE /
+OPTIONAL), so none is silently missing.
+
+| External concept (CSDM 5) | OSM target | Grain | Status + kind | Outside OSM |
+|---------------------------|------------|-------|---------------|-------------|
+| Technology Management Service (was Technical Service) | Service | Service | **PARTIAL** — conceptual. OSM Service is the canonical **definition**, narrower and technology-focused, not a runtime CI. | Business Service |
+| Technology Management Service Offering | Service Offering | Offering | **PARTIAL** — conceptual. OSM uses Characteristics and optional `providers` rather than CSDM dimension tables. | CSDM prescribed offering dimensions |
+| Technology Provider | ICT Provider + `providers` | Service and/or Offering | **PARTIAL**. OSM ICT Provider is catalog master data, not a CMDB company CI. | CMDB company / vendor CIs |
+| Service Owner | `accountable` | Service | **PARTIAL** | CSDM role taxonomies |
+| **Service Instance** (was Application Service) and siblings (Data, Network, Connection, Operational Process, Facility) | — | — | **EXTERNAL**. OSM has no instance entity. | Running/deployed objects |
 | CMDB Configuration Items | — | — | **EXTERNAL** | Inventory |
 | Business Service, Product Models, Value Streams | — | — | **EXTERNAL** | Those CSDM classes |
 | Service → Service relationships | — | — | **EXTERNAL** (**OSM-C-008**) | CSDM relationship graph |
