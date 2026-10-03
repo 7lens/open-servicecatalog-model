@@ -1,9 +1,23 @@
 # ITIL
 
-**Mapped version:** ITIL **Version 5** (general availability
-12 February 2026). ITIL 4 remains a valid parallel path and
-prerequisite for some Version 5 modules; OSM does not require an
-adopter to have moved.
+**Mapped version:** ITIL **Version 5** (released by PeopleCert as
+"ITIL (Version 5)"; Foundation availability in early 2026). ITIL 4
+remains a valid parallel path and prerequisite for some Version 5
+modules; OSM does not require an adopter to have moved.
+
+> **Mapping basis (2026-06-11):** Version 5 is the current ITIL
+> designation, branded simply "ITIL (Version 5)" and delivered by
+> PeopleCert/AXELOS; see the
+> [PeopleCert "ITIL (Version 5) explained" announcement](https://www.peoplecert.org/news-and-announcements/itil-version-5-explained).
+> Published sources disagree on the exact Foundation general-availability
+> day (variously reported in late January and February 2026), so OSM
+> states "early 2026" rather than a single calendar date
+> (exact GA day unverified at 2026-06-11; sources consulted:
+> [PeopleCert](https://www.peoplecert.org/news-and-announcements/itil-version-5-explained),
+> [TeamDynamix overview](https://www.teamdynamix.com/blog/an-introduction-to-the-itil-framework/)).
+> This mapping is unaffected by the exact day: it targets ITIL's
+> stable service/catalogue concepts, not any lifecycle date. Source
+> wording was rephrased for licensing compliance.
 
 **Status:** **PARTIAL**
 
@@ -25,17 +39,23 @@ customer tools and systems
 
 ## Mapping table
 
-| External concept | OSM target | Grain | Kind | Outside OSM |
-|------------------|------------|-------|------|-------------|
-| ITIL technological / IT service (the catalogued capability) | Service | Service | Conceptual / partial. OSM is narrower: technological definition only, not business service or customer outcome. | Business Service, Digital Product |
-| ITIL service offering | Service Offering | Offering | Partial. OSM offering is an atomic requestable **technological** variant, not consumer/commercial packaging. | Consumers, consumer groups, commercial bundles |
-| Service catalogue | The OSM catalog files themselves | Catalog | Conceptual. No `ServiceCatalogue` entity. | ITIL catalogue practices, request workflows |
+Every top-level ITIL concept below carries a status from the index
+vocabulary (MAPPED / PARTIAL / EXTERNAL / NOT IN SCOPE / FUTURE /
+OPTIONAL), so none is silently missing.
+
+| External concept | OSM target | Grain | Status + kind | Outside OSM |
+|------------------|------------|-------|---------------|-------------|
+| ITIL technological / IT service (the catalogued capability) | Service | Service | **PARTIAL** — conceptual. OSM is narrower: technological definition only, not business service or customer outcome. | Business Service, Digital Product |
+| ITIL service offering | Service Offering | Offering | **PARTIAL**. OSM offering is an atomic requestable **technological** variant, not consumer/commercial packaging. | Consumers, consumer groups, commercial bundles |
+| Service catalogue | The OSM catalog files themselves | Catalog | **PARTIAL** — conceptual. No `ServiceCatalogue` entity. | ITIL catalogue practices, request workflows |
 | Product and Service Lifecycle (Discover, Design, Acquire, Build, Transition, Operate, Deliver, Support) | — | — | **NOT IN SCOPE** as an OSM enum. Do **not** map these eight activities onto `lifecycle_state`. | The whole Version 5 lifecycle |
-| OSM `lifecycle_state` (`draft` \| `pilot` \| `production` \| `sunset` \| `retired`) | Compact **definition** state | Service | Direct for OSM; **not** the ITIL lifecycle | ITIL management activities |
-| Supplier / provider | ICT Provider via `providers` | Service and/or Offering | Partial. Operator / deliverer / technology provider only (**OSM-C-006**). | Supplier-management practices |
-| Service Owner | `accountable` | Service | Partial | Full ITIL role taxonomies |
+| OSM `lifecycle_state` (`draft` \| `pilot` \| `production` \| `sunset` \| `retired`) | Compact **definition** state | Service | **MAPPED** for OSM's own definition state; **not** the ITIL lifecycle | ITIL management activities |
+| Supplier / provider | ICT Provider via `providers` | Service and/or Offering | **PARTIAL**. Operator / deliverer / technology provider only (**OSM-C-006**). | Supplier-management practices |
+| Service Owner | `accountable` | Service | **PARTIAL** | Full ITIL role taxonomies |
+| ITIL practices (service management, operating-model activities) | — | — | **EXTERNAL**. OSM maps catalogue/service definition, not practices. | ITIL practice library |
 | Supporting-service / service–service dependency | — | — | **EXTERNAL** (**OSM-C-008**) | Service→Service graph |
 | Digital Product, consumers, value streams | — | — | **EXTERNAL** | Those ITIL objects |
+| SLA / contract models | — | — | **EXTERNAL**. OSM carries no SLA/contract object. | ITIL service-level and supplier management |
 
 No ITIL-specific schema fields are required.
 

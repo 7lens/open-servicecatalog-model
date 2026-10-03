@@ -15,13 +15,21 @@ persist the same files, and honour pause / continue.
 
 OSM (7lens Open Service-Catalog Model) is a **small, vendor-neutral,
 canonical data model** for technological services. Frozen at 1.3.0.
-It is not an AI model, a CMDB, a DORA register, or a claim of
+It is a **model definition**, and only for **services**. It is not a
+platform, an AI model, a CMDB, a DORA register, or a claim of
 compliance.
 
 The value is **owning the semantics**. That is the hard asset. Owned
 semantics are what let you grow a **lock-in-free ontology** — the
 enterprise’s own picture of technological services — instead of
 inheriting a vendor’s, a cloud’s, or a framework’s.
+
+You build and operate what sits around the model: storage,
+reconciliation, and access. If you later want that as a **platform** —
+this service model plus ontology for **organization, applications,
+contracts, and processes** (the axes AIOps needs) — that product is
+[7lens](https://7lens.io). You do not need it to start. Those axes are
+not in this repository.
 
 If those semantics are not owned, and not available to the whole
 organization, every team and every agent keeps translating between
